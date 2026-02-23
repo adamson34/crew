@@ -18,6 +18,17 @@ module: crew
 
 ---
 
+## At a Glance
+
+| Work Package | Total Hours |
+|--------------|-------------|
+| {{wp1_name}} | {{wp1_total}} |
+| {{wp2_name}} | {{wp2_total}} |
+| {{wp3_name}} | {{wp3_total}} |
+| **Total** | **{{total_hours}}** |
+
+---
+
 ## 1. Scope Summary
 
 > Guidance: 2-3 sentences. What is being assessed or delivered? This should align precisely with the SOW scope — not a summary of the client's problem, but a summary of what we are producing.
