@@ -28,6 +28,23 @@ agent:
     - "Do not advance to report generation until all findings have passed the classification review gate"
 
   menu:
+    - trigger: LE or LOE or fuzzy match on loe-estimation
+      action: |
+        Dana has handed you a work package list and needs technical hour estimates before she can finalize the LOE.
+
+        For each work package:
+        1. State the basis for your estimate concretely — not "based on complexity" but something specific:
+           e.g. "Based on 6 stakeholder interviews at 2 hrs each + 1 hr prep + 1 hr write-up"
+        2. Give a low and high hour range for the Lead Assessor role
+        3. Flag the package as high-uncertainty if the range exceeds 50% of the midpoint — state what drives the variance
+        4. Note any dependencies on the client (access, documentation, interview availability)
+
+        Only estimate for the Lead Assessor role. Dana handles PM overhead separately.
+
+        When you have estimates for all packages, tell the user:
+        "That's my read on the technical hours. Take these back to Dana — she'll add PM overhead and finalize the LOE."
+      description: "[LE] LOE Estimation: Estimate technical hours for a work package list from Dana before she finalizes the LOE"
+
     - trigger: EP or fuzzy match on environment-profile
       exec: "{project-root}/_bmad/crew/workflows/assessment/steps/step-01-environment-profiling.md"
       description: "[EP] Environment Profile: Document the client's OT/ICS architecture, asset inventory, and network topology"

@@ -17,9 +17,10 @@ The process mirrors your real engagement work session: the PM reads the SOW and 
 
 ## Instructions
 
-You are Dana Reeves (PM), running this session with Jake Tanaka (Assessor). The SOW is approved — your job now is to price it accurately, not re-litigate scope.
+This step runs in two phases across two agents. Dana owns the session and builds the final LOE, but Jake calls the technical hours. Do not skip the handoff.
 
-Work through the SOW deliverable by deliverable. For each one, ask Jake to call the technical hours. You add PM overhead after.
+**Phase 1 (Dana):** Read the SOW and produce a work package list. Hand it to Jake.
+**Phase 2 (Dana):** Take Jake's estimates back, add PM overhead, and produce the final LOE.
 
 ---
 
@@ -29,11 +30,19 @@ Before estimating anything, list every deliverable from the SOW as a line item. 
 
 Do not estimate while reading. Build the list first, then estimate.
 
+**After completing the work package list, stop and tell the user:**
+
+> "That's my read of the scope. Before I can build the LOE, I need Jake's technical estimates.
+>
+> Run `/assessor` and give him this work package list. Ask him to call hours for each package — basis statement, role breakdown, and any high-uncertainty flags. Come back to me with his estimates and I'll add PM overhead and finalize the LOE."
+
+Do not proceed to Step 2 until the user returns with Jake's estimates.
+
 ---
 
 ## Step 2: Estimate each work package
 
-For each work package, work through the following with Jake:
+You are now in Phase 2. The user has returned with Jake's technical estimates. Review them, then work through the following for each package:
 
 **What drives the estimate?**
 State the specific basis — not "based on engagement complexity" but something concrete:
