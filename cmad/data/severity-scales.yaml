@@ -1,0 +1,154 @@
+# CMAD Severity Scale Reference
+# Used by: Jake Tanaka (Assessor), Sofia Mendez (Reviewer)
+# Purpose: Standardize finding severity ratings across all engagements
+
+severity_scale:
+
+  critical:
+    label: Critical
+    color: "🔴"
+    cvss_equivalent: "9.0-10.0"
+    remediation_timeline: "Immediate — 0-30 days"
+    definition: >
+      A finding that represents an imminent, high-likelihood threat with potential for major
+      safety, operational, or compliance impact. Exploitation is technically straightforward
+      or evidence of active exploitation exists. Immediate action is required.
+    criteria:
+      - "Direct path from internet or untrusted network to critical OT assets with no effective barrier"
+      - "Compromise of safety-critical systems (SIS, ESD) is achievable via the identified attack path"
+      - "Known-exploited vulnerability (CISA KEV) present on an accessible, unpatched system"
+      - "Default or shared credentials on systems directly accessible from corporate network or internet"
+      - "Complete loss of network visibility into the OT environment (no monitoring, no logging)"
+      - "Nation-state or targeted threat actor level exposure without adequate defense"
+    examples:
+      - "Unauthenticated access to SCADA server from corporate network"
+      - "HMI running Windows XP with no network isolation and EternalBlue exposure"
+      - "Default vendor credentials on internet-accessible remote access gateway"
+      - "Safety instrumented system directly reachable from untrusted zone"
+    ot_ics_notes: >
+      In OT/ICS environments, consequence assessment must include physical/safety outcomes.
+      A finding that would be High in an IT context (e.g., remote code execution on a server)
+      may be Critical in OT if the affected system controls a physical process with safety implications.
+
+  high:
+    label: High
+    color: "🟠"
+    cvss_equivalent: "7.0-8.9"
+    remediation_timeline: "Short-term — 30-90 days"
+    definition: >
+      A significant control gap with a clear, realistic attack path that could lead to major
+      operational disruption, significant compliance violation, or material security breach.
+      Exploitation typically requires one additional condition (e.g., prior access to the corporate
+      network, knowledge of the environment) but is not highly complex.
+    criteria:
+      - "Clear lateral movement path from compromised IT environment to OT network"
+      - "Lack of multi-factor authentication for remote access to OT environment"
+      - "Critical vulnerability (CVSS 7.0+) on accessible OT system without compensating controls"
+      - "Major NERC CIP or IEC 62443 compliance gap with direct audit/violation exposure"
+      - "No incident response capability for OT environment"
+      - "Patch management completely absent for production OT systems"
+    examples:
+      - "No MFA for VPN/remote access to OT network"
+      - "Historian accessible from corporate network via unrestricted DCOM"
+      - "Engineering workstations with no antivirus and internet access"
+      - "No logging or monitoring capability in OT environment"
+      - "NERC CIP CIP-007 R5 non-compliance (system access controls)"
+    ot_ics_notes: >
+      High findings require project-level remediation planning. Many High findings in OT
+      environments relate to architectural gaps that require change windows and testing.
+      Do not lower severity due to operational constraints — document the constraint as context
+      and adjust the remediation timeline recommendation accordingly.
+
+  medium:
+    label: Medium
+    color: "🟡"
+    cvss_equivalent: "4.0-6.9"
+    remediation_timeline: "Medium-term — 90-180 days"
+    definition: >
+      A control gap that increases risk above baseline but requires multiple conditions to exploit,
+      or has limited consequence scope (e.g., affects a single system or process area rather than
+      the whole OT environment). Compensating controls may partially mitigate the risk.
+    criteria:
+      - "Policy or process gap that doesn't have a direct technical exploitation path"
+      - "Missing defense-in-depth control where other controls provide some protection"
+      - "Vulnerability on internally-accessible system (not directly reachable from untrusted zones)"
+      - "Partial compliance gap where some elements of the requirement are met"
+      - "Missing security configuration on a system with limited network exposure"
+      - "Third-party/vendor access management weakness without active exploitation indicators"
+    examples:
+      - "OT security policy missing required elements"
+      - "Patch management process exists but doesn't cover OT systems"
+      - "User account lifecycle management not applied to OT accounts"
+      - "No wireless intrusion detection for OT wireless networks"
+      - "Security awareness training not conducted for OT staff"
+    ot_ics_notes: >
+      In OT environments, 'Medium' does not mean 'not important.' Many Medium findings
+      represent process maturity gaps that create systemic risk over time. Medium findings
+      should be included in the remediation roadmap with Phase 2 (90-180 day) timelines.
+
+  low:
+    label: Low
+    color: "🟢"
+    cvss_equivalent: "0.1-3.9"
+    remediation_timeline: "Long-term — 180+ days or accept with documentation"
+    definition: >
+      A minor control gap or defense-in-depth improvement. Exploitation would require multiple
+      conditions, sophisticated attacker capability, and significant prior access. Consequence
+      is minimal even in a worst-case scenario.
+    criteria:
+      - "Minor configuration improvement with no direct exploitation path"
+      - "Best practice not followed but compensating controls are effective"
+      - "Documentation gap without operational security impact"
+      - "Very low-severity vulnerability on an isolated, low-criticality system"
+    examples:
+      - "Firewall rule set could be further tightened (already restrictive)"
+      - "Vendor documentation references outdated firmware versions"
+      - "Logging retention period is 89 days rather than the required 90 days"
+    ot_ics_notes: >
+      Low findings should be included in the report for completeness and continuous
+      improvement tracking. They may be candidates for risk acceptance with documented
+      rationale.
+
+  informational:
+    label: Informational
+    color: "ℹ️"
+    cvss_equivalent: "N/A"
+    remediation_timeline: "Address in future planning cycles"
+    definition: >
+      An observation or best practice recommendation that does not represent a current security
+      gap. No remediation is required, but the information may be useful for future program
+      development or continuous improvement.
+    criteria:
+      - "Observation of a positive practice worth acknowledging"
+      - "Industry trend or emerging threat relevant to the client's environment"
+      - "Optional enhancement that improves security maturity beyond minimum requirements"
+    ot_ics_notes: >
+      Informational items should be brief. Do not use Informational to avoid rating a real gap.
+      If there's a control gap, it's at least a Low finding.
+
+# Rating rationale requirements
+# All findings must document:
+rating_documentation_requirements:
+  required_fields:
+    - likelihood_assessment: "Low / Medium / High with explanation"
+    - consequence_assessment: "Safety / Operational / Compliance / Data loss — describe worst-case"
+    - exposure_assessment: "Internal only / Corporate-network accessible / Internet-accessible"
+    - contextual_factors: "Compensating controls, operational constraints, regulatory exposure"
+    - severity_justification: "One paragraph explicitly justifying the assigned severity"
+
+# Severity adjustment triggers
+severity_adjustment_triggers:
+  increase:
+    - "Active exploit in the wild (CISA KEV or threat intel)"
+    - "Safety system involved in attack path"
+    - "Regulatory enforcement deadline within 60 days"
+    - "Multiple findings that combine to create a complete attack chain"
+  decrease:
+    - "Effective compensating control documented with evidence"
+    - "System is isolated with no realistic attack path"
+    - "Finding is already in active remediation with evidence"
+  never_decrease_because:
+    - "Client says it hasn't been exploited before"
+    - "Client says they have 'security awareness'"
+    - "Finding would be disruptive to fix"
+    - "Assessor is uncomfortable delivering bad news"

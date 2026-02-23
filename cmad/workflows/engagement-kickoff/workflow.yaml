@@ -1,0 +1,42 @@
+name: engagement-kickoff
+description: "Run the full engagement kickoff sequence: opportunity qualification, SOW generation, project setup, kickoff prep, and initial data request. Use when starting a new consulting engagement."
+
+config_source: "{project-root}/_bmad/cmad/config.yaml"
+firm_name: "{config_source}:firm_name"
+client_name: "{config_source}:client_name"
+engagement_name: "{config_source}:engagement_name"
+vertical: "{config_source}:vertical"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+engagement_artifacts: "{config_source}:engagement_artifacts"
+deliverables: "{config_source}:deliverables"
+
+installed_path: "{project-root}/_bmad/cmad/workflows/engagement-kickoff"
+
+# Step files
+step_qualify: "{installed_path}/steps/step-01-qualify-opportunity.md"
+step_sow: "{installed_path}/steps/step-02-sow-generation.md"
+step_project_setup: "{installed_path}/steps/step-03-project-setup.md"
+step_kickoff_prep: "{installed_path}/steps/step-04-kickoff-prep.md"
+step_data_request: "{installed_path}/steps/step-05-data-request.md"
+
+# Templates
+sow_template: "{project-root}/_bmad/cmad/templates/sow-template.md"
+
+# Output files
+sow_output: "{engagement_artifacts}/sow-{{engagement_name}}.md"
+project_plan_output: "{engagement_artifacts}/project-plan-{{engagement_name}}.md"
+kickoff_deck_output: "{engagement_artifacts}/kickoff-deck-{{engagement_name}}.md"
+data_request_output: "{engagement_artifacts}/data-request-{{engagement_name}}.md"
+
+# Human review gates
+review_gates:
+  - step: sow-generation
+    gate_type: human-approval
+    description: "SOW must be reviewed and approved before project setup begins"
+  - step: kickoff-prep
+    gate_type: human-approval
+    description: "Kickoff deck and data request must be reviewed before sending to client"
