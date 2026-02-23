@@ -82,8 +82,8 @@ Break the engagement into discrete work packages. Each work package maps to one 
 
 > Add work packages as needed. Standard packages for an OT/ICS assessment:
 > - WP1: Engagement setup and kickoff (PM)
-> - WP2: Documentation review and environment profiling (Assessor)
-> - WP3: Gap analysis and findings classification (Assessor + Compliance)
+> - WP2: Documentation review and environment profiling (Consultant)
+> - WP3: Gap analysis and findings classification (Consultant + Compliance)
 > - WP4: Compliance mapping (Compliance)
 > - WP5: Report writing (Writer)
 > - WP6: QA review (Reviewer)
@@ -96,7 +96,7 @@ Break the engagement into discrete work packages. Each work package maps to one 
 | Role | Total Hours | Rate ($/hr) | Total Cost |
 |------|------------|------------|-----------|
 | Engagement Manager (PM) | {{pm_hours}} | {{pm_rate}} | {{pm_cost}} |
-| Lead Assessor | {{assessor_hours}} | {{assessor_rate}} | {{assessor_cost}} |
+| Lead Consultant | {{assessor_hours}} | {{assessor_rate}} | {{assessor_cost}} |
 | Compliance Analyst | {{compliance_hours}} | {{compliance_rate}} | {{compliance_cost}} |
 | Technical Writer | {{writer_hours}} | {{writer_rate}} | {{writer_cost}} |
 | QA Reviewer | {{reviewer_hours}} | {{reviewer_rate}} | {{reviewer_cost}} |
@@ -139,4 +139,4 @@ The following assumptions underlie this LOE. If any assumption is materially wro
 > 1. Client will provide all requested documentation within 5 business days of kickoff.
 > 2. No more than 8 stakeholder interviews will be required.
 > 3. Assessment is documentation-based and interview-based only; no active system scanning is included.
-> 4. Assessor has intermediate-to-senior familiarity with the applicable frameworks; no significant ramp-up time required.
+> 4. Consultant has intermediate-to-senior familiarity with the applicable frameworks; no significant ramp-up time required.

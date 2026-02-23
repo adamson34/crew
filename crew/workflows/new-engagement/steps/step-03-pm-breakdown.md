@@ -13,7 +13,7 @@ Translate the approved SOW into a structured work plan with explicit task assign
 
 This step has two outputs that must both be complete before handoff:
 1. A **Work Breakdown Structure (WBS)** — how the engagement is organized into phases and tasks
-2. A **Task Assignment document** — what each agent (assessor, compliance analyst, writer, reviewer) is specifically responsible for producing
+2. A **Task Assignment document** — what each agent (consultant, compliance analyst, writer, reviewer) is specifically responsible for producing
 
 ---
 
@@ -32,14 +32,14 @@ Read the SOW completely before doing anything else. Note:
 
 ## Output 1: Work Breakdown Structure
 
-Break the engagement into phases. Under each phase, list every task, its owner, estimated duration, dependencies, and expected output. Be specific — "conduct assessment" is not a task. "Review client network architecture diagram against IEC 62443 zone and conduit model — Owner: Assessor, Duration: 4 hours, Input: architecture diagram from client data request, Output: architecture notes in environment profile" is a task.
+Break the engagement into phases. Under each phase, list every task, its owner, estimated duration, dependencies, and expected output. Be specific — "conduct assessment" is not a task. "Review client network architecture diagram against IEC 62443 zone and conduit model — Owner: Consultant, Duration: 4 hours, Input: architecture diagram from client data request, Output: architecture notes in environment profile" is a task.
 
 Use this structure:
 
 ```
 ## Phase 1: Engagement Setup (Week 1)
 - Task: Confirm project plan with client PM | Owner: PM | Duration: 1 hour | Deps: SOW signed | Output: Confirmed schedule
-- Task: Send data request list | Owner: PM + Assessor | Duration: 2 hours | Deps: SOW signed | Output: data-request.md sent to client
+- Task: Send data request list | Owner: PM + Consultant | Duration: 2 hours | Deps: SOW signed | Output: data-request.md sent to client
 - Task: Schedule stakeholder interviews | Owner: PM | Duration: 1 hour | Deps: Client POC identified | Output: Interview calendar
 
 ## Phase 2: Technical Assessment (Weeks 2-N)
@@ -68,7 +68,7 @@ Load `crew/templates/task-assignment-template.md` and produce a complete assignm
 
 For each task assigned to an agent:
 - **Task ID:** Sequential identifier (T-001, T-002, etc.)
-- **Assigned to:** Agent name and role (e.g., Jake Tanaka — Lead Assessor)
+- **Assigned to:** Agent name and role (e.g., Jake Tanaka — Lead Consultant)
 - **Description:** What they need to do — specific, actionable
 - **Inputs required:** What files, documents, or information they need before they can start
 - **Expected output:** The specific artifact they produce (filename and location)
@@ -79,7 +79,7 @@ For each task assigned to an agent:
 Group tasks by agent:
 
 ```markdown
-## Jake Tanaka — Lead Assessor
+## Jake Tanaka — Lead Consultant
 
 | Task ID | Description | Inputs | Output | Due | Deps | Notes |
 |---------|-------------|--------|--------|-----|------|-------|

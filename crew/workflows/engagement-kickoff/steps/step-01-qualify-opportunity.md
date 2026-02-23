@@ -81,7 +81,7 @@ Produce a structured qualification summary in the following format:
 ### Scope Indicators
 - Estimated engagement type: [e.g., IEC 62443 Gap Assessment, NERC CIP Compliance Review]
 - Estimated duration: [e.g., 8-12 weeks]
-- Estimated team: [e.g., 1 Lead Assessor + 1 Compliance Analyst]
+- Estimated team: [e.g., 1 Lead Consultant + 1 Compliance Analyst]
 - On-site requirements: [Yes / No / TBD, and why]
 
 ### Win Factors

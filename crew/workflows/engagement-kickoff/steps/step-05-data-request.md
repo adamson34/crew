@@ -1,6 +1,6 @@
 # Step 05: Data Request List
 
-**Agent:** Dana Reeves (PM) with Jake Tanaka (Assessor)
+**Agent:** Dana Reeves (PM) with Jake Tanaka (Consultant)
 **Input:** Approved SOW, framework selection (if available), engagement vertical
 **Output:** Structured data request list for client submission
 

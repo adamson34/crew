@@ -1,5 +1,5 @@
 # CREW Severity Scale Reference
-# Used by: Jake Tanaka (Assessor), Sofia Mendez (Reviewer)
+# Used by: Jake Tanaka (Consultant), Sofia Mendez (Reviewer)
 # Purpose: Standardize finding severity ratings across all engagements
 
 severity_scale:
@@ -151,4 +151,4 @@ severity_adjustment_triggers:
     - "Client says it hasn't been exploited before"
     - "Client says they have 'security awareness'"
     - "Finding would be disruptive to fix"
-    - "Assessor is uncomfortable delivering bad news"
+    - "Consultant is uncomfortable delivering bad news"

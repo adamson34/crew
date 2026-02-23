@@ -2,7 +2,7 @@
 
 CREW is an open-source expansion module for the [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) framework that adapts BMAD's agentic development workflow for **consulting engagements**.
 
-Where BMAD provides agents for software teams (Developer, Scrum Master, Architect), CREW provides agents that mirror real consulting roles: Business Development, Project Manager, Lead Assessor, Compliance Analyst, Technical Writer, and QA Reviewer.
+Where BMAD provides agents for software teams (Developer, Scrum Master, Architect), CREW provides agents that mirror real consulting roles: Business Development, Project Manager, Lead Consultant, Compliance Analyst, Technical Writer, and QA Reviewer.
 
 **Current vertical:** OT/ICS cybersecurity consulting. Additional verticals (cloud security, IT audit, penetration testing, GRC) can be added as expansion packs.
 
@@ -24,7 +24,7 @@ node /path/to/CREW/crew/install.js
 The installer will prompt you for:
 - Firm name, your name, client name
 - Consulting vertical (OT/ICS, cloud security, IT audit, GRC, pentest)
-- Assessor skill level
+- Consultant skill level
 - Output paths for engagement artifacts, assessment artifacts, and deliverables
 
 It then writes a `.crew` config file, creates the artifact directories, copies the `crew/` module, and installs agents as Claude Code slash commands in `.claude/commands/`.
@@ -33,7 +33,7 @@ It then writes a `.crew` config file, creates the artifact directories, copies t
 # Activate agents in Claude Code
 /bd          # Marcus Webb — Business Development
 /pm          # Dana Reeves — Project Manager
-/assessor    # Jake Tanaka — Lead Assessor
+/consultant    # Jake Tanaka — Lead Consultant
 /compliance  # Priya Kapoor — Compliance Analyst
 /writer      # Eli Carter — Technical Writer
 /reviewer    # Sofia Mendez — QA Reviewer
@@ -55,7 +55,7 @@ node crew/install.js --uninstall
 |-------|------|------|-----------------|
 | `@bd` | Marcus Webb | Business Development | Opportunity qualification, SOW generation, proposals, scope changes |
 | `@pm` | Dana Reeves | Engagement Project Manager | Project setup, kickoff prep, status reporting, data requests, closeout |
-| `@assessor` | Jake Tanaka | Lead Consultant / Assessor | Environment profiling, gap analysis, findings classification, architecture review |
+| `@consultant` | Jake Tanaka | Lead Consultant / Consultant | Environment profiling, gap analysis, findings classification, architecture review |
 | `@compliance` | Priya Kapoor | Compliance & Standards Analyst | Framework selection, compliance mapping, control validation, crosswalks |
 | `@writer` | Eli Carter | Technical Report Writer | Executive summary, technical report, findings matrix, remediation plan |
 | `@reviewer` | Sofia Mendez | QA / Peer Reviewer | QA review of findings register and final deliverables, severity audit |
@@ -71,9 +71,9 @@ BD Qualification & SOW
         ↓
    Technical Assessment
    ┌─────────────────────────────────────┐
-   │  Environment Profiling (Assessor)   │
+   │  Environment Profiling (Consultant)   │
    │  Framework Selection (Compliance)   │
-   │  Gap Analysis (Assessor+Compliance) │
+   │  Gap Analysis (Consultant+Compliance) │
    │  Findings Classification ⚠️ GATE   │
    │  Compliance Mapping (Compliance)    │
    │  QA Review ⚠️ GATE                 │
@@ -91,7 +91,7 @@ BD Qualification & SOW
    Remediation Plan
    ┌─────────────────────────────────────┐
    │  Prioritization ⚠️ GATE            │
-   │  Roadmap (PM + Assessor)            │
+   │  Roadmap (PM + Consultant)            │
    │  Effort Estimation                  │
    │  Quick Wins                         │
    └─────────────────────────────────────┘
@@ -111,7 +111,7 @@ crew/
 ├── agents/                            # Role-based AI personas
 │   ├── bd.agent.yaml                  # Marcus Webb — Business Development
 │   ├── pm.agent.yaml                  # Dana Reeves — Project Manager
-│   ├── assessor.agent.yaml            # Jake Tanaka — Lead Assessor
+│   ├── consultant.agent.yaml            # Jake Tanaka — Lead Consultant
 │   ├── compliance.agent.yaml          # Priya Kapoor — Compliance Analyst
 │   ├── writer.agent.yaml              # Eli Carter — Technical Writer
 │   └── reviewer.agent.yaml            # Sofia Mendez — QA Reviewer

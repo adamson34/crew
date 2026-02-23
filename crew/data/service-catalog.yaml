@@ -27,7 +27,7 @@ services:
       posture, and produces a prioritized remediation roadmap.
     delivery_types: [on-site, remote, hybrid]
     typical_duration: "6–12 weeks"
-    team: ["Lead Assessor", "Compliance Analyst"]
+    team: ["Lead Consultant", "Compliance Analyst"]
     outputs: ["Gap Analysis Report", "Findings Matrix", "Remediation Roadmap"]
     keywords:
       - gap assessment
@@ -50,7 +50,7 @@ services:
       utilities preparing for audits or triennial assessments.
     delivery_types: [on-site, remote, hybrid]
     typical_duration: "8–16 weeks"
-    team: ["Lead Assessor", "Compliance Analyst"]
+    team: ["Lead Consultant", "Compliance Analyst"]
     outputs: ["NERC CIP Compliance Report", "Evidence Gap Log", "Remediation Plan"]
     keywords:
       - NERC CIP
@@ -76,7 +76,7 @@ services:
       configuration-only reviews.
     delivery_types: [on-site, remote, hybrid]
     typical_duration: "3–6 weeks"
-    team: ["Lead Assessor"]
+    team: ["Lead Consultant"]
     outputs: ["Architecture Review Report", "Network Diagram Markup", "Design Recommendations"]
     keywords:
       - architecture review
@@ -101,7 +101,7 @@ services:
       exploitation based on client risk tolerance.
     delivery_types: [on-site]
     typical_duration: "2–4 weeks"
-    team: ["Lead Assessor", "OT Penetration Tester"]
+    team: ["Lead Consultant", "OT Penetration Tester"]
     outputs: ["Penetration Test Report", "Exploitation Evidence Package", "Remediation Recommendations"]
     keywords:
       - penetration test
@@ -123,7 +123,7 @@ services:
       and NIST SP 800-82 IR practices.
     delivery_types: [on-site, remote]
     typical_duration: "4–8 weeks"
-    team: ["Lead Assessor", "Compliance Analyst"]
+    team: ["Lead Consultant", "Compliance Analyst"]
     outputs: ["IR Playbook", "Tabletop Exercise Report", "IR Program Gap Summary"]
     keywords:
       - incident response
@@ -146,7 +146,7 @@ services:
       Produces a risk-tiered vendor register and recommended vendor management controls.
     delivery_types: [remote, hybrid]
     typical_duration: "4–8 weeks"
-    team: ["Compliance Analyst", "Lead Assessor"]
+    team: ["Compliance Analyst", "Lead Consultant"]
     outputs: ["Vendor Risk Register", "Supply Chain Risk Report", "Control Recommendations"]
     keywords:
       - vendor risk
@@ -169,7 +169,7 @@ services:
       as a managed advisory retainer.
     delivery_types: [remote, hybrid, retainer]
     typical_duration: "12–24 weeks"
-    team: ["Lead Assessor", "Compliance Analyst", "Project Manager"]
+    team: ["Lead Consultant", "Compliance Analyst", "Project Manager"]
     outputs: ["OT Security Program Roadmap", "Policy Suite", "Governance Framework"]
     keywords:
       - program development
@@ -196,7 +196,7 @@ services:
       on client industry (NERC CIP, CFATS, TSA Pipeline, NRC 5.71, etc.).
     delivery_types: [on-site, remote, hybrid]
     typical_duration: "4–10 weeks"
-    team: ["Compliance Analyst", "Lead Assessor"]
+    team: ["Compliance Analyst", "Lead Consultant"]
     outputs: ["Readiness Report", "Evidence Gap Register", "Prioritized Action Plan"]
     keywords:
       - regulatory readiness
@@ -218,7 +218,7 @@ services:
       broader assessment program. Outputs a risk register with treatment recommendations.
     delivery_types: [on-site, remote, hybrid]
     typical_duration: "3–6 weeks"
-    team: ["Lead Assessor", "Compliance Analyst"]
+    team: ["Lead Consultant", "Compliance Analyst"]
     outputs: ["Risk Register", "Risk Heat Map", "Treatment Recommendations"]
     keywords:
       - risk assessment

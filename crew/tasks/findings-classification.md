@@ -1,6 +1,6 @@
 # Task: Findings Classification
 
-**Used by:** Jake Tanaka (Assessor)
+**Used by:** Jake Tanaka (Consultant)
 **Trigger:** When user says "classify this finding", "help me rate this finding", "is this a high or critical?", or provides a gap description and asks for a structured finding
 
 ---

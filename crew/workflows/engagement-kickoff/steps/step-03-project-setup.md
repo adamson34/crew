@@ -35,7 +35,7 @@ Use this format:
 ## Phase 1: Engagement Kickoff (Week 1)
 - Task: Send data request list to client | Owner: PM | Duration: Day 1 | Deps: SOW signed
 - Task: Schedule kickoff meeting | Owner: PM | Duration: Day 1 | Deps: SOW signed
-- Task: Conduct kickoff meeting | Owner: PM + Lead Assessor | Duration: Day 2-3 | Deps: Kickoff deck ready
+- Task: Conduct kickoff meeting | Owner: PM + Lead Consultant | Duration: Day 2-3 | Deps: Kickoff deck ready
 
 ## Phase 2: Discovery & Assessment (Weeks 2-4)
 ...
@@ -51,7 +51,7 @@ Use this format:
 
 Produce a RACI table for the key engagement activities and decisions:
 
-| Activity | BD (Marcus) | PM (Dana) | Assessor (Jake) | Compliance (Priya) | Writer (Eli) | Reviewer (Sofia) | Client |
+| Activity | BD (Marcus) | PM (Dana) | Consultant (Jake) | Compliance (Priya) | Writer (Eli) | Reviewer (Sofia) | Client |
 |----------|------------|-----------|-----------------|-------------------|--------------|-----------------|--------|
 | SOW sign-off | A | R | I | I | - | - | C |
 | Kickoff meeting | I | R | R | R | I | - | C |
@@ -76,10 +76,10 @@ Define:
 **Regular touchpoints:**
 | Meeting | Frequency | Attendees | Format | Purpose |
 |---------|-----------|-----------|--------|---------|
-| Internal sync | Weekly | PM + Assessor(s) | 30 min call | Status, blockers, upcoming tasks |
+| Internal sync | Weekly | PM + Consultant(s) | 30 min call | Status, blockers, upcoming tasks |
 | Client status call | [Weekly/Biweekly] | PM + Client PM | 30 min call | Progress update, open items, decisions needed |
-| Findings review | Once | Lead Assessor + Client OT/Security team | 2 hr working session | Walk through draft findings |
-| Executive briefing | Once | PM + Assessor + Client exec | 1 hr | Present final report |
+| Findings review | Once | Lead Consultant + Client OT/Security team | 2 hr working session | Walk through draft findings |
+| Executive briefing | Once | PM + Consultant + Client exec | 1 hr | Present final report |
 
 **Escalation path:**
 - Client issues → PM → Engagement lead → Practice lead

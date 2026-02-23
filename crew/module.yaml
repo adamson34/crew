@@ -41,7 +41,7 @@ vertical:
     label: "Penetration Testing - Adversarial security testing"
 
 assessor_skill_level:
-  prompt: "What is the primary assessor's experience level with this domain?"
+  prompt: "What is the primary consultant's experience level with this domain?"
   default: "intermediate"
   result: "{value}"
   single-select:

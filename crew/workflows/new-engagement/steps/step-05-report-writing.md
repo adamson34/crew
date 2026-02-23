@@ -11,7 +11,7 @@
 
 ## Objective
 
-Produce a client-ready deliverable package from the consultant's approved artifacts. The writer's job is to translate technical accuracy into audience-appropriate communication — not to re-assess, reinterpret findings, or soften language. What the findings register says is what the report says. If something needs to change, it goes back to the assessor.
+Produce a client-ready deliverable package from the consultant's approved artifacts. The writer's job is to translate technical accuracy into audience-appropriate communication — not to re-assess, reinterpret findings, or soften language. What the findings register says is what the report says. If something needs to change, it goes back to the consultant.
 
 Three documents are produced in sequence:
 1. **Executive Summary** — for non-technical leadership (5-minute read)

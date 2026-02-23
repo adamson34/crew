@@ -1,6 +1,6 @@
 # Step 02c: Level of Effort Generation (Path B)
 
-**Agents:** Dana Reeves (PM) + Jake Tanaka (Assessor)
+**Agents:** Dana Reeves (PM) + Jake Tanaka (Consultant)
 **Path:** B — Vague or unscoped project
 **Input:** Approved SOW from `engagement/{{engagement_name}}-sow.md`
 **Output:** `engagement/{{engagement_name}}-loe.md`
@@ -37,7 +37,7 @@ Do not estimate while reading. Build the list first, then estimate.
 
 > "That's my read of the scope. Before I can build the LOE, I need Jake's technical estimates.
 >
-> Run `/assessor` and give him this work package list. Ask him to call hours for each package — basis statement, role breakdown, and any high-uncertainty flags. Come back to me with his estimates and I'll add PM overhead and finalize the LOE."
+> Run `/consultant` and give him this work package list. Ask him to call hours for each package — basis statement, role breakdown, and any high-uncertainty flags. Come back to me with his estimates and I'll add PM overhead and finalize the LOE."
 
 Do not proceed to Step 2 until the user returns with Jake's estimates.
 
@@ -56,12 +56,12 @@ State the specific basis — not "based on engagement complexity" but something 
 If you cannot state a concrete basis, the estimate is a guess. Flag it as high-uncertainty.
 
 **Who does the work, and how many hours?**
-Assign hours by role — do not lump them. A work package that involves both an assessor and a compliance analyst should show separate hours for each. Use these role labels consistently:
+Assign hours by role — do not lump them. A work package that involves both an consultant and a compliance analyst should show separate hours for each. Use these role labels consistently:
 
 | Role | Notes |
 |------|-------|
 | Engagement Manager (PM) | All project management, scheduling, client comms, status reports |
-| Lead Assessor | Technical assessment, environment profiling, architecture review, gap analysis |
+| Lead Consultant | Technical assessment, environment profiling, architecture review, gap analysis |
 | Compliance Analyst | Framework mapping, control validation, regulatory interpretation |
 | Technical Writer | Report drafting, executive summary, findings matrix |
 | QA Reviewer | Peer review of findings and deliverables |

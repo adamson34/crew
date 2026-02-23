@@ -70,7 +70,7 @@ module: crew
 | Role | Name / Resource | Responsibilities | Estimated Hours |
 |------|----------------|-----------------|----------------|
 | Engagement Manager | {{pm_name}} | Client communications, schedule, deliverable coordination | {{pm_hours}} |
-| Lead Assessor | {{assessor_name}} | Technical discovery, gap analysis, findings classification | {{assessor_hours}} |
+| Lead Consultant | {{assessor_name}} | Technical discovery, gap analysis, findings classification | {{assessor_hours}} |
 | Compliance Analyst | {{compliance_name}} | Framework mapping, compliance matrix | {{compliance_hours}} |
 | Technical Writer | {{writer_name}} | Report drafting, deliverable production | {{writer_hours}} |
 | QA Reviewer | {{reviewer_name}} | Pre-delivery QA gate | {{reviewer_hours}} |

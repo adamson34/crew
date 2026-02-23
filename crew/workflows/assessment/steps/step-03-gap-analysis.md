@@ -1,6 +1,6 @@
 # Step 03: Gap Analysis
 
-**Agent:** Jake Tanaka (Assessor) with Priya Kapoor (Compliance)
+**Agent:** Jake Tanaka (Consultant) with Priya Kapoor (Compliance)
 **Input:** Environment profile, framework selection document, data request responses, interview notes
 **Output:** Gap analysis document (precursor to findings classification)
 

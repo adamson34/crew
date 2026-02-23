@@ -18,7 +18,7 @@ const path = require('path');
 
 // ─── Agents to install ────────────────────────────────────────────────────────
 
-const AGENTS = ['bd', 'pm', 'assessor', 'compliance', 'writer', 'reviewer'];
+const AGENTS = ['bd', 'pm', 'consultant', 'compliance', 'writer', 'reviewer'];
 
 // ─── Config schema ────────────────────────────────────────────────────────────
 
@@ -59,7 +59,7 @@ const CONFIG_FIELDS = [
   },
   {
     key: 'assessor_skill_level',
-    label: 'Primary assessor skill level',
+    label: 'Primary consultant skill level',
     default: 'intermediate',
     options: [
       { value: 'junior',       label: 'Junior — needs step-by-step guidance' },
@@ -226,7 +226,7 @@ async function main() {
   console.log('\nCREW Install');
   console.log('─'.repeat(50));
   console.log('Installs CREW agents as slash commands in .claude/commands/');
-  console.log('Agents: /bd /pm /assessor /compliance /writer /reviewer\n');
+  console.log('Agents: /bd /pm /consultant /compliance /writer /reviewer\n');
   console.log('Press Enter to accept defaults shown in parentheses.\n');
 
   const config = await collectConfig(CONFIG_FIELDS);

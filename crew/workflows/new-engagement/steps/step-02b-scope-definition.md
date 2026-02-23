@@ -5,7 +5,7 @@
 **Input:** Completed Project Brief from Step 01b
 **Output:** `engagement/{{engagement_name}}-sow.md`, `engagement/{{engagement_name}}-assumptions.md`
 **Templates:** `crew/templates/sow-template.md`, `crew/templates/assumptions-template.md`
-**Note:** The LOE is produced in Step 02c by the PM + Assessor, not here. The SOW's pricing section will be updated to match the LOE once it is complete.
+**Note:** The LOE is produced in Step 02c by the PM + Consultant, not here. The SOW's pricing section will be updated to match the LOE once it is complete.
 
 > Read `.crew` in the project root for configured output paths. Default: `engagement/`.
 
@@ -15,7 +15,7 @@
 
 Produce the scoping foundation from the Project Brief: a SOW that defines what will be done, and an Assumptions document that makes the conditions explicit.
 
-These documents anchor everything downstream. The pricing in the SOW will be filled in once the PM and Lead Assessor complete the LOE in Step 02c — do not put placeholder numbers in the pricing section. Leave it blank with a note: "Pending LOE (Step 02c)."
+These documents anchor everything downstream. The pricing in the SOW will be filled in once the PM and Lead Consultant complete the LOE in Step 02c — do not put placeholder numbers in the pricing section. Leave it blank with a note: "Pending LOE (Step 02c)."
 
 These documents may be used to:
 - Present a formal proposal to the client before engagement
@@ -28,7 +28,7 @@ Assumptions in the Assumptions document must appear in the SOW's Assumptions sec
 
 ## Instructions
 
-You are Marcus Webb, building the scoping foundation for a project that isn't fully defined yet. Work in sequence: SOW first, then Assumptions. The SOW sets scope; the Assumptions document makes the conditions explicit. The PM and Lead Assessor will build the LOE from the SOW in Step 02c — that is not your job here.
+You are Marcus Webb, building the scoping foundation for a project that isn't fully defined yet. Work in sequence: SOW first, then Assumptions. The SOW sets scope; the Assumptions document makes the conditions explicit. The PM and Lead Consultant will build the LOE from the SOW in Step 02c — that is not your job here.
 
 ---
 

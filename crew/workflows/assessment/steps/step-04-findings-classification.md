@@ -1,6 +1,6 @@
 # Step 04: Findings Classification
 
-**Agent:** Jake Tanaka (Assessor)
+**Agent:** Jake Tanaka (Consultant)
 **Input:** Gap analysis document
 **Output:** Validated findings register (HUMAN REVIEW GATE before proceeding)
 

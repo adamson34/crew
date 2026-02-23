@@ -1,6 +1,6 @@
 # Task: Asset Discovery
 
-**Used by:** Jake Tanaka (Assessor)
+**Used by:** Jake Tanaka (Consultant)
 **Trigger:** When user says "help me document assets", "build asset inventory", "what assets are in scope", or provides asset data for organization
 
 ---

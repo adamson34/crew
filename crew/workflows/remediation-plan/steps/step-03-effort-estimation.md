@@ -1,6 +1,6 @@
 # Step 03: Effort Estimation
 
-**Agent:** Jake Tanaka (Assessor) with Dana Reeves (PM)
+**Agent:** Jake Tanaka (Consultant) with Dana Reeves (PM)
 **Input:** Approved remediation roadmap
 **Output:** Effort and resource estimates for each roadmap phase
 

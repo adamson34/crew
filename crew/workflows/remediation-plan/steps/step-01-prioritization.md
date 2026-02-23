@@ -1,6 +1,6 @@
 # Step 01: Findings Prioritization
 
-**Agent:** Jake Tanaka (Assessor) with Priya Kapoor (Compliance)
+**Agent:** Jake Tanaka (Consultant) with Priya Kapoor (Compliance)
 **Input:** Approved findings register, compliance matrix
 **Output:** Prioritization rationale document (HUMAN REVIEW GATE — confirm client context before roadmap)
 

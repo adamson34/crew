@@ -1,6 +1,6 @@
 # Step 02: Remediation Roadmap
 
-**Agent:** Dana Reeves (PM) with Jake Tanaka (Assessor)
+**Agent:** Dana Reeves (PM) with Jake Tanaka (Consultant)
 **Input:** Approved prioritization rationale
 **Output:** Phased remediation roadmap
 

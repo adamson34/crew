@@ -1,6 +1,6 @@
 # Step 01: Environment Profiling
 
-**Agent:** Jake Tanaka (Assessor)
+**Agent:** Jake Tanaka (Consultant)
 **Input:** Data request responses, kickoff meeting notes, SOW
 **Output:** Environment profile document
 
@@ -127,8 +127,8 @@ engagement: {{engagement_name}}
 client: {{client_name}}
 date: {{date}}
 status: draft | final
-assessor: Jake Tanaka
+consultant: Jake Tanaka
 ---
 ```
 
-Review the profile with the Lead Assessor and PM before proceeding to framework selection.
+Review the profile with the Lead Consultant and PM before proceeding to framework selection.

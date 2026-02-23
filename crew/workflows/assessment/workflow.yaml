@@ -48,7 +48,7 @@ review_gates:
     gate_type: human-approval
     description: "Findings register must be reviewed and approved by engagement lead before compliance mapping"
     required_approvers:
-      - lead-assessor
+      - lead-consultant
       - engagement-pm
   - step: qa-review
     gate_type: human-approval

@@ -54,7 +54,7 @@ If an assumption is wrong, that is a trigger for a scope change conversation wit
 
 **Basis:** Where did this assumption come from? Proposal language, client statement during discovery, standard practice, or inferred from engagement type?
 
-**Owner:** Who is responsible for validating this assumption? (Client contact, PM, BD, Assessor)
+**Owner:** Who is responsible for validating this assumption? (Client contact, PM, BD, Consultant)
 
 **Risk If Wrong:** What happens to scope, timeline, or pricing if this assumption doesn't hold?
 - Low: Minor inconvenience, absorbable within engagement

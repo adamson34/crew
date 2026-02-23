@@ -45,13 +45,13 @@ If a task is ambiguous or you discover during execution that the scope is differ
 
 ---
 
-### Jake Tanaka — Lead Assessor
+### Jake Tanaka — Lead Consultant
 
 | Task ID | Description | Inputs Required | Expected Output | Due | Dependencies | Notes |
 |---------|-------------|-----------------|----------------|-----|--------------|-------|
 | T-{{id}} | {{description}} | {{inputs}} | `{{output_file}}` | {{due}} | {{deps}} | {{notes}} |
 
-> Standard assessor tasks:
+> Standard consultant tasks:
 > - Environment profiling from client documentation → `environment-profile.md`
 > - Gap analysis against applicable frameworks → `gap-analysis.md`
 > - Findings classification and register production → `findings-register.md`
@@ -103,10 +103,10 @@ If a task is ambiguous or you discover during execution that the scope is differ
 |---------|-------------|-------------|-----|--------|
 | T-001 | PM | Send data request list to client | Week 1 | Open |
 | T-002 | PM | Schedule and conduct kickoff meeting | Week 1 | Open |
-| T-003 | Assessor | Environment profiling | Week 2 | Open |
+| T-003 | Consultant | Environment profiling | Week 2 | Open |
 | T-004 | Compliance | Framework selection | Week 2 | Open |
-| T-005 | Assessor | Gap analysis | Week 3 | Open |
-| T-006 | Assessor | Findings classification | Week 3 | Open |
+| T-005 | Consultant | Gap analysis | Week 3 | Open |
+| T-006 | Consultant | Findings classification | Week 3 | Open |
 | T-007 | Compliance | Compliance mapping | Week 4 | Open |
 | T-008 | Reviewer | Assessment QA review | Week 4 | Open |
 | T-009 | Writer | Executive summary | Week 5 | Open |

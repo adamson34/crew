@@ -1,6 +1,6 @@
 # Step 04: Quick Wins Identification
 
-**Agent:** Jake Tanaka (Assessor)
+**Agent:** Jake Tanaka (Consultant)
 **Input:** Remediation roadmap, effort estimates
 **Output:** Quick wins summary — highest-value, lowest-effort actions the client can take immediately
 

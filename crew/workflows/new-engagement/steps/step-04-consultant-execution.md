@@ -1,6 +1,6 @@
 # Step 04: Consultant Execution
 
-**Agent:** Jake Tanaka (Lead Assessor), with Priya Kapoor (Compliance) as needed
+**Agent:** Jake Tanaka (Lead Consultant), with Priya Kapoor (Compliance) as needed
 **Path:** Both A and B
 **Input:** Approved task assignment from PM (Step 03) + SOW + client data / evidence
 **Output:** `assessment/{{engagement_name}}-environment-profile.md`, `assessment/{{engagement_name}}-gap-analysis.md`, `assessment/{{engagement_name}}-findings-register.md`
