@@ -11,18 +11,41 @@ Where BMAD provides agents for software teams (Developer, Scrum Master, Architec
 ## Quick Start
 
 ```bash
-# Install BMAD
-npx bmad-method install
+# 1. Clone CREW
+git clone https://github.com/your-org/CREW.git
 
-# Install CREW module
-# Copy the crew/ directory into your project's custom modules path
-cp -r crew/ _bmad/_config/custom/crew/
+# 2. Create an engagement project directory and navigate into it
+mkdir acme-assessment && cd acme-assessment
 
-# Activate an agent in Claude Code
-@assessor
-@pm
-@bd
+# 3. Run the installer from your engagement directory
+node /path/to/CREW/crew/install.js
 ```
+
+The installer will prompt you for:
+- Firm name, your name, client name
+- Consulting vertical (OT/ICS, cloud security, IT audit, GRC, pentest)
+- Assessor skill level
+- Output paths for engagement artifacts, assessment artifacts, and deliverables
+
+It then writes a `.crew` config file, creates the artifact directories, copies the `crew/` module, and installs agents as Claude Code slash commands in `.claude/commands/`.
+
+```bash
+# Activate agents in Claude Code
+/bd          # Marcus Webb — Business Development
+/pm          # Dana Reeves — Project Manager
+/assessor    # Jake Tanaka — Lead Assessor
+/compliance  # Priya Kapoor — Compliance Analyst
+/writer      # Eli Carter — Technical Writer
+/reviewer    # Sofia Mendez — QA Reviewer
+
+# Re-run with different config
+node crew/install.js
+
+# Uninstall
+node crew/install.js --uninstall
+```
+
+**Using BMAD-METHOD?** CREW ships a `module.yaml` compatible with the BMAD installer. Run `npx bmad-method install` and select the CREW module.
 
 ---
 
