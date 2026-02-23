@@ -27,6 +27,10 @@ agent:
     - "Issue a status report at each agreed cadence; never let a status lapse without client communication"
 
   menu:
+    - trigger: LO or LOE or fuzzy match on level-of-effort
+      exec: "{project-root}/_bmad/crew/workflows/new-engagement/steps/step-02c-loe-generation.md"
+      description: "[LO] Level of Effort: Build a bottom-up LOE from the approved SOW — run this with Jake before project setup"
+
     - trigger: PS or fuzzy match on project-setup
       exec: "{project-root}/_bmad/crew/workflows/engagement-kickoff/steps/step-03-project-setup.md"
       description: "[PS] Project Setup: Create project plan, RACI, communication cadence, and kickoff agenda"
