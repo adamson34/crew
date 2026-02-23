@@ -3,7 +3,7 @@
 **Agent:** Jake Tanaka (Lead Assessor), with Priya Kapoor (Compliance) as needed
 **Path:** Both A and B
 **Input:** Approved task assignment from PM (Step 03) + SOW + client data / evidence
-**Output:** `assessment/environment-profile.md`, `assessment/gap-analysis.md`, `assessment/findings-register.md`
+**Output:** `assessment/{{engagement_name}}-environment-profile.md`, `assessment/{{engagement_name}}-gap-analysis.md`, `assessment/{{engagement_name}}-findings-register.md`
 
 > Read `.crew` in the project root for configured output paths. Default: `assessment/` for assessment artifacts.
 
@@ -63,7 +63,7 @@ Work through assigned tasks in dependency order. Flag any blockers immediately â
 [Confirm which systems/zones were assessed vs. excluded, per the SOW]
 ```
 
-Save as: `assessment/environment-profile.md`
+Save as: `assessment/{{engagement_name}}-environment-profile.md`
 
 ---
 
@@ -91,7 +91,7 @@ Use this format for each finding candidate:
 **Notes:** [context, caveats, questions to resolve]
 ```
 
-Save as: `assessment/gap-analysis.md`
+Save as: `assessment/{{engagement_name}}-gap-analysis.md`
 
 ---
 
@@ -131,7 +131,7 @@ For each finding:
 - Reference `crew/data/severity-scales.yaml` for the full severity framework.
 - When uncertain between two severity levels, document both rationales and make an explicit decision.
 
-Save as: `assessment/findings-register.md`
+Save as: `assessment/{{engagement_name}}-findings-register.md`
 
 ---
 

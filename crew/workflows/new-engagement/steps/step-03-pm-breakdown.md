@@ -3,7 +3,7 @@
 **Agent:** Dana Reeves (PM)
 **Path:** Both A and B converge here
 **Input:** Approved SOW (required) + Approved LOE from Step 02c (required for Path B) + Assumptions document (required for Path B)
-**Output:** Work Breakdown Structure + Task Assignment document — `task-assignment-{{engagement_name}}.md`
+**Output:** Work Breakdown Structure + Task Assignment document — `{{engagement_name}}-task-assignment.md`
 
 ---
 
@@ -83,9 +83,9 @@ Group tasks by agent:
 
 | Task ID | Description | Inputs | Output | Due | Deps | Notes |
 |---------|-------------|--------|--------|-----|------|-------|
-| T-003 | Profile the OT/ICS environment from client documentation | ... | environment-profile.md | Week 2 | T-002 complete | ... |
-| T-005 | Conduct gap analysis against selected frameworks | ... | gap-analysis.md | Week 3 | T-004 complete | ... |
-| T-006 | Classify and structure findings register | ... | findings-register.md | Week 3 | T-005 complete | ... |
+| T-003 | Profile the OT/ICS environment from client documentation | ... | {{engagement_name}}-environment-profile.md | Week 2 | T-002 complete | ... |
+| T-005 | Conduct gap analysis against selected frameworks | ... | {{engagement_name}}-gap-analysis.md | Week 3 | T-004 complete | ... |
+| T-006 | Classify and structure findings register | ... | {{engagement_name}}-findings-register.md | Week 3 | T-005 complete | ... |
 
 ## Priya Kapoor — Compliance Analyst
 ...
@@ -111,5 +111,5 @@ Present the WBS and Task Assignment document together. Ask the user:
 > **Do not hand off to the consultant until both documents are approved.**
 
 When approved:
-- Save the task assignment as `engagement/task-assignment-{{engagement_name}}.md`
+- Save the task assignment as `engagement/{{engagement_name}}-task-assignment.md`
 - Tell the user: "Work plan approved. Handing task assignments to Jake Tanaka for execution."

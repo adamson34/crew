@@ -49,13 +49,13 @@ severity_scales: "{project-root}/_bmad/crew/data/severity-scales.yaml"
 standards_crosswalks: "{project-root}/_bmad/crew/data/standards-crosswalks.yaml"
 
 # Output files
-sow_output: "{engagement_artifacts}/sow-{{engagement_name}}.md"
-loe_output: "{engagement_artifacts}/loe-{{engagement_name}}.md"
-assumptions_output: "{engagement_artifacts}/assumptions-{{engagement_name}}.md"
-task_assignment_output: "{engagement_artifacts}/task-assignment-{{engagement_name}}.md"
-findings_register_output: "{assessment_artifacts}/findings-register.md"
-environment_profile_output: "{assessment_artifacts}/environment-profile.md"
-gap_analysis_output: "{assessment_artifacts}/gap-analysis.md"
+sow_output: "{engagement_artifacts}/{{engagement_name}}-sow.md"
+loe_output: "{engagement_artifacts}/{{engagement_name}}-loe.md"
+assumptions_output: "{engagement_artifacts}/{{engagement_name}}-assumptions.md"
+task_assignment_output: "{engagement_artifacts}/{{engagement_name}}-task-assignment.md"
+findings_register_output: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
+environment_profile_output: "{assessment_artifacts}/{{engagement_name}}-environment-profile.md"
+gap_analysis_output: "{assessment_artifacts}/{{engagement_name}}-gap-analysis.md"
 technical_report_output: "{deliverables}/{{engagement_name}}-technical-report.md"
 findings_matrix_output: "{deliverables}/{{engagement_name}}-findings-matrix.md"
 final_report_output: "{deliverables}/{{engagement_name}}-assessment-report.md"
@@ -105,18 +105,18 @@ input_file_patterns:
 
   sow:
     description: "Approved Statement of Work (available after step-02a or step-02b)"
-    whole: "{engagement_artifacts}/sow-{{engagement_name}}.md"
+    whole: "{engagement_artifacts}/{{engagement_name}}-sow.md"
     load_strategy: "FULL_LOAD"
     path: both
 
   task_assignment:
     description: "PM task assignment (available after step-03)"
-    whole: "{engagement_artifacts}/task-assignment-{{engagement_name}}.md"
+    whole: "{engagement_artifacts}/{{engagement_name}}-task-assignment.md"
     load_strategy: "FULL_LOAD"
     path: both
 
   findings_register:
     description: "Consultant findings register (available after step-04)"
-    whole: "{assessment_artifacts}/findings-register.md"
+    whole: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
     load_strategy: "FULL_LOAD"
     path: both

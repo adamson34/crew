@@ -36,10 +36,10 @@ severity_scales: "{project-root}/_bmad/crew/data/severity-scales.yaml"
 standards_crosswalks: "{project-root}/_bmad/crew/data/standards-crosswalks.yaml"
 
 # Output files
-environment_profile_output: "{assessment_artifacts}/environment-profile.md"
+environment_profile_output: "{assessment_artifacts}/{{engagement_name}}-environment-profile.md"
 framework_selection_output: "{assessment_artifacts}/framework-selection.md"
-gap_analysis_output: "{assessment_artifacts}/gap-analysis.md"
-findings_register_output: "{assessment_artifacts}/findings-register.md"
+gap_analysis_output: "{assessment_artifacts}/{{engagement_name}}-gap-analysis.md"
+findings_register_output: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
 compliance_matrix_output: "{assessment_artifacts}/compliance-matrix.md"
 
 # Human review gates

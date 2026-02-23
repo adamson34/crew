@@ -72,7 +72,7 @@ Save draft as: `deliverables/{{engagement_name}}-executive-summary.md`
 Describe how the assessment was conducted: what documentation was reviewed, what interviews were conducted, what technical activities occurred. Reference the applicable frameworks. Note any scope limitations or constraints.
 
 ### Environment Overview
-Summarize the environment profile in report-ready language. This section gives a reader who wasn't at the kickoff enough context to understand the findings. Draw from `environment-profile.md` — do not add new technical characterizations.
+Summarize the environment profile in report-ready language. This section gives a reader who wasn't at the kickoff enough context to understand the findings. Draw from `assessment/{{engagement_name}}-environment-profile.md` — do not add new technical characterizations.
 
 ### Findings
 Present each finding from the findings register in full. Group by severity (Critical → Informational), then by category within each severity tier.

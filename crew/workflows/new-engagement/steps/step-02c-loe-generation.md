@@ -2,8 +2,8 @@
 
 **Agents:** Dana Reeves (PM) + Jake Tanaka (Assessor)
 **Path:** B — Vague or unscoped project
-**Input:** Approved SOW from `engagement/sow-{{engagement_name}}.md`
-**Output:** `engagement/loe-{{engagement_name}}.md`
+**Input:** Approved SOW from `engagement/{{engagement_name}}-sow.md`
+**Output:** `engagement/{{engagement_name}}-loe.md`
 **Template:** `crew/templates/loe-template.md`
 
 > Read `.crew` in the project root for configured output paths. Default: `engagement/` for SOW/LOE/assumptions, `assessment/` for findings/profiles, `deliverables/` for reports.
@@ -109,7 +109,7 @@ Specific requirements:
 - Section 5 (Out-of-Scope) must be consistent with SOW Section 9 (Exclusions)
 - Section 6 (Assumptions) must match the Assumptions document from Step 02b
 
-Save as: `engagement/loe-{{engagement_name}}.md`
+Save as: `engagement/{{engagement_name}}-loe.md`
 
 ---
 

@@ -118,7 +118,7 @@ List information that was requested but not received, or areas where available d
 
 ## Output Requirements
 
-Save the completed environment profile as: `assessment-artifacts/environment-profile.md`
+Save the completed environment profile as: `assessment/{{engagement_name}}-environment-profile.md`
 
 Include at the top:
 ```

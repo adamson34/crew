@@ -99,16 +99,16 @@ Document the recommended folder structure for this engagement:
 ```
 {{engagement_name}}/
 ├── engagement/
-│   ├── sow-{{engagement_name}}.md
+│   ├── {{engagement_name}}-sow.md
 │   ├── project-plan.md
 │   ├── kickoff-deck.md
 │   └── data-request.md
 ├── assessment/
 │   ├── client-data/         # Client-provided documentation
-│   ├── environment-profile.md
+│   ├── {{engagement_name}}-environment-profile.md
 │   ├── framework-selection.md
-│   ├── gap-analysis.md
-│   ├── findings-register.md
+│   ├── {{engagement_name}}-gap-analysis.md
+│   ├── {{engagement_name}}-findings-register.md
 │   └── compliance-matrix.md
 ├── deliverables/
 │   ├── {{engagement_name}}-executive-summary.md

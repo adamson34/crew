@@ -38,7 +38,7 @@ review_gates:
 input_file_patterns:
   findings_register:
     description: "Validated findings register (source of all remediation items)"
-    whole: "{assessment_artifacts}/findings-register.md"
+    whole: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
     load_strategy: "FULL_LOAD"
   compliance_matrix:
     description: "Compliance mapping to inform regulatory prioritization"
@@ -46,5 +46,5 @@ input_file_patterns:
     load_strategy: "FULL_LOAD"
   environment_profile:
     description: "Environment profile for feasibility context"
-    whole: "{assessment_artifacts}/environment-profile.md"
+    whole: "{assessment_artifacts}/{{engagement_name}}-environment-profile.md"
     load_strategy: "SELECTIVE_LOAD"

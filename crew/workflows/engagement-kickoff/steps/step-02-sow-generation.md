@@ -115,7 +115,7 @@ Do not mark the SOW as final or proceed to project setup until the user approves
 
 Once approved, **write the SOW to a file before telling the user anything else.** Read `.crew` in the project root to find the output path (`paths.engagement`, default: `engagement/`).
 
-**Save as:** `engagement/sow-{{engagement_name}}.md`
+**Save as:** `engagement/{{engagement_name}}-sow.md`
 (Replace `engagement/` with the value of `paths.engagement` from `.crew` if it differs.)
 
 Confirm the file has been written, then tell the user:

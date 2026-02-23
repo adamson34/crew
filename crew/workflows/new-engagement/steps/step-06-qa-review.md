@@ -24,8 +24,8 @@ If you find issues, document them precisely. The writer and assessor will fix th
 Load all of the following before beginning:
 - Assembled final report (`{{engagement_name}}-assessment-report.md`)
 - Findings matrix (`{{engagement_name}}-findings-matrix.md`)
-- Findings register (`findings-register.md` — the approved source of truth)
-- SOW (`sow-{{engagement_name}}.md` — scope validation)
+- Findings register (`assessment/{{engagement_name}}-findings-register.md` — the approved source of truth)
+- SOW (`engagement/{{engagement_name}}-sow.md` — scope validation)
 
 ---
 

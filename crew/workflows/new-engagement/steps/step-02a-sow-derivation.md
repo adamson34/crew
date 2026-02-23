@@ -3,7 +3,7 @@
 **Agent:** Marcus Webb (BD)
 **Path:** A — Signed proposal in hand
 **Input:** Completed Proposal Intake Summary from Step 01a + any resolved open questions
-**Output:** `engagement/sow-{{engagement_name}}.md`
+**Output:** `engagement/{{engagement_name}}-sow.md`
 **Template:** `crew/templates/sow-template.md`
 
 > Read `.crew` in the project root for configured output paths. Default: `engagement/`.
@@ -101,6 +101,6 @@ Present the completed SOW draft to the user. Ask explicitly:
 
 > **Do not proceed to Step 03 (PM Breakdown) until the user approves this SOW.**
 
-When approved, save as `engagement/sow-{{engagement_name}}.md` and tell the user:
+When approved, save as `engagement/{{engagement_name}}-sow.md` and tell the user:
 
 > "SOW approved and filed. Handing off to Dana Reeves to break this into a work plan and task assignments."
