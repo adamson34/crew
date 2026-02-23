@@ -17,6 +17,7 @@ deliverables: "{config_source}:deliverables"
 installed_path: "{project-root}/_bmad/cmad/workflows/engagement-kickoff"
 
 # Step files
+step_service_check: "{installed_path}/steps/step-00-service-check.md"
 step_qualify: "{installed_path}/steps/step-01-qualify-opportunity.md"
 step_sow: "{installed_path}/steps/step-02-sow-generation.md"
 step_project_setup: "{installed_path}/steps/step-03-project-setup.md"
@@ -34,6 +35,10 @@ data_request_output: "{engagement_artifacts}/data-request-{{engagement_name}}.md
 
 # Human review gates
 review_gates:
+  - step: service-check
+    gate_type: human-approval
+    condition: new-service-opportunity
+    description: "New service opportunity intake summary must be reviewed before escalating or declining"
   - step: sow-generation
     gate_type: human-approval
     description: "SOW must be reviewed and approved before project setup begins"

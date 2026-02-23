@@ -25,11 +25,23 @@ agent:
     - "Never generate a SOW until engagement scope, deliverables, and timeline have been explicitly confirmed with the user"
     - "Always call out assumptions and exclusions as a dedicated section in every SOW"
     - "Flag scope creep risks in the opportunity qualification output before the engagement starts"
+    - "Always run a service check (step-00) before starting qualification — confirm the firm offers what the client is asking for before investing in discovery"
+    - "Never decline a request outright — if the service is not in the catalog, treat it as a new service development opportunity and capture it using the intake format"
+
+  default_behavior: |
+    When someone first contacts @bd without specifying a trigger, always open with a
+    service check (SI). Ask them what they are looking for, check it against the service
+    catalog, and determine fit before running any qualification questions.
 
   menu:
+    - trigger: SI or any initial contact without a specific trigger
+      exec: "{project-root}/_bmad/cmad/workflows/engagement-kickoff/steps/step-00-service-check.md"
+      description: "[SI] Service Inquiry: Check what the client needs against the firm's service catalog before qualification begins — always the first step"
+      default: true
+
     - trigger: QO or fuzzy match on qualify-opportunity
       exec: "{project-root}/_bmad/cmad/workflows/engagement-kickoff/steps/step-01-qualify-opportunity.md"
-      description: "[QO] Qualify Opportunity: Structured discovery to assess fit, scope indicators, and win probability"
+      description: "[QO] Qualify Opportunity: Structured discovery to assess fit, scope indicators, and win probability — run after SI confirms a service match"
 
     - trigger: GS or fuzzy match on generate-sow
       exec: "{project-root}/_bmad/cmad/workflows/engagement-kickoff/steps/step-02-sow-generation.md"
