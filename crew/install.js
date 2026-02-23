@@ -4,33 +4,98 @@
  * CREW Installer
  * Compiles agent files and installs them as Claude Code slash commands
  * in .claude/commands/ in the current working directory.
+ * Also writes a .crew config file and creates engagement directories.
  *
  * Usage:
  *   node install.js
  *
- * All config values are optional. Leave blank to keep {{placeholder}}
- * for manual find-and-replace later.
+ * All config values are optional. Leave blank to accept the default
+ * or keep {{placeholder}} for manual find-and-replace later.
  */
 
 const fs   = require('fs');
 const path = require('path');
 
-// ─── Config fields prompted at install ────────────────────────────────────────
-
-const CONFIG_FIELDS = [
-  { key: 'firm_name', label: 'Consulting firm name' },
-  { key: 'user_name', label: 'Your name (how agents address you)' },
-];
-
 // ─── Agents to install ────────────────────────────────────────────────────────
 
 const AGENTS = ['bd', 'pm', 'assessor', 'compliance', 'writer', 'reviewer'];
 
+// ─── Config schema ────────────────────────────────────────────────────────────
+
+const dirName = path.basename(process.cwd());
+
+const CONFIG_FIELDS = [
+  {
+    key: 'firm_name',
+    label: 'Consulting firm name',
+    placeholder: true,
+  },
+  {
+    key: 'user_name',
+    label: 'Your name (how agents address you)',
+    placeholder: true,
+  },
+  {
+    key: 'engagement_name',
+    label: 'Engagement name or identifier',
+    default: dirName,
+  },
+  {
+    key: 'client_name',
+    label: 'Client organization name',
+    default: 'Client',
+  },
+  {
+    key: 'vertical',
+    label: 'Consulting vertical',
+    default: 'ot-ics',
+    options: [
+      { value: 'ot-ics',         label: 'OT/ICS Cybersecurity' },
+      { value: 'cloud-security', label: 'Cloud Security' },
+      { value: 'it-audit',       label: 'IT Audit' },
+      { value: 'grc',            label: 'GRC — Governance, Risk & Compliance' },
+      { value: 'pentest',        label: 'Penetration Testing' },
+    ],
+  },
+  {
+    key: 'assessor_skill_level',
+    label: 'Primary assessor skill level',
+    default: 'intermediate',
+    options: [
+      { value: 'junior',       label: 'Junior — needs step-by-step guidance' },
+      { value: 'intermediate', label: 'Intermediate — familiar with domain' },
+      { value: 'senior',       label: 'Senior — domain expert' },
+    ],
+  },
+  {
+    key: 'engagement_artifacts',
+    label: 'Engagement artifacts path (SOW, project plan, comms)',
+    default: 'engagement',
+  },
+  {
+    key: 'assessment_artifacts',
+    label: 'Assessment artifacts path (findings, evidence, notes)',
+    default: 'assessment',
+  },
+  {
+    key: 'deliverables',
+    label: 'Deliverables path (reports, roadmaps, presentations)',
+    default: 'deliverables',
+  },
+];
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function printSelect(options, defaultValue) {
+  options.forEach((o, i) => {
+    const marker = o.value === defaultValue ? '*' : ' ';
+    process.stdout.write(`    ${marker} ${i + 1}) ${o.label} [${o.value}]\n`);
+  });
+}
+
 /**
- * Prompt for all config fields using a single 'line' listener so piped
- * input and interactive input both work correctly.
+ * Collect all config fields interactively via readline.
+ * Supports plain text fields and single-select fields.
  */
 function collectConfig(fields) {
   return new Promise(resolve => {
@@ -38,40 +103,105 @@ function collectConfig(fields) {
     const config = {};
     let i = 0;
 
-    function printPrompt() {
-      process.stdout.write(`  ${fields[i].label} (blank = keep {{${fields[i].key}}}): `);
-    }
+    function prompt() {
+      if (i >= fields.length) { rl.close(); return; }
 
-    function finish() {
-      // Fill any remaining fields with null (stdin closed early)
-      while (i < fields.length) { config[fields[i++].key] = null; }
-      rl.close();
-      resolve(config);
+      const f = fields[i];
+
+      if (f.options) {
+        process.stdout.write(`\n  ${f.label}:\n`);
+        printSelect(f.options, f.default);
+        process.stdout.write(`  Choice (default: ${f.default}): `);
+      } else {
+        const hint = f.default ? ` (default: ${f.default})` : f.placeholder ? ` (blank = keep {{${f.key}}})` : '';
+        process.stdout.write(`  ${f.label}${hint}: `);
+      }
     }
 
     rl.on('line', line => {
-      config[fields[i].key] = line.trim() || null;
-      i++;
-      if (i < fields.length) {
-        printPrompt();
+      const f = fields[i];
+      const raw = line.trim();
+
+      if (f.options) {
+        const num = parseInt(raw, 10);
+        if (raw === '' || isNaN(num)) {
+          // Accept the default or a typed value
+          const typed = f.options.find(o => o.value === raw);
+          config[f.key] = typed ? typed.value : (f.default || null);
+        } else {
+          const opt = f.options[num - 1];
+          config[f.key] = opt ? opt.value : (f.default || null);
+        }
       } else {
-        finish();
+        if (raw === '') {
+          config[f.key] = f.default || null;
+        } else {
+          config[f.key] = raw;
+        }
       }
+
+      i++;
+      prompt();
     });
 
-    rl.on('close', finish);
+    rl.on('close', () => {
+      // Fill any remaining fields with defaults (stdin closed early)
+      while (i < fields.length) {
+        config[fields[i].key] = fields[i].default || null;
+        i++;
+      }
+      resolve(config);
+    });
 
-    printPrompt();
+    prompt();
   });
 }
 
 function stamp(content, config) {
   let out = content;
-  for (const { key } of CONFIG_FIELDS) {
-    if (config[key]) out = out.split(`{{${key}}}`).join(config[key]);
+  for (const f of CONFIG_FIELDS) {
+    if (config[f.key]) out = out.split(`{{${f.key}}}`).join(config[f.key]);
     // if null, leave {{key}} as-is for manual replacement
   }
   return out;
+}
+
+function writeCrewFile(config) {
+  const lines = [
+    '# CREW Engagement Configuration',
+    '# Generated by crew/install.js — edit directly to update settings.',
+    '',
+    `engagement_name: "${config.engagement_name || ''}"`,
+    `client_name: "${config.client_name || ''}"`,
+    `firm_name: "${config.firm_name || ''}"`,
+    `user_name: "${config.user_name || ''}"`,
+    `vertical: "${config.vertical || ''}"`,
+    `assessor_skill_level: "${config.assessor_skill_level || ''}"`,
+    '',
+    'paths:',
+    `  engagement: "${config.engagement_artifacts || 'engagement'}"`,
+    `  assessment: "${config.assessment_artifacts || 'assessment'}"`,
+    `  deliverables: "${config.deliverables || 'deliverables'}"`,
+    '',
+  ];
+  fs.writeFileSync(path.join(process.cwd(), '.crew'), lines.join('\n'), 'utf8');
+}
+
+function createDirectories(config) {
+  const dirs = [
+    config.engagement_artifacts || 'engagement',
+    config.assessment_artifacts || 'assessment',
+    config.deliverables         || 'deliverables',
+  ];
+  const created = [];
+  for (const dir of dirs) {
+    const abs = path.join(process.cwd(), dir);
+    if (!fs.existsSync(abs)) {
+      fs.mkdirSync(abs, { recursive: true });
+      created.push(dir);
+    }
+  }
+  return created;
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -83,19 +213,26 @@ async function main() {
   console.log('\nCREW Install');
   console.log('─'.repeat(50));
   console.log('Installs CREW agents as slash commands in .claude/commands/');
-  console.log('Agents will be available as /bd /pm /assessor /compliance /writer /reviewer\n');
-  console.log('Config values are optional — leave blank to keep {{placeholder}}');
-  console.log('for manual find-and-replace later.\n');
+  console.log('Agents: /bd /pm /assessor /compliance /writer /reviewer\n');
+  console.log('Press Enter to accept defaults shown in parentheses.\n');
 
-  // Collect config
   const config = await collectConfig(CONFIG_FIELDS);
 
   console.log('');
+
+  // Write .crew config file
+  writeCrewFile(config);
+  console.log('  OK  .crew');
+
+  // Create artifact directories
+  const created = createDirectories(config);
+  for (const dir of created) console.log(`  OK  ${dir}/`);
 
   // Ensure .claude/commands exists
   fs.mkdirSync(commandsDir, { recursive: true });
 
   // Install each agent
+  console.log('');
   let installed = 0;
   const skipped = [];
 
@@ -122,7 +259,7 @@ async function main() {
 
   console.log(`\n${installed} agent${installed !== 1 ? 's' : ''} installed to .claude/commands/\n`);
 
-  const blanks = CONFIG_FIELDS.filter(f => !config[f.key]);
+  const blanks = CONFIG_FIELDS.filter(f => f.placeholder && !config[f.key]);
   if (blanks.length) {
     console.log('Note: the following placeholders were left in agent files:');
     blanks.forEach(f => console.log(`  {{${f.key}}}`));
@@ -138,6 +275,7 @@ async function main() {
 function uninstall() {
   const commandsDir = path.join(process.cwd(), '.claude', 'commands');
   let removed = 0;
+
   for (const name of AGENTS) {
     const dest = path.join(commandsDir, `${name}.md`);
     if (fs.existsSync(dest)) {
@@ -146,6 +284,13 @@ function uninstall() {
       removed++;
     }
   }
+
+  const crewFile = path.join(process.cwd(), '.crew');
+  if (fs.existsSync(crewFile)) {
+    fs.unlinkSync(crewFile);
+    console.log('  removed  .crew');
+  }
+
   console.log(`\n${removed} agent${removed !== 1 ? 's' : ''} removed.\n`);
 }
 
