@@ -2,8 +2,11 @@
 
 **Agents:** Dana Reeves (PM) + Jake Tanaka (Assessor)
 **Path:** B — Vague or unscoped project
-**Input:** Approved SOW from Step 02b
-**Output:** Completed LOE — `loe-{{engagement_name}}.md`
+**Input:** Approved SOW from `engagement/sow-{{engagement_name}}.md`
+**Output:** `engagement/loe-{{engagement_name}}.md`
+**Template:** `crew/templates/loe-template.md`
+
+> Read `.crew` in the project root for configured output paths. Default: `engagement/` for SOW/LOE/assumptions, `assessment/` for findings/profiles, `deliverables/` for reports.
 
 ---
 
@@ -96,7 +99,7 @@ These flags feed directly into the LOE Section 4 and tell the PM where to build 
 
 ## Output Format
 
-Load `_bmad/crew/templates/loe-template.md` and produce a fully completed LOE. Fill every field — do not leave placeholders. If a field cannot be filled because information is genuinely unknown, document why and flag it as an open item.
+Load `crew/templates/loe-template.md` and produce a fully completed LOE. Fill every field — do not leave placeholders. If a field cannot be filled because information is genuinely unknown, document why and flag it as an open item.
 
 Specific requirements:
 - Every work package must have a written basis statement (not just a number)
@@ -106,7 +109,7 @@ Specific requirements:
 - Section 5 (Out-of-Scope) must be consistent with SOW Section 9 (Exclusions)
 - Section 6 (Assumptions) must match the Assumptions document from Step 02b
 
-Save as: `{engagement_artifacts}/loe-{{engagement_name}}.md`
+Save as: `engagement/loe-{{engagement_name}}.md`
 
 ---
 

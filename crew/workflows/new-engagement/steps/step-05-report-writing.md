@@ -3,7 +3,9 @@
 **Agent:** Eli Carter (Technical Writer)
 **Path:** Both A and B
 **Input:** Approved findings register + environment profile + gap analysis + SOW
-**Output:** Executive summary + technical report + findings matrix → assembled final report
+**Output:** `deliverables/{{engagement_name}}-executive-summary.md`, `deliverables/{{engagement_name}}-technical-report.md`, `deliverables/{{engagement_name}}-findings-matrix.md`, `deliverables/{{engagement_name}}-assessment-report.md`
+
+> Read `.crew` in the project root for configured output paths. Default: `deliverables/` for final reports.
 
 ---
 
@@ -35,7 +37,7 @@ Your authority: You may rewrite, restructure, and clarify — you may not add fi
 
 **Audience:** CISO, COO, CEO, Board member. Assume no OT/ICS technical background. Assume 5 minutes of reading time.
 
-**Load:** `_bmad/crew/templates/executive-summary-template.md`
+**Load:** `crew/templates/executive-summary-template.md`
 
 **What to include:**
 - What was assessed (one paragraph, plain language)
@@ -54,7 +56,7 @@ Your authority: You may rewrite, restructure, and clarify — you may not add fi
 
 **Human review gate:** Present the executive summary draft to the user before continuing to the technical report. The executive summary sets the tone for the entire engagement — it needs to be right before the rest follows.
 
-Save draft as: `{deliverables}/{{engagement_name}}-executive-summary.md`
+Save draft as: `deliverables/{{engagement_name}}-executive-summary.md`
 
 ---
 
@@ -62,7 +64,7 @@ Save draft as: `{deliverables}/{{engagement_name}}-executive-summary.md`
 
 **Audience:** Security practitioners, OT engineers, IT/OT staff responsible for remediation. Assume technical background in their domain.
 
-**Load:** `_bmad/crew/templates/technical-report-template.md`
+**Load:** `crew/templates/technical-report-template.md`
 
 **Sections:**
 
@@ -93,7 +95,7 @@ Note controls and practices that are working well. Every engagement should have 
 ### Compliance Summary (if applicable)
 Reference the compliance matrix if one was produced. Provide a framework-by-framework status summary. Do not reproduce the full matrix in the report body — reference it as an appendix.
 
-Save as: `{deliverables}/{{engagement_name}}-technical-report.md`
+Save as: `deliverables/{{engagement_name}}-technical-report.md`
 
 ---
 
@@ -101,7 +103,7 @@ Save as: `{deliverables}/{{engagement_name}}-technical-report.md`
 
 **Audience:** Everyone. This is the most-referenced document in the deliverable package. Operations staff use it for remediation tracking. Executives use it for progress reporting. QA uses it to verify completeness.
 
-**Load:** `_bmad/crew/templates/findings-matrix-template.md`
+**Load:** `crew/templates/findings-matrix-template.md`
 
 One row per finding. Columns:
 - Finding ID
@@ -117,7 +119,7 @@ One row per finding. Columns:
 
 The findings matrix must be 100% consistent with the findings register and the technical report. IDs, titles, and severity ratings must match exactly.
 
-Save as: `{deliverables}/{{engagement_name}}-findings-matrix.md`
+Save as: `deliverables/{{engagement_name}}-findings-matrix.md`
 
 ---
 
@@ -137,7 +139,7 @@ Combine the approved executive summary, technical report, and findings matrix in
 9. Appendix A: Findings Matrix
 10. Appendix B: Compliance Matrix (if applicable)
 
-Save as: `{deliverables}/{{engagement_name}}-assessment-report.md`
+Save as: `deliverables/{{engagement_name}}-assessment-report.md`
 
 ---
 

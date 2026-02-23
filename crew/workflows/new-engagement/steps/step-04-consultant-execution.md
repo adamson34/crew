@@ -3,7 +3,9 @@
 **Agent:** Jake Tanaka (Lead Assessor), with Priya Kapoor (Compliance) as needed
 **Path:** Both A and B
 **Input:** Approved task assignment from PM (Step 03) + SOW + client data / evidence
-**Output:** Assessment artifacts â€” `environment-profile.md`, `gap-analysis.md`, `findings-register.md`
+**Output:** `assessment/environment-profile.md`, `assessment/gap-analysis.md`, `assessment/findings-register.md`
+
+> Read `.crew` in the project root for configured output paths. Default: `assessment/` for assessment artifacts.
 
 ---
 
@@ -61,7 +63,7 @@ Work through assigned tasks in dependency order. Flag any blockers immediately â
 [Confirm which systems/zones were assessed vs. excluded, per the SOW]
 ```
 
-Save as: `{assessment_artifacts}/environment-profile.md`
+Save as: `assessment/environment-profile.md`
 
 ---
 
@@ -89,7 +91,7 @@ Use this format for each finding candidate:
 **Notes:** [context, caveats, questions to resolve]
 ```
 
-Save as: `{assessment_artifacts}/gap-analysis.md`
+Save as: `assessment/gap-analysis.md`
 
 ---
 
@@ -126,10 +128,10 @@ For each finding:
 
 **Severity calibration reminders:**
 - Severity must account for OT context. A finding that is "Medium" in an IT environment may be "Critical" in OT if it affects a system controlling a physical process with safety implications.
-- Reference `_bmad/crew/data/severity-scales.yaml` for the full severity framework.
+- Reference `crew/data/severity-scales.yaml` for the full severity framework.
 - When uncertain between two severity levels, document both rationales and make an explicit decision.
 
-Save as: `{assessment_artifacts}/findings-register.md`
+Save as: `assessment/findings-register.md`
 
 ---
 

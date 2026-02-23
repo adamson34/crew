@@ -3,8 +3,11 @@
 **Agent:** Marcus Webb (BD)
 **Path:** B — Vague or unscoped project
 **Input:** Completed Project Brief from Step 01b
-**Output:** Two artifacts — `sow-{{engagement_name}}.md`, `assumptions-{{engagement_name}}.md`
+**Output:** `engagement/sow-{{engagement_name}}.md`, `engagement/assumptions-{{engagement_name}}.md`
+**Templates:** `crew/templates/sow-template.md`, `crew/templates/assumptions-template.md`
 **Note:** The LOE is produced in Step 02c by the PM + Assessor, not here. The SOW's pricing section will be updated to match the LOE once it is complete.
+
+> Read `.crew` in the project root for configured output paths. Default: `engagement/`.
 
 ---
 
@@ -31,7 +34,7 @@ You are Marcus Webb, building the scoping foundation for a project that isn't fu
 
 ## Document 1: Statement of Work
 
-Load `_bmad/crew/templates/sow-template.md` and complete it from the Project Brief.
+Load `crew/templates/sow-template.md` and complete it from the Project Brief.
 
 **Scoping principles for Path B (where you're defining scope, not deriving it):**
 
@@ -45,13 +48,13 @@ Load `_bmad/crew/templates/sow-template.md` and complete it from the Project Bri
 
 Fill all sections of the SOW template. Pay particular attention to Sections 8 (Assumptions) and 9 (Exclusions) — these are where Path B engagements most often go wrong.
 
-Save as: `{engagement_artifacts}/sow-{{engagement_name}}.md`
+Save as: `engagement/sow-{{engagement_name}}.md`
 
 ---
 
 ## Document 2: Assumptions
 
-Load `_bmad/crew/templates/assumptions-template.md` and complete it.
+Load `crew/templates/assumptions-template.md` and complete it.
 
 Every assumption that drove a scoping or pricing decision goes here. Include:
 - Technical assumptions (client environment, access, documentation availability)
@@ -63,7 +66,7 @@ For each assumption: state it clearly, document what evidence or information it'
 
 Assumptions are not excuses — they are risk flags. Any assumption that is wrong should trigger a scope change conversation with the client.
 
-Save as: `{engagement_artifacts}/assumptions-{{engagement_name}}.md`
+Save as: `engagement/assumptions-{{engagement_name}}.md`
 
 ---
 

@@ -64,7 +64,7 @@ After listing all tasks, identify:
 
 The task assignment document is what each agent receives as their work order. It is separate from the WBS — the WBS is a planning document; the task assignment is an execution document.
 
-Load `_bmad/crew/templates/task-assignment-template.md` and produce a complete assignment list.
+Load `crew/templates/task-assignment-template.md` and produce a complete assignment list.
 
 For each task assigned to an agent:
 - **Task ID:** Sequential identifier (T-001, T-002, etc.)
@@ -111,5 +111,5 @@ Present the WBS and Task Assignment document together. Ask the user:
 > **Do not hand off to the consultant until both documents are approved.**
 
 When approved:
-- Save the task assignment as `{engagement_artifacts}/task-assignment-{{engagement_name}}.md`
+- Save the task assignment as `engagement/task-assignment-{{engagement_name}}.md`
 - Tell the user: "Work plan approved. Handing task assignments to Jake Tanaka for execution."

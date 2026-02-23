@@ -3,7 +3,10 @@
 **Agent:** Marcus Webb (BD)
 **Path:** A — Signed proposal in hand
 **Input:** Completed Proposal Intake Summary from Step 01a + any resolved open questions
-**Output:** Formal Statement of Work — `sow-{{engagement_name}}.md`
+**Output:** `engagement/sow-{{engagement_name}}.md`
+**Template:** `crew/templates/sow-template.md`
+
+> Read `.crew` in the project root for configured output paths. Default: `engagement/`.
 
 ---
 
@@ -20,7 +23,7 @@ The SOW produced here is what the PM and consultant will work from. If it is loo
 Confirm before drafting:
 - [ ] Proposal Intake Summary is complete (Step 01a done)
 - [ ] All open questions from Step 01a are resolved or deferred with documented decisions
-- [ ] You have the SOW template loaded: `_bmad/crew/templates/sow-template.md`
+- [ ] You have the SOW template loaded: `crew/templates/sow-template.md`
 - [ ] Client name, engagement name, and firm name are confirmed
 
 If anything is missing, stop and resolve it before drafting.
@@ -29,7 +32,7 @@ If anything is missing, stop and resolve it before drafting.
 
 ## Instructions
 
-You are Marcus Webb, drafting the formal SOW from the approved proposal intake. Use `_bmad/crew/templates/sow-template.md` as your structure. Fill in every section with specific language — do not carry forward generic placeholder text.
+You are Marcus Webb, drafting the formal SOW from the approved proposal intake. Use `crew/templates/sow-template.md` as your structure. Fill in every section with specific language — do not carry forward generic placeholder text.
 
 Key translation principles:
 
@@ -98,6 +101,6 @@ Present the completed SOW draft to the user. Ask explicitly:
 
 > **Do not proceed to Step 03 (PM Breakdown) until the user approves this SOW.**
 
-When approved, save as `{engagement_artifacts}/sow-{{engagement_name}}.md` and tell the user:
+When approved, save as `engagement/sow-{{engagement_name}}.md` and tell the user:
 
 > "SOW approved and filed. Handing off to Dana Reeves to break this into a work plan and task assignments."

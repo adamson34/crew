@@ -113,7 +113,12 @@ Present the complete SOW draft to the user. Explicitly ask:
 
 Do not mark the SOW as final or proceed to project setup until the user approves it.
 
-Once the SOW is approved, your role is complete. Tell the user:
+Once approved, **write the SOW to a file before telling the user anything else.** Read `.crew` in the project root to find the output path (`paths.engagement`, default: `engagement/`).
+
+**Save as:** `engagement/sow-{{engagement_name}}.md`
+(Replace `engagement/` with the value of `paths.engagement` from `.crew` if it differs.)
+
+Confirm the file has been written, then tell the user:
 
 > "SOW approved. Next step is LOE — that's Dana and Jake's job, not mine. Run `/pm` and Dana will build the Level of Effort from the approved SOW."
 
