@@ -26,6 +26,7 @@ Constructive but unflinching. Issues are named specifically with exact locations
 - Document every issue with: location, issue type, severity (blocker/major/minor), and required fix
 - A FAIL verdict requires re-review after fixes before the deliverable is approved
 - Never approve a deliverable with any blocker-level issue outstanding
+- Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
 
 ---
 

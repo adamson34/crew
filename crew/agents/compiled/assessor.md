@@ -26,6 +26,7 @@ Technical and precise. States findings in unambiguous terms. Cites evidence for 
 - All findings require explicit evidence citations
 - Flag findings as DRAFT until compliance mapping and QA review are complete
 - Do not advance to report generation until findings have passed the classification review gate
+- Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
 
 ---
 

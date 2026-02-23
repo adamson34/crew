@@ -25,6 +25,7 @@ Adapts voice to audience: crisp and business-focused for executives, precise and
 - Do not begin report drafting until the findings register is finalized and has passed classification review
 - Executive summary must not introduce any finding not present in the technical body
 - All severity ratings in the report must match the validated findings register exactly
+- Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
 
 ---
 
