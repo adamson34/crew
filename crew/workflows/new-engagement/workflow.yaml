@@ -1,0 +1,122 @@
+name: new-engagement
+description: "End-to-end workflow for a net-new consulting engagement. Two entry paths: Path A for engagements with a signed proposal already in hand, Path B for vague or unscoped projects that need a SOW, LOE, and Assumptions document built first. Both paths converge at PM breakdown and flow through consultant execution, technical report writing, and final QA."
+
+config_source: "{project-root}/_bmad/crew/config.yaml"
+firm_name: "{config_source}:firm_name"
+client_name: "{config_source}:client_name"
+engagement_name: "{config_source}:engagement_name"
+vertical: "{config_source}:vertical"
+user_name: "{config_source}:user_name"
+assessor_skill_level: "{config_source}:assessor_skill_level"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+engagement_artifacts: "{config_source}:engagement_artifacts"
+assessment_artifacts: "{config_source}:assessment_artifacts"
+deliverables: "{config_source}:deliverables"
+
+installed_path: "{project-root}/_bmad/crew/workflows/new-engagement"
+
+# Step files — shared entry
+step_entry: "{installed_path}/steps/step-00-entry.md"
+
+# Path A: Proposal-First steps
+step_proposal_intake: "{installed_path}/steps/step-01a-proposal-intake.md"
+step_sow_derivation: "{installed_path}/steps/step-02a-sow-derivation.md"
+
+# Path B: Scoping-First steps
+step_project_brief: "{installed_path}/steps/step-01b-project-brief.md"
+step_scope_definition: "{installed_path}/steps/step-02b-scope-definition.md"
+
+# Shared downstream steps (both paths converge here)
+step_pm_breakdown: "{installed_path}/steps/step-03-pm-breakdown.md"
+step_consultant_execution: "{installed_path}/steps/step-04-consultant-execution.md"
+step_report_writing: "{installed_path}/steps/step-05-report-writing.md"
+step_qa_review: "{installed_path}/steps/step-06-qa-review.md"
+
+# Templates
+sow_template: "{project-root}/_bmad/crew/templates/sow-template.md"
+loe_template: "{project-root}/_bmad/crew/templates/loe-template.md"
+assumptions_template: "{project-root}/_bmad/crew/templates/assumptions-template.md"
+task_assignment_template: "{project-root}/_bmad/crew/templates/task-assignment-template.md"
+technical_report_template: "{project-root}/_bmad/crew/templates/technical-report-template.md"
+findings_matrix_template: "{project-root}/_bmad/crew/templates/findings-matrix-template.md"
+
+# Knowledge base references
+ot_ics_overview: "{project-root}/_bmad/crew/knowledge-base/ot-ics-overview.md"
+severity_scales: "{project-root}/_bmad/crew/data/severity-scales.yaml"
+standards_crosswalks: "{project-root}/_bmad/crew/data/standards-crosswalks.yaml"
+
+# Output files
+sow_output: "{engagement_artifacts}/sow-{{engagement_name}}.md"
+loe_output: "{engagement_artifacts}/loe-{{engagement_name}}.md"
+assumptions_output: "{engagement_artifacts}/assumptions-{{engagement_name}}.md"
+task_assignment_output: "{engagement_artifacts}/task-assignment-{{engagement_name}}.md"
+findings_register_output: "{assessment_artifacts}/findings-register.md"
+environment_profile_output: "{assessment_artifacts}/environment-profile.md"
+gap_analysis_output: "{assessment_artifacts}/gap-analysis.md"
+technical_report_output: "{deliverables}/{{engagement_name}}-technical-report.md"
+findings_matrix_output: "{deliverables}/{{engagement_name}}-findings-matrix.md"
+final_report_output: "{deliverables}/{{engagement_name}}-assessment-report.md"
+
+# Human review gates
+review_gates:
+  - step: sow-derivation
+    gate_type: human-approval
+    description: "SOW derived from proposal must be reviewed before handing off to PM. Confirm scope boundaries, deliverables, and assumptions accurately reflect the signed proposal."
+    path: A
+
+  - step: scope-definition
+    gate_type: human-approval
+    description: "SOW + LOE + Assumptions must be reviewed before handing off to PM. Confirm scope is realistic, LOE is defensible, and assumptions are explicitly documented."
+    path: B
+
+  - step: pm-breakdown
+    gate_type: human-approval
+    description: "Task assignment and WBS must be reviewed before consultant begins execution. Confirm tasks are correctly scoped, sequenced, and assigned."
+    path: both
+
+  - step: consultant-execution
+    gate_type: human-approval
+    description: "Findings register must be reviewed by engagement lead before passing to report writer. Confirm all findings are evidence-backed, accurately rated, and within scope."
+    path: both
+
+  - step: report-writing
+    gate_type: human-approval
+    description: "Executive summary and technical report draft must be reviewed before final assembly."
+    path: both
+
+  - step: qa-review
+    gate_type: human-approval
+    description: "QA reviewer must explicitly PASS the full deliverable package before client delivery."
+    required_approvers:
+      - qa-reviewer
+    blocking: true
+    path: both
+
+# Input file patterns
+input_file_patterns:
+  signed_proposal:
+    description: "Signed client proposal (Path A only)"
+    whole: "{engagement_artifacts}/proposal-*.{md,pdf,docx}"
+    load_strategy: "FULL_LOAD"
+    path: A
+
+  sow:
+    description: "Approved Statement of Work (available after step-02a or step-02b)"
+    whole: "{engagement_artifacts}/sow-{{engagement_name}}.md"
+    load_strategy: "FULL_LOAD"
+    path: both
+
+  task_assignment:
+    description: "PM task assignment (available after step-03)"
+    whole: "{engagement_artifacts}/task-assignment-{{engagement_name}}.md"
+    load_strategy: "FULL_LOAD"
+    path: both
+
+  findings_register:
+    description: "Consultant findings register (available after step-04)"
+    whole: "{assessment_artifacts}/findings-register.md"
+    load_strategy: "FULL_LOAD"
+    path: both
