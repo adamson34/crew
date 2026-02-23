@@ -3,26 +3,29 @@
 **Agent:** Marcus Webb (BD)
 **Path:** B — Vague or unscoped project
 **Input:** Completed Project Brief from Step 01b
-**Output:** Three artifacts — `sow-{{engagement_name}}.md`, `loe-{{engagement_name}}.md`, `assumptions-{{engagement_name}}.md`
+**Output:** Two artifacts — `sow-{{engagement_name}}.md`, `assumptions-{{engagement_name}}.md`
+**Note:** The LOE is produced in Step 02c by the PM + Assessor, not here. The SOW's pricing section will be updated to match the LOE once it is complete.
 
 ---
 
 ## Objective
 
-Produce a complete scoping package from the Project Brief. The package contains three documents that together answer: *what will we do, how long will it take, and what are we assuming?*
+Produce the scoping foundation from the Project Brief: a SOW that defines what will be done, and an Assumptions document that makes the conditions explicit.
+
+These documents anchor everything downstream. The pricing in the SOW will be filled in once the PM and Lead Assessor complete the LOE in Step 02c — do not put placeholder numbers in the pricing section. Leave it blank with a note: "Pending LOE (Step 02c)."
 
 These documents may be used to:
 - Present a formal proposal to the client before engagement
 - Initiate the engagement directly if the client is proceeding informally
 - Serve as the PM handoff package for work breakdown
 
-All three documents must be internally consistent. Hours in the LOE must align with the team in the SOW. Assumptions in the Assumptions document must appear in the SOW's Assumptions section.
+Assumptions in the Assumptions document must appear in the SOW's Assumptions section.
 
 ---
 
 ## Instructions
 
-You are Marcus Webb, building a scoping package for a project that isn't fully defined yet. Work in sequence: SOW first, then LOE, then Assumptions. The SOW sets scope; the LOE prices it; the Assumptions document makes the conditions explicit.
+You are Marcus Webb, building the scoping foundation for a project that isn't fully defined yet. Work in sequence: SOW first, then Assumptions. The SOW sets scope; the Assumptions document makes the conditions explicit. The PM and Lead Assessor will build the LOE from the SOW in Step 02c — that is not your job here.
 
 ---
 
@@ -46,31 +49,7 @@ Save as: `{engagement_artifacts}/sow-{{engagement_name}}.md`
 
 ---
 
-## Document 2: Level of Effort (LOE)
-
-Load `_bmad/crew/templates/loe-template.md` and complete it.
-
-The LOE must:
-- Break the engagement into work packages aligned with the SOW scope
-- Estimate hours per role per work package
-- State the basis for each estimate (e.g., "based on N systems in scope," "assumes 6 staff interviews")
-- Show a total hours and total cost summary
-- Flag any work packages with high uncertainty and document the range
-
-The LOE is an internal document. It does not go to the client. It is the basis for the price in the SOW's pricing section and the input for the PM's resource planning.
-
-**Estimate calibration:**
-- Documentation review: 4-8 hours per major document set (policy, architecture, asset inventory, procedures)
-- Staff interviews: 1-2 hours per interview session, plus 1 hour prep and 1 hour write-up per session
-- Technical analysis: varies significantly — document your basis for each estimate
-- Report writing: 8-16 hours for a typical findings-based report section
-- QA review: 2-4 hours for a standard deliverable
-
-Save as: `{engagement_artifacts}/loe-{{engagement_name}}.md`
-
----
-
-## Document 3: Assumptions
+## Document 2: Assumptions
 
 Load `_bmad/crew/templates/assumptions-template.md` and complete it.
 
@@ -92,33 +71,27 @@ Save as: `{engagement_artifacts}/assumptions-{{engagement_name}}.md`
 
 Before presenting for review, verify:
 
-- [ ] Every work package in the LOE maps to a deliverable in the SOW
-- [ ] The total price in the SOW matches the total in the LOE
 - [ ] Every assumption in the Assumptions document appears in the SOW Section 8
 - [ ] No assumption in the Assumptions document contradicts the SOW scope
 - [ ] Every open item from Step 01b is either resolved or documented as an assumption
+- [ ] SOW pricing section is left blank with a note: "Pending LOE (Step 02c)"
 
 ---
 
 ## Human Review Gate
 
-Present all three documents together. Ask the user:
+Present both documents together. Ask the user:
 
 **On the SOW:**
 1. Is the scope accurate and bounded correctly?
 2. Are the exclusions complete?
 3. Are the deliverables described precisely enough that the client can't dispute what they receive?
 
-**On the LOE:**
-1. Are the work package estimates realistic?
-2. Are the basis statements correct? (Is the estimate actually based on N systems in scope?)
-3. Is the total defensible if the client asks how we got to that number?
-
 **On the Assumptions:**
 1. Are there any assumptions we've made that aren't listed here?
 2. Are any of the listed assumptions likely to be wrong?
 
-> **Do not proceed to Step 03 until all three documents are approved.**
+> **Do not proceed to Step 02c until both documents are approved.**
 
 When approved, tell the user:
-> "Scoping package approved. I'll hand this to Dana Reeves to build the work breakdown and task assignments."
+> "SOW and Assumptions approved. Handing to Dana Reeves and Jake Tanaka to build the Level of Effort estimate."

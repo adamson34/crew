@@ -2,7 +2,7 @@
 
 **Agent:** Dana Reeves (PM)
 **Path:** Both A and B converge here
-**Input:** Approved SOW (required) + LOE (if available from Path B) + Assumptions document (if available from Path B)
+**Input:** Approved SOW (required) + Approved LOE from Step 02c (required for Path B) + Assumptions document (required for Path B)
 **Output:** Work Breakdown Structure + Task Assignment document — `task-assignment-{{engagement_name}}.md`
 
 ---
