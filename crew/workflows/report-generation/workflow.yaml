@@ -1,0 +1,65 @@
+name: report-generation
+description: "Assemble the full client assessment report: executive summary, technical findings, compliance matrix, and final QA review. Requires a completed, QA-approved findings register as input."
+
+config_source: "{project-root}/_bmad/crew/config.yaml"
+firm_name: "{config_source}:firm_name"
+client_name: "{config_source}:client_name"
+engagement_name: "{config_source}:engagement_name"
+vertical: "{config_source}:vertical"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+assessment_artifacts: "{config_source}:assessment_artifacts"
+deliverables: "{config_source}:deliverables"
+
+installed_path: "{project-root}/_bmad/crew/workflows/report-generation"
+
+# Step files
+step_exec_summary: "{installed_path}/steps/step-01-executive-summary.md"
+step_technical: "{installed_path}/steps/step-02-technical-report.md"
+step_findings_matrix: "{installed_path}/steps/step-03-findings-matrix.md"
+step_assemble: "{installed_path}/steps/step-04-assemble.md"
+step_qa: "{installed_path}/steps/step-05-qa-review.md"
+
+# Templates
+exec_summary_template: "{project-root}/_bmad/crew/templates/executive-summary-template.md"
+technical_report_template: "{project-root}/_bmad/crew/templates/technical-report-template.md"
+findings_matrix_template: "{project-root}/_bmad/crew/templates/findings-matrix-template.md"
+
+# Output files
+exec_summary_output: "{deliverables}/{{engagement_name}}-executive-summary.md"
+technical_report_output: "{deliverables}/{{engagement_name}}-technical-report.md"
+findings_matrix_output: "{deliverables}/{{engagement_name}}-findings-matrix.md"
+final_report_output: "{deliverables}/{{engagement_name}}-assessment-report.md"
+
+# Human review gates
+review_gates:
+  - step: executive-summary
+    gate_type: human-approval
+    description: "Executive summary must be reviewed by engagement lead before technical report drafting continues"
+  - step: qa-review
+    gate_type: human-approval
+    description: "QA reviewer must explicitly PASS the full report before client delivery"
+    required_approvers:
+      - qa-reviewer
+    blocking: true
+
+input_file_patterns:
+  findings_register:
+    description: "Validated findings register from assessment phase"
+    whole: "{assessment_artifacts}/findings-register.md"
+    load_strategy: "FULL_LOAD"
+  compliance_matrix:
+    description: "Compliance mapping matrix"
+    whole: "{assessment_artifacts}/compliance-matrix.md"
+    load_strategy: "FULL_LOAD"
+  environment_profile:
+    description: "Environment profile for context"
+    whole: "{assessment_artifacts}/environment-profile.md"
+    load_strategy: "FULL_LOAD"
+  sow:
+    description: "SOW for scope alignment validation"
+    whole: "{engagement_artifacts}/sow-*.md"
+    load_strategy: "SELECTIVE_LOAD"

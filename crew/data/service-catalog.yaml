@@ -1,0 +1,252 @@
+# CREW Service Catalog
+# Reference data used by the BD agent to validate inbound opportunities
+# against current firm capabilities.
+#
+# Status values:
+#   active    — fully delivered, established practice
+#   emerging  — delivered but maturing; limited capacity
+#   planned   — on the roadmap, not yet taking engagements
+#
+# Match logic:
+#   keywords  — terms Marcus uses to fuzzy-match client descriptions
+#   vertical  — restricts service to a specific consulting vertical (or "all")
+
+services:
+
+  # ─────────────────────────────────────────
+  # OT / ICS Cybersecurity
+  # ─────────────────────────────────────────
+
+  - id: ot-ics-gap-assessment
+    name: OT/ICS Gap Assessment
+    status: active
+    vertical: ot-ics
+    description: |
+      Structured evaluation of an OT/ICS environment against a chosen security framework
+      (IEC 62443, NIST CSF, NERC CIP). Identifies security gaps, documents current-state
+      posture, and produces a prioritized remediation roadmap.
+    delivery_types: [on-site, remote, hybrid]
+    typical_duration: "6–12 weeks"
+    team: ["Lead Assessor", "Compliance Analyst"]
+    outputs: ["Gap Analysis Report", "Findings Matrix", "Remediation Roadmap"]
+    keywords:
+      - gap assessment
+      - IEC 62443
+      - NIST CSF
+      - OT assessment
+      - ICS assessment
+      - security assessment
+      - maturity assessment
+      - posture review
+      - control assessment
+
+  - id: nerc-cip-compliance-review
+    name: NERC CIP Compliance Review
+    status: active
+    vertical: ot-ics
+    description: |
+      In-depth review of bulk electric system (BES) cyber system inventory, control
+      implementation, and evidence packages against NERC CIP standards. Designed for
+      utilities preparing for audits or triennial assessments.
+    delivery_types: [on-site, remote, hybrid]
+    typical_duration: "8–16 weeks"
+    team: ["Lead Assessor", "Compliance Analyst"]
+    outputs: ["NERC CIP Compliance Report", "Evidence Gap Log", "Remediation Plan"]
+    keywords:
+      - NERC CIP
+      - bulk electric
+      - BES
+      - utility compliance
+      - CIP audit
+      - reliability standard
+      - CIP-002
+      - CIP-005
+      - CIP-007
+      - CIP-010
+      - CIP-013
+
+  - id: ot-architecture-review
+    name: OT/ICS Network Architecture Review
+    status: active
+    vertical: ot-ics
+    description: |
+      Analysis of OT network topology, segmentation, remote access design, and
+      IT/OT boundary controls. Benchmarks against the Purdue Model and IEC 62443
+      zone/conduit requirements. Identifies design-level risks not visible in
+      configuration-only reviews.
+    delivery_types: [on-site, remote, hybrid]
+    typical_duration: "3–6 weeks"
+    team: ["Lead Assessor"]
+    outputs: ["Architecture Review Report", "Network Diagram Markup", "Design Recommendations"]
+    keywords:
+      - architecture review
+      - network review
+      - OT network
+      - segmentation
+      - Purdue model
+      - zone and conduit
+      - IT/OT boundary
+      - DMZ
+      - remote access review
+      - firewall review
+
+  - id: ot-penetration-testing
+    name: OT/ICS Penetration Testing
+    status: emerging
+    vertical: ot-ics
+    description: |
+      Controlled adversarial testing of OT/ICS environments to identify exploitable
+      vulnerabilities. Scoped to minimize operational risk; conducted in coordination
+      with plant operations staff. Distinguishes passive enumeration from active
+      exploitation based on client risk tolerance.
+    delivery_types: [on-site]
+    typical_duration: "2–4 weeks"
+    team: ["Lead Assessor", "OT Penetration Tester"]
+    outputs: ["Penetration Test Report", "Exploitation Evidence Package", "Remediation Recommendations"]
+    keywords:
+      - penetration test
+      - pentest
+      - red team
+      - vulnerability exploitation
+      - active testing
+      - OT pentest
+      - ICS pentest
+      - adversarial
+
+  - id: incident-response-planning
+    name: OT/ICS Incident Response Planning
+    status: active
+    vertical: ot-ics
+    description: |
+      Development or review of OT-specific incident response (IR) playbooks, tabletop
+      exercise design, and IR program maturity assessment. Aligns with ICS-CERT guidance
+      and NIST SP 800-82 IR practices.
+    delivery_types: [on-site, remote]
+    typical_duration: "4–8 weeks"
+    team: ["Lead Assessor", "Compliance Analyst"]
+    outputs: ["IR Playbook", "Tabletop Exercise Report", "IR Program Gap Summary"]
+    keywords:
+      - incident response
+      - IR plan
+      - IR playbook
+      - tabletop exercise
+      - TTX
+      - crisis response
+      - OT incident
+      - ICS-CERT
+      - recovery planning
+
+  - id: vendor-supply-chain-risk
+    name: OT Vendor & Supply Chain Risk Assessment
+    status: active
+    vertical: ot-ics
+    description: |
+      Evaluation of third-party OT vendor access, software supply chain risks, and
+      vendor security posture. Aligns to IEC 62443-2-4 and NERC CIP-013 requirements.
+      Produces a risk-tiered vendor register and recommended vendor management controls.
+    delivery_types: [remote, hybrid]
+    typical_duration: "4–8 weeks"
+    team: ["Compliance Analyst", "Lead Assessor"]
+    outputs: ["Vendor Risk Register", "Supply Chain Risk Report", "Control Recommendations"]
+    keywords:
+      - vendor risk
+      - supply chain
+      - third party
+      - CIP-013
+      - IEC 62443-2-4
+      - vendor management
+      - software supply chain
+      - SBOM
+
+  - id: ot-program-development
+    name: OT Cybersecurity Program Development
+    status: active
+    vertical: ot-ics
+    description: |
+      End-to-end advisory engagement to build or mature an OT cybersecurity program.
+      Covers governance, policy development, risk management, workforce training planning,
+      and continuous monitoring strategy. May span multiple engagements or be structured
+      as a managed advisory retainer.
+    delivery_types: [remote, hybrid, retainer]
+    typical_duration: "12–24 weeks"
+    team: ["Lead Assessor", "Compliance Analyst", "Project Manager"]
+    outputs: ["OT Security Program Roadmap", "Policy Suite", "Governance Framework"]
+    keywords:
+      - program development
+      - program maturity
+      - security program
+      - OT governance
+      - policy development
+      - security roadmap
+      - advisory
+      - retainer
+      - continuous improvement
+
+  # ─────────────────────────────────────────
+  # General / Cross-Vertical
+  # ─────────────────────────────────────────
+
+  - id: regulatory-readiness
+    name: Regulatory Readiness Assessment
+    status: active
+    vertical: all
+    description: |
+      Pre-audit or pre-regulation readiness review to identify gaps before a formal
+      regulatory examination. Applicable across multiple regulatory frameworks depending
+      on client industry (NERC CIP, CFATS, TSA Pipeline, NRC 5.71, etc.).
+    delivery_types: [on-site, remote, hybrid]
+    typical_duration: "4–10 weeks"
+    team: ["Compliance Analyst", "Lead Assessor"]
+    outputs: ["Readiness Report", "Evidence Gap Register", "Prioritized Action Plan"]
+    keywords:
+      - regulatory readiness
+      - audit prep
+      - pre-audit
+      - CFATS
+      - TSA pipeline
+      - NRC
+      - regulatory compliance
+      - examination readiness
+
+  - id: risk-assessment
+    name: Cybersecurity Risk Assessment
+    status: active
+    vertical: all
+    description: |
+      Structured risk identification, likelihood/consequence analysis, and risk ranking
+      exercise. Can be conducted as a standalone engagement or as a component of a
+      broader assessment program. Outputs a risk register with treatment recommendations.
+    delivery_types: [on-site, remote, hybrid]
+    typical_duration: "3–6 weeks"
+    team: ["Lead Assessor", "Compliance Analyst"]
+    outputs: ["Risk Register", "Risk Heat Map", "Treatment Recommendations"]
+    keywords:
+      - risk assessment
+      - risk register
+      - risk analysis
+      - risk ranking
+      - likelihood consequence
+      - threat modeling
+      - risk treatment
+
+
+# ─────────────────────────────────────────
+# New Service Development
+# ─────────────────────────────────────────
+# If a client request does not match any service above, Marcus captures it
+# as a new service opportunity rather than declining outright.
+# This section defines the escalation path.
+
+new_service_development:
+  owner: "Business Development Lead"
+  intake_fields:
+    - client_description: "What the client asked for, in their words"
+    - proposed_category: "Closest existing service, or 'net-new'"
+    - vertical: "Industry/domain this would serve"
+    - estimated_demand: "Low / Medium / High based on BD judgment"
+    - notes: "Any competitive intel, urgency factors, or strategic fit notes"
+  escalation_path:
+    - "Document in New Service Opportunity log"
+    - "Raise with practice lead for feasibility review"
+    - "Determine: extend existing service, or launch new practice"
+    - "If launching: assign owner, define MVP scope, set target go-live"

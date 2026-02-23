@@ -1,0 +1,50 @@
+name: remediation-plan
+description: "Build the prioritized remediation roadmap: findings prioritization, multi-phase roadmap, effort estimation, and quick wins identification. Produces the remediation plan deliverable."
+
+config_source: "{project-root}/_bmad/crew/config.yaml"
+firm_name: "{config_source}:firm_name"
+client_name: "{config_source}:client_name"
+engagement_name: "{config_source}:engagement_name"
+vertical: "{config_source}:vertical"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+assessment_artifacts: "{config_source}:assessment_artifacts"
+deliverables: "{config_source}:deliverables"
+
+installed_path: "{project-root}/_bmad/crew/workflows/remediation-plan"
+
+# Step files
+step_prioritization: "{installed_path}/steps/step-01-prioritization.md"
+step_roadmap: "{installed_path}/steps/step-02-roadmap.md"
+step_effort: "{installed_path}/steps/step-03-effort-estimation.md"
+step_quick_wins: "{installed_path}/steps/step-04-quick-wins.md"
+
+# Templates
+roadmap_template: "{project-root}/_bmad/crew/templates/remediation-roadmap-template.md"
+
+# Output file
+roadmap_output: "{deliverables}/{{engagement_name}}-remediation-roadmap.md"
+
+# Human review gate
+review_gates:
+  - step: prioritization
+    gate_type: human-approval
+    description: "Prioritization rationale must be reviewed before building the phased roadmap"
+    notes: "Client constraints (budget, resources, regulatory deadlines) should be confirmed at this gate"
+
+input_file_patterns:
+  findings_register:
+    description: "Validated findings register (source of all remediation items)"
+    whole: "{assessment_artifacts}/findings-register.md"
+    load_strategy: "FULL_LOAD"
+  compliance_matrix:
+    description: "Compliance mapping to inform regulatory prioritization"
+    whole: "{assessment_artifacts}/compliance-matrix.md"
+    load_strategy: "FULL_LOAD"
+  environment_profile:
+    description: "Environment profile for feasibility context"
+    whole: "{assessment_artifacts}/environment-profile.md"
+    load_strategy: "SELECTIVE_LOAD"

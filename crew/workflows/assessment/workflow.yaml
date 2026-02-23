@@ -1,0 +1,67 @@
+name: assessment
+description: "Execute the full cybersecurity assessment lifecycle: environment profiling, framework selection, gap analysis, findings classification, compliance mapping, and QA review. This is the core technical workflow for CREW engagements."
+
+config_source: "{project-root}/_bmad/crew/config.yaml"
+firm_name: "{config_source}:firm_name"
+client_name: "{config_source}:client_name"
+engagement_name: "{config_source}:engagement_name"
+vertical: "{config_source}:vertical"
+user_name: "{config_source}:user_name"
+assessor_skill_level: "{config_source}:assessor_skill_level"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+assessment_artifacts: "{config_source}:assessment_artifacts"
+engagement_artifacts: "{config_source}:engagement_artifacts"
+
+installed_path: "{project-root}/_bmad/crew/workflows/assessment"
+
+# Step files
+step_environment: "{installed_path}/steps/step-01-environment-profiling.md"
+step_framework: "{installed_path}/steps/step-02-framework-selection.md"
+step_gap_analysis: "{installed_path}/steps/step-03-gap-analysis.md"
+step_findings: "{installed_path}/steps/step-04-findings-classification.md"
+step_compliance: "{installed_path}/steps/step-05-compliance-mapping.md"
+step_qa: "{installed_path}/steps/step-06-qa-review.md"
+
+# Knowledge base references
+ot_ics_overview: "{project-root}/_bmad/crew/knowledge-base/ot-ics-overview.md"
+nerc_cip_ref: "{project-root}/_bmad/crew/knowledge-base/nerc-cip-reference.md"
+iec_62443_ref: "{project-root}/_bmad/crew/knowledge-base/iec-62443-reference.md"
+nist_csf_ref: "{project-root}/_bmad/crew/knowledge-base/nist-csf-reference.md"
+
+# Data references
+severity_scales: "{project-root}/_bmad/crew/data/severity-scales.yaml"
+standards_crosswalks: "{project-root}/_bmad/crew/data/standards-crosswalks.yaml"
+
+# Output files
+environment_profile_output: "{assessment_artifacts}/environment-profile.md"
+framework_selection_output: "{assessment_artifacts}/framework-selection.md"
+gap_analysis_output: "{assessment_artifacts}/gap-analysis.md"
+findings_register_output: "{assessment_artifacts}/findings-register.md"
+compliance_matrix_output: "{assessment_artifacts}/compliance-matrix.md"
+
+# Human review gates
+review_gates:
+  - step: findings-classification
+    gate_type: human-approval
+    description: "Findings register must be reviewed and approved by engagement lead before compliance mapping"
+    required_approvers:
+      - lead-assessor
+      - engagement-pm
+  - step: qa-review
+    gate_type: human-approval
+    description: "QA reviewer must explicitly PASS the findings register before advancing to report generation"
+    required_approvers:
+      - qa-reviewer
+
+input_file_patterns:
+  sow:
+    description: "Statement of Work for scope validation"
+    whole: "{engagement_artifacts}/sow-*.md"
+    load_strategy: "FULL_LOAD"
+  data_request_responses:
+    description: "Client-provided documentation from data request"
+    whole: "{assessment_artifacts}/client-data/**/*.{md,pdf,xlsx,docx}"
+    load_strategy: "SELECTIVE_LOAD"
