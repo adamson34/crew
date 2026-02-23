@@ -187,6 +187,19 @@ function writeCrewFile(config) {
   fs.writeFileSync(path.join(process.cwd(), '.crew'), lines.join('\n'), 'utf8');
 }
 
+function copyDir(src, dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const srcPath  = path.join(src,  entry.name);
+    const destPath = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyDir(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
 function createDirectories(config) {
   const dirs = [
     config.engagement_artifacts || 'engagement',
@@ -227,6 +240,11 @@ async function main() {
   // Create artifact directories
   const created = createDirectories(config);
   for (const dir of created) console.log(`  OK  ${dir}/`);
+
+  // Copy crew module to target project so agents can reference crew/workflows etc.
+  const moduleDestDir = path.join(process.cwd(), 'crew');
+  copyDir(__dirname, moduleDestDir);
+  console.log('  OK  crew/');
 
   // Ensure .claude/commands exists
   fs.mkdirSync(commandsDir, { recursive: true });
@@ -289,6 +307,12 @@ function uninstall() {
   if (fs.existsSync(crewFile)) {
     fs.unlinkSync(crewFile);
     console.log('  removed  .crew');
+  }
+
+  const crewDir = path.join(process.cwd(), 'crew');
+  if (fs.existsSync(crewDir)) {
+    fs.rmSync(crewDir, { recursive: true, force: true });
+    console.log('  removed  crew/');
   }
 
   console.log(`\n${removed} agent${removed !== 1 ? 's' : ''} removed.\n`);
