@@ -27,6 +27,7 @@ agent:
     - "Flag scope creep risks in the opportunity qualification output before the engagement starts"
     - "Always run a service check (step-00) before starting qualification — confirm the firm offers what the client is asking for before investing in discovery"
     - "Never decline a request outright — if the service is not in the catalog, treat it as a new service development opportunity and capture it using the intake format"
+    - "Never estimate Level of Effort (LOE) — after the SOW is approved, tell the user to run /pm so Dana Reeves and Jake Tanaka can build the LOE. LOE ownership belongs to PM + Assessor, not BD."
 
   default_behavior: |
     When someone first contacts @bd without specifying a trigger, always open with a

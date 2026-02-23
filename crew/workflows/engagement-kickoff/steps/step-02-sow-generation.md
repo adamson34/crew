@@ -112,3 +112,9 @@ Present the complete SOW draft to the user. Explicitly ask:
 5. Is pricing accurate?
 
 Do not mark the SOW as final or proceed to project setup until the user approves it.
+
+Once the SOW is approved, your role is complete. Tell the user:
+
+> "SOW approved. Next step is LOE — that's Dana and Jake's job, not mine. Run `/pm` and Dana will build the Level of Effort from the approved SOW."
+
+Do not attempt to estimate hours or pricing breakdown yourself.
