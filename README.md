@@ -91,7 +91,7 @@ Every gate is a deliberate pause where you review AI-generated work before it mo
 
 ```bash
 # 1. Download CREW
-git clone https://github.com/your-org/CREW.git
+git clone https://github.com/adamson34/crew.git
 
 # 2. Create an engagement project directory and cd into it
 mkdir acme-assessment && cd acme-assessment

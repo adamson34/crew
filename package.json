@@ -1,0 +1,27 @@
+{
+  "name": "crew",
+  "version": "1.0.0",
+  "description": "Consulting Role Engine Workflows — AI consulting framework for Claude Code",
+  "main": "crew/install.js",
+  "bin": {
+    "crew-install": "crew/install.js"
+  },
+  "scripts": {
+    "install-crew": "node crew/install.js",
+    "uninstall-crew": "node crew/install.js --uninstall",
+    "test": "node crew/hooks/test-hooks.js"
+  },
+  "keywords": [
+    "claude-code",
+    "consulting",
+    "workflow",
+    "ot-ics",
+    "cybersecurity"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamson34/crew.git"
+  },
+  "private": true
+}
