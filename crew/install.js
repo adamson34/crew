@@ -255,6 +255,130 @@ function createDirectories(config) {
   return created;
 }
 
+// ─── Hooks configuration ─────────────────────────────────────────────────────
+
+const CREW_HOOKS = {
+  SessionStart: [{
+    matcher: '',
+    hooks: [{ type: 'command', command: 'bash crew/hooks/session-context.sh', timeout: 10 }],
+  }],
+  PreToolUse: [{
+    matcher: 'Write',
+    hooks: [{ type: 'command', command: 'node crew/hooks/state-guard.js', timeout: 10 }],
+  }],
+  PostToolUse: [
+    {
+      matcher: 'Edit',
+      hooks: [{ type: 'command', command: 'bash crew/hooks/state-post-validate.sh', timeout: 10 }],
+    },
+    {
+      matcher: 'Write',
+      hooks: [{ type: 'command', command: 'bash crew/hooks/artifact-tracker.sh', timeout: 10 }],
+    },
+  ],
+  Stop: [{
+    hooks: [{ type: 'command', command: 'bash crew/hooks/completion-guard.sh', timeout: 10 }],
+  }],
+};
+
+function writeHooksConfig() {
+  const settingsDir = path.join(process.cwd(), '.claude');
+  fs.mkdirSync(settingsDir, { recursive: true });
+
+  const settingsPath = path.join(settingsDir, 'settings.json');
+
+  // Read existing settings or start fresh
+  let settings = {};
+  if (fs.existsSync(settingsPath)) {
+    try {
+      settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+    } catch (e) {
+      // Back up invalid settings file
+      fs.copyFileSync(settingsPath, settingsPath + '.bak');
+      console.log('  !!  .claude/settings.json was invalid JSON — backed up to .bak');
+      settings = {};
+    }
+  }
+
+  if (!settings.hooks) settings.hooks = {};
+
+  // For each event, remove existing CREW hooks and add fresh ones
+  for (const [event, matcherGroups] of Object.entries(CREW_HOOKS)) {
+    if (!settings.hooks[event]) {
+      settings.hooks[event] = [];
+    }
+
+    // Filter out any existing CREW hooks (identified by crew/hooks/ in command)
+    settings.hooks[event] = settings.hooks[event].filter(group => {
+      const isCrewHook = group.hooks && group.hooks.some(h =>
+        h.command && h.command.includes('crew/hooks/')
+      );
+      return !isCrewHook;
+    });
+
+    // Add CREW hooks
+    settings.hooks[event].push(...matcherGroups);
+  }
+
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n', 'utf8');
+  console.log('  OK  .claude/settings.json (hooks)');
+
+  // Make shell hook scripts executable
+  const hooksDir = path.join(process.cwd(), 'crew', 'hooks');
+  if (fs.existsSync(hooksDir)) {
+    for (const file of fs.readdirSync(hooksDir)) {
+      if (file.endsWith('.sh')) {
+        fs.chmodSync(path.join(hooksDir, file), 0o755);
+      }
+    }
+  }
+}
+
+function removeHooksConfig() {
+  const settingsPath = path.join(process.cwd(), '.claude', 'settings.json');
+  if (!fs.existsSync(settingsPath)) return;
+
+  try {
+    const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+    if (!settings.hooks) return;
+
+    let changed = false;
+    for (const event of Object.keys(settings.hooks)) {
+      const before = settings.hooks[event].length;
+      settings.hooks[event] = settings.hooks[event].filter(group => {
+        const isCrewHook = group.hooks && group.hooks.some(h =>
+          h.command && h.command.includes('crew/hooks/')
+        );
+        return !isCrewHook;
+      });
+      if (settings.hooks[event].length !== before) changed = true;
+
+      // Remove empty event arrays
+      if (settings.hooks[event].length === 0) {
+        delete settings.hooks[event];
+        changed = true;
+      }
+    }
+
+    // Remove empty hooks object
+    if (Object.keys(settings.hooks).length === 0) {
+      delete settings.hooks;
+    }
+
+    if (changed) {
+      if (Object.keys(settings).length === 0) {
+        fs.unlinkSync(settingsPath);
+        console.log('  removed  .claude/settings.json');
+      } else {
+        fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n', 'utf8');
+        console.log('  cleaned  .claude/settings.json (hooks removed)');
+      }
+    }
+  } catch (e) {
+    console.log('  !!  Could not clean .claude/settings.json:', e.message);
+  }
+}
+
 // ─── Preamble injection ───────────────────────────────────────────────────────
 
 function readPreamble() {
@@ -318,6 +442,9 @@ async function main() {
   const moduleDestDir = path.join(process.cwd(), 'crew');
   copyDir(__dirname, moduleDestDir);
   console.log('  OK  crew/');
+
+  // Write hook configuration to .claude/settings.json
+  writeHooksConfig();
 
   // Ensure .claude/commands exists
   fs.mkdirSync(commandsDir, { recursive: true });
@@ -403,6 +530,9 @@ function uninstall() {
     fs.unlinkSync(claudeMd);
     console.log('  removed  CLAUDE.md');
   }
+
+  // Remove CREW hooks from .claude/settings.json before removing crew/
+  removeHooksConfig();
 
   const crewDir = path.join(process.cwd(), 'crew');
   if (fs.existsSync(crewDir)) {
