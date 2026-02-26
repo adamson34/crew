@@ -1,1 +1,12 @@
 .claude/settings.local.json
+.DS_Store
+*.code-workspace
+
+# Runtime state and config (generated per-engagement by installer)
+.crew
+.crew-state.yaml
+
+# Engagement artifacts (contain client data)
+engagement/
+assessment/
+deliverables/
