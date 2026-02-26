@@ -2,18 +2,21 @@
 
 CREW is an AI-powered consulting workflow framework that runs inside [Claude Code](https://docs.anthropic.com/en/docs/claude-code). It gives you a team of six AI agents — each with a distinct consulting role, personality, and methodology — that walk you through a full engagement lifecycle: from scoping and SOW generation through technical assessment, report writing, and remediation planning.
 
+A `/crew` orchestrator tracks workflow state, manages review gates, and routes you to the right agent at each step. Nothing advances without your explicit approval.
+
 **Current vertical:** OT/ICS cybersecurity consulting, with an extensible architecture for additional verticals.
 
 ## What It Does
 
-CREW installs six role-based AI agents as Claude Code slash commands. Each agent is a detailed persona with domain expertise, decision-making principles, and a communication style modeled after a real consulting role. You interact with them naturally in Claude Code — ask Marcus to scope an engagement, tell Jake to run a gap analysis, have Eli draft the executive summary.
+CREW installs seven slash commands into Claude Code: six role-based agents and one orchestrator. Each agent is a detailed persona with domain expertise, decision-making principles, and a communication style modeled after a real consulting role. You interact with them naturally — ask Marcus to scope an engagement, tell Jake to run a gap analysis, have Eli draft the executive summary.
 
-The agents share a structured workflow with human review gates at every critical handoff. Nothing goes to a client without your approval.
+The agents share a structured workflow with human review gates at every critical handoff. The orchestrator (`/crew`) reads a state file that tracks which steps are done, which gates are pending, and what artifacts have been produced.
 
 ### The Team
 
 | Command | Agent | Role | What They Do |
 |---------|-------|------|-------------|
+| `/crew` | Orchestrator | Workflow Management | Shows status, routes to next step, handles gate approvals |
 | `/bd` | Marcus Webb | Business Development | Qualifies opportunities, generates SOWs and proposals, handles scope changes |
 | `/pm` | Dana Reeves | Project Manager | Plans projects, builds timelines, tracks deliverables, manages client comms |
 | `/consultant` | Jake Tanaka | Lead Consultant | Profiles environments, runs gap analysis, classifies findings, reviews architecture |
@@ -87,7 +90,7 @@ Every gate is a deliberate pause where you review AI-generated work before it mo
 ### Install
 
 ```bash
-# 1. Clone CREW
+# 1. Download CREW
 git clone https://github.com/your-org/CREW.git
 
 # 2. Create an engagement project directory and cd into it
@@ -113,19 +116,22 @@ After installation, your engagement directory looks like this:
 
 ```
 acme-assessment/
-├── .crew                     # Engagement config (YAML)
+├── CLAUDE.md                     # Engagement context for Claude Code
+├── .crew                         # Engagement config (YAML)
+├── .crew-state.yaml              # Workflow state tracking
 ├── .claude/
 │   └── commands/
-│       ├── bd.md             # /bd slash command
-│       ├── pm.md             # /pm slash command
-│       ├── consultant.md     # /consultant slash command
-│       ├── compliance.md     # /compliance slash command
-│       ├── writer.md         # /writer slash command
-│       └── reviewer.md       # /reviewer slash command
-├── crew/                     # Full module (workflows, templates, data, knowledge base)
-├── engagement/               # SOW, project plan, comms artifacts
-├── assessment/               # Findings, evidence, notes
-└── deliverables/             # Reports, roadmaps, presentations
+│       ├── crew.md               # /crew orchestrator
+│       ├── bd.md                 # /bd slash command
+│       ├── pm.md                 # /pm slash command
+│       ├── consultant.md         # /consultant slash command
+│       ├── compliance.md         # /compliance slash command
+│       ├── writer.md             # /writer slash command
+│       └── reviewer.md           # /reviewer slash command
+├── crew/                         # Full module (workflows, templates, data, knowledge base)
+├── engagement/                   # SOW, project plan, comms artifacts
+├── assessment/                   # Findings, evidence, notes
+└── deliverables/                 # Reports, roadmaps, presentations
 ```
 
 ### Reconfigure or Uninstall
@@ -134,7 +140,7 @@ acme-assessment/
 # Re-run with different config
 node crew/install.js
 
-# Remove everything CREW installed
+# Remove everything CREW installed (agents, .crew, .crew-state.yaml, CLAUDE.md, crew/)
 node crew/install.js --uninstall
 ```
 
@@ -142,15 +148,82 @@ node crew/install.js --uninstall
 
 ## How It Works
 
+### Agents
+
 CREW agents are markdown files installed as Claude Code [slash commands](https://docs.anthropic.com/en/docs/claude-code). When you type `/consultant` in Claude Code, it loads Jake Tanaka's full persona — his background, principles, methodology, and available workflows. You then interact with him naturally.
 
-Each agent references workflow steps, templates, and data files in the local `crew/` directory. Everything runs locally in your engagement project. There is no external service, no API beyond Claude Code itself.
+Each agent has a **state preamble** that makes it check `.crew-state.yaml` before doing work. If a prerequisite step isn't complete or a blocking gate hasn't been approved, the agent stops and tells you what's needed. After completing work, the agent updates the state file and registers produced artifacts.
 
 **Agents are roles, not task runners.** Each has a name, personality, communication style, and decision-making principles that shape output quality. Marcus approaches a SOW differently than Jake approaches a finding — that difference is intentional.
 
-**Workflows are engagement phases, not sprints.** They map to the consulting lifecycle (scoping, kickoff, assessment, reporting, remediation), with each phase having a clear start state, output, and handoff.
+### Orchestrator
 
-**Templates are separate from tasks.** Tasks define *how* to do something. Templates define *what the output looks like*. This makes the methodology reusable across different deliverable formats or client branding.
+The `/crew` command is the workflow management hub. It doesn't do consulting work — it manages state:
+
+| Command | What It Does |
+|---------|-------------|
+| **ST** — Status | Dashboard showing step progress, gate statuses, artifact count |
+| **NX** — Next Step | Identifies the next actionable step and tells you which agent to invoke |
+| **GA** — Gate Approval | Lists pending gates, records your approval, unblocks downstream steps |
+| **GR** — Gate Rejection | Rejects a gate with notes, keeps downstream steps blocked |
+| **IN** — Initialize | Picks a workflow, parses its definition, scaffolds steps and gates into state |
+| **RS** — Reset Step | Resets a step to `not_started` (useful after gate rejection or rework) |
+| **AF** — Artifacts | Lists all produced artifacts with provenance |
+
+Typical flow: run `/crew IN` to start a workflow, then `/crew NX` to see what's next. The orchestrator tells you which agent to invoke. After each step, come back to `/crew` for gate approvals and routing.
+
+### State File
+
+`.crew-state.yaml` tracks everything across sessions:
+
+```yaml
+crew_version: "1.0.0"
+engagement: "acme-assessment"
+initialized_at: "2026-02-26T10:00:00Z"
+
+active_workflow:
+  id: assessment
+  started_at: "2026-02-26T10:00:00Z"
+  status: in_progress
+
+steps:
+  step-01-environment-profiling:
+    status: completed
+    agent: consultant
+    started_at: "2026-02-26T10:05:00Z"
+    completed_at: "2026-02-26T12:30:00Z"
+    artifacts_produced:
+      - assessment/acme-environment-profile.md
+
+  step-02-framework-selection:
+    status: in_progress
+    agent: compliance
+    started_at: "2026-02-26T13:00:00Z"
+
+gates:
+  gate-findings-classification:
+    status: pending
+    after_step: step-04-findings-classification
+    blocks: [step-05-compliance-mapping]
+
+artifacts:
+  - path: "assessment/acme-environment-profile.md"
+    produced_by: consultant
+    step: step-01-environment-profiling
+    produced_at: "2026-02-26T12:30:00Z"
+
+completed_workflows: []
+```
+
+The state file is human-readable and manually editable. If something goes wrong, you can edit it directly.
+
+### CLAUDE.md
+
+The installer generates a `CLAUDE.md` file in your engagement root. Claude Code reads this automatically at the start of every session, giving it engagement context (client name, firm, vertical), the agent table, behavioral rules (check state, respect gates, update after work), and directory layout.
+
+### Workflows
+
+Workflows are YAML definitions in `crew/workflows/`. Each declares the step order, prerequisites, gates, and artifact patterns. The orchestrator reads these at runtime — they're executable configuration, not just documentation.
 
 **Domain knowledge is modular.** The OT/ICS starter pack is the first vertical. Swap out the knowledge base and data files for a different domain and the same agent structure and workflows apply.
 
@@ -165,6 +238,7 @@ Each agent references workflow steps, templates, and data files in the local `cr
 | `data/service-catalog.yaml` | Firm service offerings with match keywords, delivery types, team composition, and typical duration. Used by BD agent to validate inbound opportunities. |
 | `data/severity-scales.yaml` | Five-level severity scale (Critical through Informational) with CVSS ranges, remediation timelines, OT-specific guidance, and rating documentation requirements. |
 | `data/standards-crosswalks.yaml` | Control domain mappings across NERC CIP, IEC 62443, NIST CSF, and NIST SP 800-82. Used by the compliance agent for multi-framework assessments. |
+| `data/engagement-history.yaml` | Past engagement LOE data for benchmarking estimates. |
 
 ### Knowledge Base
 
@@ -200,17 +274,7 @@ The core agent structure, workflow phases, and review gates are domain-agnostic 
 
 CREW was originally designed as an expansion module for the [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) framework, which provides agentic workflows for software development teams. CREW adapts that pattern for consulting teams.
 
-**In practice, CREW runs independently.** The BMAD integration is a packaging convention (the `module.yaml` file and `_bmad/` path references in the source YAML definitions), but the compiled agents and installer work without BMAD installed. If you're using BMAD, CREW can be installed as a module via `npx bmad-method install`. If you're not, the standalone `node install.js` path works on its own.
-
-What CREW borrows from BMAD:
-- The concept of role-based AI agents with distinct personas
-- YAML-based workflow definitions with step references
-- The module packaging convention (`module.yaml`)
-
-What CREW does independently:
-- Installation, configuration, and runtime (no BMAD dependency)
-- All domain knowledge, templates, data, and deliverable structures
-- The consulting engagement lifecycle and review gate system
+**In practice, CREW runs independently.** The BMAD integration is a packaging convention (the `module.yaml` file), but the compiled agents and installer work without BMAD installed. If you're using BMAD, CREW can be installed as a module via `npx bmad-method install`. If you're not, the standalone `node install.js` path works on its own.
 
 ---
 
@@ -218,13 +282,11 @@ What CREW does independently:
 
 ### Current State
 
-CREW is a working prototype with a single vertical (OT/ICS cybersecurity). It runs locally via `node install.js` and requires manually cloning the repository. The six agents, five workflow phases, and all templates and reference data are functional.
+CREW is a working tool with a single vertical (OT/ICS cybersecurity). It runs locally via `node install.js`, tracks workflow state across sessions, enforces review gates, and routes users between agents via the `/crew` orchestrator. Six role agents, five workflow phases, templates, reference data, and the orchestrator are all functional.
 
 ### Near-Term
 
 - **npm distribution** — publish as a package so users can install via `npx` without cloning
-- **CLAUDE.md integration** — auto-generate a project-level CLAUDE.md with engagement context so agents work better across sessions
-- **Workflow orchestration** — currently agents are invoked individually; add workflow-level coordination so agents hand off to each other automatically
 - **Additional templates** — client-facing presentation decks, data request checklists, closeout reports
 
 ### Medium-Term

@@ -1,65 +1,95 @@
 name: report-generation
 description: "Assemble the full client assessment report: executive summary, technical findings, compliance matrix, and final QA review. Requires a completed, QA-approved findings register as input."
 
-config_source: "{project-root}/_bmad/crew/config.yaml"
-firm_name: "{config_source}:firm_name"
-client_name: "{config_source}:client_name"
-engagement_name: "{config_source}:engagement_name"
-vertical: "{config_source}:vertical"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-date: system-generated
+# ─── Steps ──────────────────────────────────────────────────────────────────────
 
-assessment_artifacts: "{config_source}:assessment_artifacts"
-deliverables: "{config_source}:deliverables"
+steps:
+  - id: step-01-executive-summary
+    file: steps/step-01-executive-summary.md
+    agent: writer
+    prerequisites: []
+    gate_after: gate-executive-summary
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-executive-summary.md"
+        type: executive-summary
 
-installed_path: "{project-root}/_bmad/crew/workflows/report-generation"
+  - id: step-02-technical-report
+    file: steps/step-02-technical-report.md
+    agent: writer
+    prerequisites: [step-01-executive-summary]
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-technical-report.md"
+        type: technical-report
 
-# Step files
-step_exec_summary: "{installed_path}/steps/step-01-executive-summary.md"
-step_technical: "{installed_path}/steps/step-02-technical-report.md"
-step_findings_matrix: "{installed_path}/steps/step-03-findings-matrix.md"
-step_assemble: "{installed_path}/steps/step-04-assemble.md"
-step_qa: "{installed_path}/steps/step-05-qa-review.md"
+  - id: step-03-findings-matrix
+    file: steps/step-03-findings-matrix.md
+    agent: writer
+    prerequisites: [step-02-technical-report]
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-findings-matrix.md"
+        type: findings-matrix
 
-# Templates
-exec_summary_template: "{project-root}/_bmad/crew/templates/executive-summary-template.md"
-technical_report_template: "{project-root}/_bmad/crew/templates/technical-report-template.md"
-findings_matrix_template: "{project-root}/_bmad/crew/templates/findings-matrix-template.md"
+  - id: step-04-assemble
+    file: steps/step-04-assemble.md
+    agent: writer
+    prerequisites: [step-03-findings-matrix]
+    required_artifacts:
+      - pattern: "{{deliverables}}/{{engagement_name}}-executive-summary.md"
+      - pattern: "{{deliverables}}/{{engagement_name}}-technical-report.md"
+      - pattern: "{{deliverables}}/{{engagement_name}}-findings-matrix.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-assessment-report.md"
+        type: assessment-report
 
-# Output files
-exec_summary_output: "{deliverables}/{{engagement_name}}-executive-summary.md"
-technical_report_output: "{deliverables}/{{engagement_name}}-technical-report.md"
-findings_matrix_output: "{deliverables}/{{engagement_name}}-findings-matrix.md"
-final_report_output: "{deliverables}/{{engagement_name}}-assessment-report.md"
+  - id: step-05-qa-review
+    file: steps/step-05-qa-review.md
+    agent: reviewer
+    prerequisites: [step-04-assemble]
+    gate_after: gate-qa-review
+    required_artifacts:
+      - pattern: "{{deliverables}}/{{engagement_name}}-assessment-report.md"
+    produces: []
 
-# Human review gates
-review_gates:
-  - step: executive-summary
-    gate_type: human-approval
+# ─── Gates ──────────────────────────────────────────────────────────────────────
+
+gates:
+  - id: gate-executive-summary
+    after_step: step-01-executive-summary
+    blocks: [step-02-technical-report]
     description: "Executive summary must be reviewed by engagement lead before technical report drafting continues"
-  - step: qa-review
-    gate_type: human-approval
+
+  - id: gate-qa-review
+    after_step: step-05-qa-review
+    blocks: []
     description: "QA reviewer must explicitly PASS the full report before client delivery"
-    required_approvers:
-      - qa-reviewer
+    required_approvers: [qa-reviewer]
     blocking: true
+
+# ─── References ─────────────────────────────────────────────────────────────────
+
+templates:
+  exec_summary_template: "crew/templates/executive-summary-template.md"
+  technical_report_template: "crew/templates/technical-report-template.md"
+  findings_matrix_template: "crew/templates/findings-matrix-template.md"
 
 input_file_patterns:
   findings_register:
     description: "Validated findings register from assessment phase"
-    whole: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
-    load_strategy: "FULL_LOAD"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
   compliance_matrix:
     description: "Compliance mapping matrix"
-    whole: "{assessment_artifacts}/compliance-matrix.md"
-    load_strategy: "FULL_LOAD"
+    pattern: "{{assessment_artifacts}}/compliance-matrix.md"
   environment_profile:
     description: "Environment profile for context"
-    whole: "{assessment_artifacts}/{{engagement_name}}-environment-profile.md"
-    load_strategy: "FULL_LOAD"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
   sow:
     description: "SOW for scope alignment validation"
-    whole: "{engagement_artifacts}/*-sow.md"
-    load_strategy: "SELECTIVE_LOAD"
+    pattern: "{{engagement_artifacts}}/*-sow.md"

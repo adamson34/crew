@@ -1,47 +1,92 @@
 name: engagement-kickoff
 description: "Run the full engagement kickoff sequence: opportunity qualification, SOW generation, project setup, kickoff prep, and initial data request. Use when starting a new consulting engagement."
 
-config_source: "{project-root}/_bmad/crew/config.yaml"
-firm_name: "{config_source}:firm_name"
-client_name: "{config_source}:client_name"
-engagement_name: "{config_source}:engagement_name"
-vertical: "{config_source}:vertical"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-date: system-generated
+# ─── Steps ──────────────────────────────────────────────────────────────────────
 
-engagement_artifacts: "{config_source}:engagement_artifacts"
-deliverables: "{config_source}:deliverables"
+steps:
+  - id: step-00-service-check
+    file: steps/step-00-service-check.md
+    agent: bd
+    prerequisites: []
+    gate_after: gate-service-check
+    required_artifacts: []
+    produces: []
+    note: "Gate is conditional — only triggers if this is a new service opportunity"
 
-installed_path: "{project-root}/_bmad/crew/workflows/engagement-kickoff"
+  - id: step-01-qualify-opportunity
+    file: steps/step-01-qualify-opportunity.md
+    agent: bd
+    prerequisites: [step-00-service-check]
+    required_artifacts: []
+    produces: []
 
-# Step files
-step_service_check: "{installed_path}/steps/step-00-service-check.md"
-step_qualify: "{installed_path}/steps/step-01-qualify-opportunity.md"
-step_sow: "{installed_path}/steps/step-02-sow-generation.md"
-step_project_setup: "{installed_path}/steps/step-03-project-setup.md"
-step_kickoff_prep: "{installed_path}/steps/step-04-kickoff-prep.md"
-step_data_request: "{installed_path}/steps/step-05-data-request.md"
+  - id: step-02-sow-generation
+    file: steps/step-02-sow-generation.md
+    agent: bd
+    prerequisites: [step-01-qualify-opportunity]
+    gate_after: gate-sow-generation
+    required_artifacts: []
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-sow.md"
+        type: sow
 
-# Templates
-sow_template: "{project-root}/_bmad/crew/templates/sow-template.md"
+  - id: step-03-project-setup
+    file: steps/step-03-project-setup.md
+    agent: pm
+    prerequisites: [step-02-sow-generation]
+    required_artifacts:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-sow.md"
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-project-plan.md"
+        type: project-plan
 
-# Output files
-sow_output: "{engagement_artifacts}/{{engagement_name}}-sow.md"
-project_plan_output: "{engagement_artifacts}/{{engagement_name}}-project-plan.md"
-kickoff_deck_output: "{engagement_artifacts}/{{engagement_name}}-kickoff-deck.md"
-data_request_output: "{engagement_artifacts}/{{engagement_name}}-data-request.md"
+  - id: step-04-kickoff-prep
+    file: steps/step-04-kickoff-prep.md
+    agent: pm
+    prerequisites: [step-03-project-setup]
+    gate_after: gate-kickoff-prep
+    required_artifacts:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-project-plan.md"
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-kickoff-deck.md"
+        type: kickoff-deck
 
-# Human review gates
-review_gates:
-  - step: service-check
-    gate_type: human-approval
-    condition: new-service-opportunity
+  - id: step-05-data-request
+    file: steps/step-05-data-request.md
+    agent: pm
+    prerequisites: [step-04-kickoff-prep]
+    required_artifacts: []
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-data-request.md"
+        type: data-request
+
+# ─── Gates ──────────────────────────────────────────────────────────────────────
+
+gates:
+  - id: gate-service-check
+    after_step: step-00-service-check
+    blocks: [step-01-qualify-opportunity]
     description: "New service opportunity intake summary must be reviewed before escalating or declining"
-  - step: sow-generation
-    gate_type: human-approval
+    condition: new-service-opportunity
+
+  - id: gate-sow-generation
+    after_step: step-02-sow-generation
+    blocks: [step-03-project-setup]
     description: "SOW must be reviewed and approved before project setup begins"
-  - step: kickoff-prep
-    gate_type: human-approval
+
+  - id: gate-kickoff-prep
+    after_step: step-04-kickoff-prep
+    blocks: [step-05-data-request]
     description: "Kickoff deck and data request must be reviewed before sending to client"
+
+# ─── References ─────────────────────────────────────────────────────────────────
+
+templates:
+  sow_template: "crew/templates/sow-template.md"
+
+knowledge_base:
+  ot_ics_overview: "crew/knowledge-base/ot-ics-overview.md"
+
+data:
+  service_catalog: "crew/data/service-catalog.yaml"
+  severity_scales: "crew/data/severity-scales.yaml"

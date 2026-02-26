@@ -4,7 +4,8 @@
  * CREW Installer
  * Compiles agent files and installs them as Claude Code slash commands
  * in .claude/commands/ in the current working directory.
- * Also writes a .crew config file and creates engagement directories.
+ * Also writes a .crew config file, CLAUDE.md, .crew-state.yaml skeleton,
+ * and creates engagement directories.
  *
  * Usage:
  *   node install.js
@@ -18,7 +19,7 @@ const path = require('path');
 
 // ─── Agents to install ────────────────────────────────────────────────────────
 
-const AGENTS = ['bd', 'pm', 'consultant', 'compliance', 'writer', 'reviewer'];
+const AGENTS = ['bd', 'pm', 'consultant', 'compliance', 'writer', 'reviewer', 'crew'];
 
 // ─── Config schema ────────────────────────────────────────────────────────────
 
@@ -187,6 +188,43 @@ function writeCrewFile(config) {
   fs.writeFileSync(path.join(process.cwd(), '.crew'), lines.join('\n'), 'utf8');
 }
 
+function writeClaudeMd(config) {
+  const templatePath = path.join(__dirname, 'templates', 'claude-md-template.md');
+  if (!fs.existsSync(templatePath)) {
+    console.log('  --  CLAUDE.md  (template not found, skipped)');
+    return;
+  }
+  const template = fs.readFileSync(templatePath, 'utf8');
+  const content = stamp(template, config);
+  fs.writeFileSync(path.join(process.cwd(), 'CLAUDE.md'), content, 'utf8');
+  console.log('  OK  CLAUDE.md');
+}
+
+function writeInitialState(config) {
+  const now = new Date().toISOString();
+  const lines = [
+    'crew_version: "1.0.0"',
+    `engagement: "${config.engagement_name || ''}"`,
+    `initialized_at: "${now}"`,
+    '',
+    'active_workflow:',
+    '  id: null',
+    '  started_at: null',
+    '  status: not_started',
+    '',
+    'steps: {}',
+    '',
+    'gates: {}',
+    '',
+    'artifacts: []',
+    '',
+    'completed_workflows: []',
+    '',
+  ];
+  fs.writeFileSync(path.join(process.cwd(), '.crew-state.yaml'), lines.join('\n'), 'utf8');
+  console.log('  OK  .crew-state.yaml');
+}
+
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
@@ -217,6 +255,35 @@ function createDirectories(config) {
   return created;
 }
 
+// ─── Preamble injection ───────────────────────────────────────────────────────
+
+function readPreamble() {
+  const preamblePath = path.join(__dirname, 'agents', 'preamble.md');
+  if (!fs.existsSync(preamblePath)) return null;
+  return fs.readFileSync(preamblePath, 'utf8');
+}
+
+function injectPreamble(agentContent, preamble) {
+  if (!preamble) return agentContent;
+
+  // Insert preamble after the first heading line (# CREW Agent — ...)
+  const lines = agentContent.split('\n');
+  const headingIndex = lines.findIndex(l => l.startsWith('# '));
+
+  if (headingIndex === -1) {
+    // No heading found — prepend
+    return preamble + '\n\n' + agentContent;
+  }
+
+  // Insert after the heading line (and any blank line following it)
+  let insertAt = headingIndex + 1;
+  while (insertAt < lines.length && lines[insertAt].trim() === '') insertAt++;
+
+  const before = lines.slice(0, insertAt).join('\n');
+  const after  = lines.slice(insertAt).join('\n');
+  return before + '\n\n' + preamble + '\n\n' + after;
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -226,7 +293,7 @@ async function main() {
   console.log('\nCREW Install');
   console.log('─'.repeat(50));
   console.log('Installs CREW agents as slash commands in .claude/commands/');
-  console.log('Agents: /bd /pm /consultant /compliance /writer /reviewer\n');
+  console.log('Agents: /bd /pm /consultant /compliance /writer /reviewer /crew\n');
   console.log('Press Enter to accept defaults shown in parentheses.\n');
 
   const config = await collectConfig(CONFIG_FIELDS);
@@ -236,6 +303,12 @@ async function main() {
   // Write .crew config file
   writeCrewFile(config);
   console.log('  OK  .crew');
+
+  // Write CLAUDE.md
+  writeClaudeMd(config);
+
+  // Write initial state file
+  writeInitialState(config);
 
   // Create artifact directories
   const created = createDirectories(config);
@@ -248,6 +321,9 @@ async function main() {
 
   // Ensure .claude/commands exists
   fs.mkdirSync(commandsDir, { recursive: true });
+
+  // Read preamble for injection
+  const preamble = readPreamble();
 
   // Install each agent
   console.log('');
@@ -262,7 +338,14 @@ async function main() {
       continue;
     }
 
-    const content = stamp(fs.readFileSync(src, 'utf8'), config);
+    let content = fs.readFileSync(src, 'utf8');
+
+    // Inject preamble into role agents (not the orchestrator)
+    if (name !== 'crew' && preamble) {
+      content = injectPreamble(content, preamble);
+    }
+
+    content = stamp(content, config);
     fs.writeFileSync(path.join(commandsDir, `${name}.md`), content, 'utf8');
     console.log(`  OK  /${name}`);
     installed++;
@@ -307,6 +390,18 @@ function uninstall() {
   if (fs.existsSync(crewFile)) {
     fs.unlinkSync(crewFile);
     console.log('  removed  .crew');
+  }
+
+  const stateFile = path.join(process.cwd(), '.crew-state.yaml');
+  if (fs.existsSync(stateFile)) {
+    fs.unlinkSync(stateFile);
+    console.log('  removed  .crew-state.yaml');
+  }
+
+  const claudeMd = path.join(process.cwd(), 'CLAUDE.md');
+  if (fs.existsSync(claudeMd)) {
+    fs.unlinkSync(claudeMd);
+    console.log('  removed  CLAUDE.md');
   }
 
   const crewDir = path.join(process.cwd(), 'crew');

@@ -1,67 +1,101 @@
 name: assessment
 description: "Execute the full cybersecurity assessment lifecycle: environment profiling, framework selection, gap analysis, findings classification, compliance mapping, and QA review. This is the core technical workflow for CREW engagements."
 
-config_source: "{project-root}/_bmad/crew/config.yaml"
-firm_name: "{config_source}:firm_name"
-client_name: "{config_source}:client_name"
-engagement_name: "{config_source}:engagement_name"
-vertical: "{config_source}:vertical"
-user_name: "{config_source}:user_name"
-assessor_skill_level: "{config_source}:assessor_skill_level"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-date: system-generated
+# ─── Steps ──────────────────────────────────────────────────────────────────────
 
-assessment_artifacts: "{config_source}:assessment_artifacts"
-engagement_artifacts: "{config_source}:engagement_artifacts"
+steps:
+  - id: step-01-environment-profiling
+    file: steps/step-01-environment-profiling.md
+    agent: consultant
+    prerequisites: []
+    required_artifacts: []
+    produces:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
+        type: environment-profile
 
-installed_path: "{project-root}/_bmad/crew/workflows/assessment"
+  - id: step-02-framework-selection
+    file: steps/step-02-framework-selection.md
+    agent: compliance
+    prerequisites: [step-01-environment-profiling]
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/framework-selection.md"
+        type: framework-selection
 
-# Step files
-step_environment: "{installed_path}/steps/step-01-environment-profiling.md"
-step_framework: "{installed_path}/steps/step-02-framework-selection.md"
-step_gap_analysis: "{installed_path}/steps/step-03-gap-analysis.md"
-step_findings: "{installed_path}/steps/step-04-findings-classification.md"
-step_compliance: "{installed_path}/steps/step-05-compliance-mapping.md"
-step_qa: "{installed_path}/steps/step-06-qa-review.md"
+  - id: step-03-gap-analysis
+    file: steps/step-03-gap-analysis.md
+    agent: consultant
+    prerequisites: [step-02-framework-selection]
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
+      - pattern: "{{assessment_artifacts}}/framework-selection.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-gap-analysis.md"
+        type: gap-analysis
 
-# Knowledge base references
-ot_ics_overview: "{project-root}/_bmad/crew/knowledge-base/ot-ics-overview.md"
-nerc_cip_ref: "{project-root}/_bmad/crew/knowledge-base/nerc-cip-reference.md"
-iec_62443_ref: "{project-root}/_bmad/crew/knowledge-base/iec-62443-reference.md"
-nist_csf_ref: "{project-root}/_bmad/crew/knowledge-base/nist-csf-reference.md"
+  - id: step-04-findings-classification
+    file: steps/step-04-findings-classification.md
+    agent: consultant
+    prerequisites: [step-03-gap-analysis]
+    gate_after: gate-findings-classification
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-gap-analysis.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+        type: findings-register
 
-# Data references
-severity_scales: "{project-root}/_bmad/crew/data/severity-scales.yaml"
-standards_crosswalks: "{project-root}/_bmad/crew/data/standards-crosswalks.yaml"
+  - id: step-05-compliance-mapping
+    file: steps/step-05-compliance-mapping.md
+    agent: compliance
+    prerequisites: [step-04-findings-classification]
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+        type: compliance-matrix
 
-# Output files
-environment_profile_output: "{assessment_artifacts}/{{engagement_name}}-environment-profile.md"
-framework_selection_output: "{assessment_artifacts}/framework-selection.md"
-gap_analysis_output: "{assessment_artifacts}/{{engagement_name}}-gap-analysis.md"
-findings_register_output: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
-compliance_matrix_output: "{assessment_artifacts}/compliance-matrix.md"
+  - id: step-06-qa-review
+    file: steps/step-06-qa-review.md
+    agent: reviewer
+    prerequisites: [step-05-compliance-mapping]
+    gate_after: gate-qa-review
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+    produces: []
 
-# Human review gates
-review_gates:
-  - step: findings-classification
-    gate_type: human-approval
+# ─── Gates ──────────────────────────────────────────────────────────────────────
+
+gates:
+  - id: gate-findings-classification
+    after_step: step-04-findings-classification
+    blocks: [step-05-compliance-mapping]
     description: "Findings register must be reviewed and approved by engagement lead before compliance mapping"
-    required_approvers:
-      - lead-consultant
-      - engagement-pm
-  - step: qa-review
-    gate_type: human-approval
+    required_approvers: [lead-consultant, engagement-pm]
+
+  - id: gate-qa-review
+    after_step: step-06-qa-review
+    blocks: []
     description: "QA reviewer must explicitly PASS the findings register before advancing to report generation"
-    required_approvers:
-      - qa-reviewer
+    required_approvers: [qa-reviewer]
+
+# ─── References ─────────────────────────────────────────────────────────────────
+
+knowledge_base:
+  ot_ics_overview: "crew/knowledge-base/ot-ics-overview.md"
+  nerc_cip_ref: "crew/knowledge-base/nerc-cip-reference.md"
+  iec_62443_ref: "crew/knowledge-base/iec-62443-reference.md"
+  nist_csf_ref: "crew/knowledge-base/nist-csf-reference.md"
+
+data:
+  severity_scales: "crew/data/severity-scales.yaml"
+  standards_crosswalks: "crew/data/standards-crosswalks.yaml"
 
 input_file_patterns:
   sow:
     description: "Statement of Work for scope validation"
-    whole: "{engagement_artifacts}/*-sow.md"
-    load_strategy: "FULL_LOAD"
+    pattern: "{{engagement_artifacts}}/*-sow.md"
   data_request_responses:
     description: "Client-provided documentation from data request"
-    whole: "{assessment_artifacts}/client-data/**/*.{md,pdf,xlsx,docx}"
-    load_strategy: "SELECTIVE_LOAD"
+    pattern: "{{assessment_artifacts}}/client-data/**/*.{md,pdf,xlsx,docx}"

@@ -1,122 +1,212 @@
 name: new-engagement
 description: "End-to-end workflow for a net-new consulting engagement. Two entry paths: Path A for engagements with a signed proposal already in hand, Path B for vague or unscoped projects that need a SOW, LOE, and Assumptions document built first. Both paths converge at PM breakdown and flow through consultant execution, technical report writing, and final QA."
 
-config_source: "{project-root}/_bmad/crew/config.yaml"
-firm_name: "{config_source}:firm_name"
-client_name: "{config_source}:client_name"
-engagement_name: "{config_source}:engagement_name"
-vertical: "{config_source}:vertical"
-user_name: "{config_source}:user_name"
-assessor_skill_level: "{config_source}:assessor_skill_level"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-date: system-generated
+# ─── Steps ──────────────────────────────────────────────────────────────────────
+# Path A and Path B diverge after entry and converge at step-03-pm-breakdown.
+# Steps with a `path` field only apply when that path is active.
+# Steps with `prerequisites_any` require at least ONE of the listed steps (convergence point).
 
-engagement_artifacts: "{config_source}:engagement_artifacts"
-assessment_artifacts: "{config_source}:assessment_artifacts"
-deliverables: "{config_source}:deliverables"
+steps:
+  - id: step-00-entry
+    file: steps/step-00-entry.md
+    agent: bd
+    prerequisites: []
+    required_artifacts: []
+    produces: []
+    note: "Determines whether this is Path A (signed proposal) or Path B (unscoped project)"
 
-installed_path: "{project-root}/_bmad/crew/workflows/new-engagement"
+  # ── Path A: Proposal-First ──────────────────────────────────────────────────
 
-# Step files — shared entry
-step_entry: "{installed_path}/steps/step-00-entry.md"
-
-# Path A: Proposal-First steps
-step_proposal_intake: "{installed_path}/steps/step-01a-proposal-intake.md"
-step_sow_derivation: "{installed_path}/steps/step-02a-sow-derivation.md"
-
-# Path B: Scoping-First steps
-step_project_brief: "{installed_path}/steps/step-01b-project-brief.md"
-step_scope_definition: "{installed_path}/steps/step-02b-scope-definition.md"
-
-# Shared downstream steps (both paths converge here)
-step_pm_breakdown: "{installed_path}/steps/step-03-pm-breakdown.md"
-step_consultant_execution: "{installed_path}/steps/step-04-consultant-execution.md"
-step_report_writing: "{installed_path}/steps/step-05-report-writing.md"
-step_qa_review: "{installed_path}/steps/step-06-qa-review.md"
-
-# Templates
-sow_template: "{project-root}/_bmad/crew/templates/sow-template.md"
-loe_template: "{project-root}/_bmad/crew/templates/loe-template.md"
-assumptions_template: "{project-root}/_bmad/crew/templates/assumptions-template.md"
-task_assignment_template: "{project-root}/_bmad/crew/templates/task-assignment-template.md"
-technical_report_template: "{project-root}/_bmad/crew/templates/technical-report-template.md"
-findings_matrix_template: "{project-root}/_bmad/crew/templates/findings-matrix-template.md"
-
-# Knowledge base references
-ot_ics_overview: "{project-root}/_bmad/crew/knowledge-base/ot-ics-overview.md"
-severity_scales: "{project-root}/_bmad/crew/data/severity-scales.yaml"
-standards_crosswalks: "{project-root}/_bmad/crew/data/standards-crosswalks.yaml"
-
-# Output files
-sow_output: "{engagement_artifacts}/{{engagement_name}}-sow.md"
-loe_output: "{engagement_artifacts}/{{engagement_name}}-loe.md"
-assumptions_output: "{engagement_artifacts}/{{engagement_name}}-assumptions.md"
-task_assignment_output: "{engagement_artifacts}/{{engagement_name}}-task-assignment.md"
-findings_register_output: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
-environment_profile_output: "{assessment_artifacts}/{{engagement_name}}-environment-profile.md"
-gap_analysis_output: "{assessment_artifacts}/{{engagement_name}}-gap-analysis.md"
-technical_report_output: "{deliverables}/{{engagement_name}}-technical-report.md"
-findings_matrix_output: "{deliverables}/{{engagement_name}}-findings-matrix.md"
-final_report_output: "{deliverables}/{{engagement_name}}-assessment-report.md"
-
-# Human review gates
-review_gates:
-  - step: sow-derivation
-    gate_type: human-approval
-    description: "SOW derived from proposal must be reviewed before handing off to PM. Confirm scope boundaries, deliverables, and assumptions accurately reflect the signed proposal."
+  - id: step-01a-proposal-intake
+    file: steps/step-01a-proposal-intake.md
+    agent: bd
     path: A
+    prerequisites: [step-00-entry]
+    required_artifacts:
+      - pattern: "{{engagement_artifacts}}/*-proposal.{md,pdf,docx}"
+    produces: []
 
-  - step: scope-definition
-    gate_type: human-approval
-    description: "SOW + LOE + Assumptions must be reviewed before handing off to PM. Confirm scope is realistic, LOE is defensible, and assumptions are explicitly documented."
+  - id: step-02a-sow-derivation
+    file: steps/step-02a-sow-derivation.md
+    agent: bd
+    path: A
+    prerequisites: [step-01a-proposal-intake]
+    gate_after: gate-sow-derivation
+    required_artifacts: []
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-sow.md"
+        type: sow
+
+  # ── Path B: Scoping-First ───────────────────────────────────────────────────
+
+  - id: step-01b-project-brief
+    file: steps/step-01b-project-brief.md
+    agent: bd
     path: B
+    prerequisites: [step-00-entry]
+    required_artifacts: []
+    produces: []
 
-  - step: pm-breakdown
-    gate_type: human-approval
+  - id: step-02b-scope-definition
+    file: steps/step-02b-scope-definition.md
+    agent: bd
+    path: B
+    prerequisites: [step-01b-project-brief]
+    gate_after: gate-scope-definition
+    required_artifacts: []
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-sow.md"
+        type: sow
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-loe.md"
+        type: loe
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-assumptions.md"
+        type: assumptions
+
+  # ── LOE generation (Path A only — Path B produces LOE during scope definition)
+
+  - id: step-02c-loe-generation
+    file: steps/step-02c-loe-generation.md
+    agent: pm
+    path: A
+    prerequisites: [step-02a-sow-derivation]
+    required_artifacts:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-sow.md"
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-loe.md"
+        type: loe
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-assumptions.md"
+        type: assumptions
+
+  # ── Convergence: Both paths merge here ──────────────────────────────────────
+
+  - id: step-03-pm-breakdown
+    file: steps/step-03-pm-breakdown.md
+    agent: pm
+    prerequisites_any: [step-02c-loe-generation, step-02b-scope-definition]
+    gate_after: gate-pm-breakdown
+    required_artifacts:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-sow.md"
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-loe.md"
+    produces:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-task-assignment.md"
+        type: task-assignment
+
+  - id: step-04-consultant-execution
+    file: steps/step-04-consultant-execution.md
+    agent: consultant
+    prerequisites: [step-03-pm-breakdown]
+    gate_after: gate-consultant-execution
+    required_artifacts:
+      - pattern: "{{engagement_artifacts}}/{{engagement_name}}-task-assignment.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+        type: findings-register
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
+        type: environment-profile
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-gap-analysis.md"
+        type: gap-analysis
+
+  - id: step-05-report-writing
+    file: steps/step-05-report-writing.md
+    agent: writer
+    prerequisites: [step-04-consultant-execution]
+    gate_after: gate-report-writing
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-technical-report.md"
+        type: technical-report
+      - pattern: "{{deliverables}}/{{engagement_name}}-findings-matrix.md"
+        type: findings-matrix
+      - pattern: "{{deliverables}}/{{engagement_name}}-executive-summary.md"
+        type: executive-summary
+
+  - id: step-06-qa-review
+    file: steps/step-06-qa-review.md
+    agent: reviewer
+    prerequisites: [step-05-report-writing]
+    gate_after: gate-qa-review
+    required_artifacts:
+      - pattern: "{{deliverables}}/{{engagement_name}}-technical-report.md"
+      - pattern: "{{deliverables}}/{{engagement_name}}-executive-summary.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-assessment-report.md"
+        type: assessment-report
+
+  - id: step-06-import-history
+    file: steps/step-06-import-history.md
+    agent: pm
+    prerequisites: [step-04-consultant-execution]
+    required_artifacts: []
+    produces: []
+    optional: true
+    note: "Import engagement cost data for LOE benchmarking. Can run anytime after execution."
+
+# ─── Gates ──────────────────────────────────────────────────────────────────────
+
+gates:
+  - id: gate-sow-derivation
+    after_step: step-02a-sow-derivation
+    blocks: [step-02c-loe-generation]
+    path: A
+    description: "SOW derived from proposal must be reviewed before LOE generation. Confirm scope boundaries, deliverables, and assumptions accurately reflect the signed proposal."
+
+  - id: gate-scope-definition
+    after_step: step-02b-scope-definition
+    blocks: [step-03-pm-breakdown]
+    path: B
+    description: "SOW + LOE + Assumptions must be reviewed before handing off to PM. Confirm scope is realistic, LOE is defensible, and assumptions are explicitly documented."
+
+  - id: gate-pm-breakdown
+    after_step: step-03-pm-breakdown
+    blocks: [step-04-consultant-execution]
     description: "Task assignment and WBS must be reviewed before consultant begins execution. Confirm tasks are correctly scoped, sequenced, and assigned."
-    path: both
 
-  - step: consultant-execution
-    gate_type: human-approval
+  - id: gate-consultant-execution
+    after_step: step-04-consultant-execution
+    blocks: [step-05-report-writing]
     description: "Findings register must be reviewed by engagement lead before passing to report writer. Confirm all findings are evidence-backed, accurately rated, and within scope."
-    path: both
 
-  - step: report-writing
-    gate_type: human-approval
+  - id: gate-report-writing
+    after_step: step-05-report-writing
+    blocks: [step-06-qa-review]
     description: "Executive summary and technical report draft must be reviewed before final assembly."
-    path: both
 
-  - step: qa-review
-    gate_type: human-approval
+  - id: gate-qa-review
+    after_step: step-06-qa-review
+    blocks: []
     description: "QA reviewer must explicitly PASS the full deliverable package before client delivery."
-    required_approvers:
-      - qa-reviewer
+    required_approvers: [qa-reviewer]
     blocking: true
-    path: both
 
-# Input file patterns
+# ─── References ─────────────────────────────────────────────────────────────────
+
+templates:
+  sow_template: "crew/templates/sow-template.md"
+  loe_template: "crew/templates/loe-template.md"
+  assumptions_template: "crew/templates/assumptions-template.md"
+  task_assignment_template: "crew/templates/task-assignment-template.md"
+  technical_report_template: "crew/templates/technical-report-template.md"
+  findings_matrix_template: "crew/templates/findings-matrix-template.md"
+
+knowledge_base:
+  ot_ics_overview: "crew/knowledge-base/ot-ics-overview.md"
+
+data:
+  severity_scales: "crew/data/severity-scales.yaml"
+  standards_crosswalks: "crew/data/standards-crosswalks.yaml"
+
 input_file_patterns:
   signed_proposal:
     description: "Signed client proposal (Path A only)"
-    whole: "{engagement_artifacts}/*-proposal.{md,pdf,docx}"
-    load_strategy: "FULL_LOAD"
+    pattern: "{{engagement_artifacts}}/*-proposal.{md,pdf,docx}"
     path: A
-
   sow:
     description: "Approved Statement of Work (available after step-02a or step-02b)"
-    whole: "{engagement_artifacts}/{{engagement_name}}-sow.md"
-    load_strategy: "FULL_LOAD"
-    path: both
-
+    pattern: "{{engagement_artifacts}}/{{engagement_name}}-sow.md"
   task_assignment:
     description: "PM task assignment (available after step-03)"
-    whole: "{engagement_artifacts}/{{engagement_name}}-task-assignment.md"
-    load_strategy: "FULL_LOAD"
-    path: both
-
+    pattern: "{{engagement_artifacts}}/{{engagement_name}}-task-assignment.md"
   findings_register:
     description: "Consultant findings register (available after step-04)"
-    whole: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
-    load_strategy: "FULL_LOAD"
-    path: both
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"

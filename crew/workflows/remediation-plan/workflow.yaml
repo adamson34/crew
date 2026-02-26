@@ -1,50 +1,72 @@
 name: remediation-plan
 description: "Build the prioritized remediation roadmap: findings prioritization, multi-phase roadmap, effort estimation, and quick wins identification. Produces the remediation plan deliverable."
 
-config_source: "{project-root}/_bmad/crew/config.yaml"
-firm_name: "{config_source}:firm_name"
-client_name: "{config_source}:client_name"
-engagement_name: "{config_source}:engagement_name"
-vertical: "{config_source}:vertical"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-date: system-generated
+# ─── Steps ──────────────────────────────────────────────────────────────────────
 
-assessment_artifacts: "{config_source}:assessment_artifacts"
-deliverables: "{config_source}:deliverables"
+steps:
+  - id: step-01-prioritization
+    file: steps/step-01-prioritization.md
+    agent: consultant
+    prerequisites: []
+    gate_after: gate-prioritization
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+    produces: []
 
-installed_path: "{project-root}/_bmad/crew/workflows/remediation-plan"
+  - id: step-02-roadmap
+    file: steps/step-02-roadmap.md
+    agent: consultant
+    prerequisites: [step-01-prioritization]
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-remediation-roadmap.md"
+        type: remediation-roadmap
 
-# Step files
-step_prioritization: "{installed_path}/steps/step-01-prioritization.md"
-step_roadmap: "{installed_path}/steps/step-02-roadmap.md"
-step_effort: "{installed_path}/steps/step-03-effort-estimation.md"
-step_quick_wins: "{installed_path}/steps/step-04-quick-wins.md"
+  - id: step-03-effort-estimation
+    file: steps/step-03-effort-estimation.md
+    agent: pm
+    prerequisites: [step-02-roadmap]
+    required_artifacts:
+      - pattern: "{{deliverables}}/{{engagement_name}}-remediation-roadmap.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-remediation-roadmap.md"
+        type: remediation-roadmap
+        note: "Updates the roadmap with effort estimates"
 
-# Templates
-roadmap_template: "{project-root}/_bmad/crew/templates/remediation-roadmap-template.md"
+  - id: step-04-quick-wins
+    file: steps/step-04-quick-wins.md
+    agent: consultant
+    prerequisites: [step-03-effort-estimation]
+    required_artifacts:
+      - pattern: "{{deliverables}}/{{engagement_name}}-remediation-roadmap.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-remediation-roadmap.md"
+        type: remediation-roadmap
+        note: "Finalizes roadmap with quick wins section"
 
-# Output file
-roadmap_output: "{deliverables}/{{engagement_name}}-remediation-roadmap.md"
+# ─── Gates ──────────────────────────────────────────────────────────────────────
 
-# Human review gate
-review_gates:
-  - step: prioritization
-    gate_type: human-approval
+gates:
+  - id: gate-prioritization
+    after_step: step-01-prioritization
+    blocks: [step-02-roadmap]
     description: "Prioritization rationale must be reviewed before building the phased roadmap"
     notes: "Client constraints (budget, resources, regulatory deadlines) should be confirmed at this gate"
+
+# ─── References ─────────────────────────────────────────────────────────────────
+
+templates:
+  roadmap_template: "crew/templates/remediation-roadmap-template.md"
 
 input_file_patterns:
   findings_register:
     description: "Validated findings register (source of all remediation items)"
-    whole: "{assessment_artifacts}/{{engagement_name}}-findings-register.md"
-    load_strategy: "FULL_LOAD"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
   compliance_matrix:
     description: "Compliance mapping to inform regulatory prioritization"
-    whole: "{assessment_artifacts}/compliance-matrix.md"
-    load_strategy: "FULL_LOAD"
+    pattern: "{{assessment_artifacts}}/compliance-matrix.md"
   environment_profile:
     description: "Environment profile for feasibility context"
-    whole: "{assessment_artifacts}/{{engagement_name}}-environment-profile.md"
-    load_strategy: "SELECTIVE_LOAD"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
