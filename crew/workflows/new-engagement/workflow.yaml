@@ -99,7 +99,7 @@ review_gates:
 input_file_patterns:
   signed_proposal:
     description: "Signed client proposal (Path A only)"
-    whole: "{engagement_artifacts}/proposal-*.{md,pdf,docx}"
+    whole: "{engagement_artifacts}/*-proposal.{md,pdf,docx}"
     load_strategy: "FULL_LOAD"
     path: A
 

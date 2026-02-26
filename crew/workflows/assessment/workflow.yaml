@@ -59,7 +59,7 @@ review_gates:
 input_file_patterns:
   sow:
     description: "Statement of Work for scope validation"
-    whole: "{engagement_artifacts}/sow-*.md"
+    whole: "{engagement_artifacts}/*-sow.md"
     load_strategy: "FULL_LOAD"
   data_request_responses:
     description: "Client-provided documentation from data request"

@@ -61,5 +61,5 @@ input_file_patterns:
     load_strategy: "FULL_LOAD"
   sow:
     description: "SOW for scope alignment validation"
-    whole: "{engagement_artifacts}/sow-*.md"
+    whole: "{engagement_artifacts}/*-sow.md"
     load_strategy: "SELECTIVE_LOAD"

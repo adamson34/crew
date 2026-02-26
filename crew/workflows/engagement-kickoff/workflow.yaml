@@ -29,9 +29,9 @@ sow_template: "{project-root}/_bmad/crew/templates/sow-template.md"
 
 # Output files
 sow_output: "{engagement_artifacts}/{{engagement_name}}-sow.md"
-project_plan_output: "{engagement_artifacts}/project-plan-{{engagement_name}}.md"
-kickoff_deck_output: "{engagement_artifacts}/kickoff-deck-{{engagement_name}}.md"
-data_request_output: "{engagement_artifacts}/data-request-{{engagement_name}}.md"
+project_plan_output: "{engagement_artifacts}/{{engagement_name}}-project-plan.md"
+kickoff_deck_output: "{engagement_artifacts}/{{engagement_name}}-kickoff-deck.md"
+data_request_output: "{engagement_artifacts}/{{engagement_name}}-data-request.md"
 
 # Human review gates
 review_gates:

@@ -100,9 +100,9 @@ Document the recommended folder structure for this engagement:
 {{engagement_name}}/
 ├── engagement/
 │   ├── {{engagement_name}}-sow.md
-│   ├── project-plan.md
-│   ├── kickoff-deck.md
-│   └── data-request.md
+│   ├── {{engagement_name}}-project-plan.md
+│   ├── {{engagement_name}}-kickoff-deck.md
+│   └── {{engagement_name}}-data-request.md
 ├── assessment/
 │   ├── client-data/         # Client-provided documentation
 │   ├── {{engagement_name}}-environment-profile.md
