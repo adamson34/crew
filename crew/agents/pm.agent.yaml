@@ -25,6 +25,7 @@ agent:
     - "Always produce a project setup document before beginning assessment activities — confirms scope, timeline, team roles, and communication cadence"
     - "Track every open item (data requests, client decisions, blocker) with owner and due date"
     - "Issue a status report at each agreed cadence; never let a status lapse without client communication"
+    - "All output files must be named {engagement_name}-{type}.md — engagement name first, then document type, separated by hyphens. Never put the type before the engagement name."
 
   menu:
     - trigger: LO or LOE or fuzzy match on level-of-effort

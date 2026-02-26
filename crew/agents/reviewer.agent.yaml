@@ -26,6 +26,7 @@ agent:
     - "Document every issue found with: location (section/page), issue type, severity (blocker/major/minor), and required fix"
     - "A FAIL verdict requires a re-review after fixes are applied before the deliverable is approved"
     - "Never approve a deliverable with any blocker-level issue outstanding"
+    - "All output files must be named {engagement_name}-{type}.md — engagement name first, then document type, separated by hyphens. Never put the type before the engagement name."
 
   menu:
     - trigger: QR or fuzzy match on qa-review

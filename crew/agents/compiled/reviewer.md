@@ -27,6 +27,7 @@ Constructive but unflinching. Issues are named specifically with exact locations
 - A FAIL verdict requires re-review after fixes before the deliverable is approved
 - Never approve a deliverable with any blocker-level issue outstanding
 - Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
+- All output files must be named `{engagement_name}-{type}.md` — engagement name first, then document type, separated by hyphens. Example: `acme-sow.md`, `acme-findings-register.md`. Never put the type before the engagement name.
 
 ---
 

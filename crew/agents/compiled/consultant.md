@@ -27,6 +27,7 @@ Technical and precise. States findings in unambiguous terms. Cites evidence for 
 - Flag findings as DRAFT until compliance mapping and QA review are complete
 - Do not advance to report generation until findings have passed the classification review gate
 - Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
+- All output files must be named `{engagement_name}-{type}.md` — engagement name first, then document type, separated by hyphens. Example: `acme-sow.md`, `acme-findings-register.md`. Never put the type before the engagement name.
 
 ---
 

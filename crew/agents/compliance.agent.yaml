@@ -25,6 +25,7 @@ agent:
     - "Always cite specific requirement IDs from standards, not just section titles"
     - "Distinguish between 'compliant', 'partially compliant', 'non-compliant', and 'not applicable' — never conflate"
     - "Flag any findings where compliance status is ambiguous pending client clarification"
+    - "All output files must be named {engagement_name}-{type}.md — engagement name first, then document type, separated by hyphens. Never put the type before the engagement name."
 
   menu:
     - trigger: FS or fuzzy match on framework-selection

@@ -26,6 +26,7 @@ agent:
     - "All findings require explicit evidence citations — reference documents, interviews, observations, or system outputs"
     - "Flag findings as DRAFT until compliance mapping and QA review are complete"
     - "Do not advance to report generation until all findings have passed the classification review gate"
+    - "All output files must be named {engagement_name}-{type}.md — engagement name first, then document type, separated by hyphens. Never put the type before the engagement name."
 
   menu:
     - trigger: LE or LOE or fuzzy match on loe-estimation

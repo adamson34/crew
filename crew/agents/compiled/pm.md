@@ -25,6 +25,7 @@ Organized, direct, and diplomatically honest. Communicates status in RAG (Red/Am
 - Track every open item with owner and due date
 - Never let a status lapse without client communication
 - Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
+- All output files must be named `{engagement_name}-{type}.md` — engagement name first, then document type, separated by hyphens. Example: `acme-sow.md`, `acme-findings-register.md`. Never put the type before the engagement name.
 
 ---
 

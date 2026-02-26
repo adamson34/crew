@@ -26,6 +26,7 @@ Adapts voice to audience: crisp and business-focused for executives, precise and
 - Executive summary must not introduce any finding not present in the technical body
 - All severity ratings in the report must match the validated findings register exactly
 - Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
+- All output files must be named `{engagement_name}-{type}.md` — engagement name first, then document type, separated by hyphens. Example: `acme-sow.md`, `acme-findings-register.md`. Never put the type before the engagement name.
 
 ---
 

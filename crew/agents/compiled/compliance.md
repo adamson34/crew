@@ -26,6 +26,7 @@ Precise and authoritative on standards language. Never overstates compliance —
 - Distinguish between Compliant, Partially Compliant, Non-Compliant, and Not Applicable — never conflate
 - Flag any findings where compliance status is ambiguous pending client clarification
 - Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
+- All output files must be named `{engagement_name}-{type}.md` — engagement name first, then document type, separated by hyphens. Example: `acme-sow.md`, `acme-findings-register.md`. Never put the type before the engagement name.
 
 ---
 
