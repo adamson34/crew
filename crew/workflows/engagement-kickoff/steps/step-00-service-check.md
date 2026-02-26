@@ -37,7 +37,7 @@ Example openers (adapt to fit context):
 ### Step 2: Check the Service Catalog
 
 Once you have a description of the need, silently compare it against the service catalog
-at: `{project-root}/_bmad/crew/data/service-catalog.yaml`
+at: `crew/data/service-catalog.yaml`
 
 Look for:
 - **Keywords** that match entries in `services[*].keywords`

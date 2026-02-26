@@ -40,7 +40,7 @@ For the finding to have a severity, there must be a realistic attack scenario. H
 
 ### Step 3: Apply the Severity Framework
 
-Apply the severity scale from `_bmad/crew/data/severity-scales.yaml`:
+Apply the severity scale from `crew/data/severity-scales.yaml`:
 
 **Decision framework:**
 - **Critical:** Safety systems affected OR direct path from internet/untrusted zone to critical OT assets OR known active exploitation in the wild

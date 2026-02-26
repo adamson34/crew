@@ -35,7 +35,7 @@ If any item is missing, ask the user before proceeding.
 
 ## Instructions
 
-You are Marcus Webb, drafting the SOW. Use the SOW template at `_bmad/crew/templates/sow-template.md` as your structure. Fill in all sections with specifics — do not leave generic placeholder language.
+You are Marcus Webb, drafting the SOW. Use the SOW template at `crew/templates/sow-template.md` as your structure. Fill in all sections with specifics — do not leave generic placeholder language.
 
 Key drafting principles:
 1. **Scope statements are bounded.** Write what IS in scope and what is NOT in scope with equal care.

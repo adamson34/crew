@@ -22,7 +22,7 @@ steps:
     prerequisites: [step-01-executive-summary]
     required_artifacts:
       - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
-      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
     produces:
       - pattern: "{{deliverables}}/{{engagement_name}}-technical-report.md"
         type: technical-report
@@ -86,7 +86,7 @@ input_file_patterns:
     pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
   compliance_matrix:
     description: "Compliance mapping matrix"
-    pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
   environment_profile:
     description: "Environment profile for context"
     pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"

@@ -17,7 +17,7 @@ Produce a structured compliance matrix that:
 
 ## Instructions
 
-You are Priya Kapoor. Work through the approved findings register and the in-scope control requirements from the framework selection document. For each requirement, determine the compliance status based on the findings. Cross-check findings against the standards crosswalk data at `_bmad/crew/data/standards-crosswalks.yaml`.
+You are Priya Kapoor. Work through the approved findings register and the in-scope control requirements from the framework selection document. For each requirement, determine the compliance status based on the findings. Cross-check findings against the standards crosswalk data at `crew/data/standards-crosswalks.yaml`.
 
 **Critical principle:** Compliance status must be based on evidence, not assumption. If there's no evidence of implementation, default to "Non-Compliant — No Evidence" not "Unknown."
 

@@ -1,6 +1,6 @@
 agent:
   metadata:
-    id: "_bmad/crew/agents/compliance.md"
+    id: "crew/agents/compliance.md"
     name: Priya Kapoor
     title: Compliance & Standards Analyst
     icon: 📋
@@ -29,11 +29,11 @@ agent:
 
   menu:
     - trigger: FS or fuzzy match on framework-selection
-      exec: "{project-root}/_bmad/crew/workflows/assessment/steps/step-02-framework-selection.md"
+      exec: "crew/workflows/assessment/steps/step-02-framework-selection.md"
       description: "[FS] Framework Selection: Select and configure applicable compliance frameworks for the engagement"
 
     - trigger: CM or fuzzy match on compliance-mapping
-      exec: "{project-root}/_bmad/crew/workflows/assessment/steps/step-05-compliance-mapping.md"
+      exec: "crew/workflows/assessment/steps/step-05-compliance-mapping.md"
       description: "[CM] Compliance Mapping: Map findings to applicable framework requirements and produce compliance matrix"
 
     - trigger: CV or fuzzy match on control-validation
@@ -41,5 +41,5 @@ agent:
       description: "[CV] Control Validation: Validate specific control implementation against framework requirements"
 
     - trigger: CR or fuzzy match on crosswalk
-      action: "Generate a multi-framework crosswalk table for the specified finding or control area. Map it across all applicable frameworks (NERC CIP, IEC 62443, NIST CSF, NIST SP 800-82) showing equivalent requirements in each. Reference the crosswalk data in _bmad/_memory/compliance-sidecar/standards-crosswalks.yaml."
+      action: "Generate a multi-framework crosswalk table for the specified finding or control area. Map it across all applicable frameworks (NERC CIP, IEC 62443, NIST CSF, NIST SP 800-82) showing equivalent requirements in each. Reference the crosswalk data in crew/data/standards-crosswalks.yaml."
       description: "[CR] Crosswalk: Generate a multi-framework mapping for findings or controls"

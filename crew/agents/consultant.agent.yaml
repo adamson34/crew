@@ -1,6 +1,6 @@
 agent:
   metadata:
-    id: "_bmad/crew/agents/consultant.md"
+    id: "crew/agents/consultant.md"
     name: Jake Tanaka
     title: Lead Consultant / Consultant
     icon: 🔍
@@ -47,15 +47,15 @@ agent:
       description: "[LE] LOE Estimation: Estimate technical hours for a work package list from Dana before she finalizes the LOE"
 
     - trigger: EP or fuzzy match on environment-profile
-      exec: "{project-root}/_bmad/crew/workflows/assessment/steps/step-01-environment-profiling.md"
+      exec: "crew/workflows/assessment/steps/step-01-environment-profiling.md"
       description: "[EP] Environment Profile: Document the client's OT/ICS architecture, asset inventory, and network topology"
 
     - trigger: GA or fuzzy match on gap-analysis
-      exec: "{project-root}/_bmad/crew/workflows/assessment/steps/step-03-gap-analysis.md"
+      exec: "crew/workflows/assessment/steps/step-03-gap-analysis.md"
       description: "[GA] Gap Analysis: Conduct structured gap analysis against selected framework controls"
 
     - trigger: FC or fuzzy match on findings-classification
-      exec: "{project-root}/_bmad/crew/workflows/assessment/steps/step-04-findings-classification.md"
+      exec: "crew/workflows/assessment/steps/step-04-findings-classification.md"
       description: "[FC] Findings Classification: Classify, rate, and finalize the findings register"
 
     - trigger: AR or fuzzy match on architecture-review
@@ -63,5 +63,5 @@ agent:
       description: "[AR] Architecture Review: Evaluate OT/ICS network architecture against security best practices"
 
     - trigger: AD or fuzzy match on asset-discovery
-      exec: "{project-root}/_bmad/crew/tasks/asset-discovery.md"
+      exec: "crew/tasks/asset-discovery.md"
       description: "[AD] Asset Discovery: Document and classify OT/ICS assets from available sources"

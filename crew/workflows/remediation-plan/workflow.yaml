@@ -11,7 +11,7 @@ steps:
     gate_after: gate-prioritization
     required_artifacts:
       - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
-      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
     produces: []
 
   - id: step-02-roadmap
@@ -66,7 +66,7 @@ input_file_patterns:
     pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
   compliance_matrix:
     description: "Compliance mapping to inform regulatory prioritization"
-    pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
   environment_profile:
     description: "Environment profile for feasibility context"
     pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"

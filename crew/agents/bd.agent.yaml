@@ -1,6 +1,6 @@
 agent:
   metadata:
-    id: "_bmad/crew/agents/bd.md"
+    id: "crew/agents/bd.md"
     name: Marcus Webb
     title: Business Development / Sales Engineer
     icon: 🤝
@@ -37,16 +37,16 @@ agent:
 
   menu:
     - trigger: SI or any initial contact without a specific trigger
-      exec: "{project-root}/_bmad/crew/workflows/engagement-kickoff/steps/step-00-service-check.md"
+      exec: "crew/workflows/engagement-kickoff/steps/step-00-service-check.md"
       description: "[SI] Service Inquiry: Check what the client needs against the firm's service catalog before qualification begins — always the first step"
       default: true
 
     - trigger: QO or fuzzy match on qualify-opportunity
-      exec: "{project-root}/_bmad/crew/workflows/engagement-kickoff/steps/step-01-qualify-opportunity.md"
+      exec: "crew/workflows/engagement-kickoff/steps/step-01-qualify-opportunity.md"
       description: "[QO] Qualify Opportunity: Structured discovery to assess fit, scope indicators, and win probability — run after SI confirms a service match"
 
     - trigger: GS or fuzzy match on generate-sow
-      exec: "{project-root}/_bmad/crew/workflows/engagement-kickoff/steps/step-02-sow-generation.md"
+      exec: "crew/workflows/engagement-kickoff/steps/step-02-sow-generation.md"
       description: "[GS] Generate SOW: Produce a complete Statement of Work from scoping inputs"
 
     - trigger: WP or fuzzy match on write-proposal

@@ -1,6 +1,6 @@
 agent:
   metadata:
-    id: "_bmad/crew/agents/writer.md"
+    id: "crew/agents/writer.md"
     name: Eli Carter
     title: Technical Report Writer
     icon: ✍️
@@ -29,21 +29,21 @@ agent:
 
   menu:
     - trigger: ES or fuzzy match on executive-summary
-      exec: "{project-root}/_bmad/crew/workflows/report-generation/steps/step-01-executive-summary.md"
+      exec: "crew/workflows/report-generation/steps/step-01-executive-summary.md"
       description: "[ES] Executive Summary: Draft the executive summary section for the assessment report"
 
     - trigger: TR or fuzzy match on technical-report
-      exec: "{project-root}/_bmad/crew/workflows/report-generation/steps/step-02-technical-report.md"
+      exec: "crew/workflows/report-generation/steps/step-02-technical-report.md"
       description: "[TR] Technical Report: Draft the full technical findings and analysis section"
 
     - trigger: FM or fuzzy match on findings-matrix
-      exec: "{project-root}/_bmad/crew/workflows/report-generation/steps/step-03-findings-matrix.md"
+      exec: "crew/workflows/report-generation/steps/step-03-findings-matrix.md"
       description: "[FM] Findings Matrix: Produce the structured findings summary table"
 
     - trigger: AS or fuzzy match on assemble-report
-      exec: "{project-root}/_bmad/crew/workflows/report-generation/steps/step-04-assemble.md"
+      exec: "crew/workflows/report-generation/steps/step-04-assemble.md"
       description: "[AS] Assemble Report: Combine all sections into the final deliverable structure"
 
     - trigger: RP or fuzzy match on remediation-plan
-      exec: "{project-root}/_bmad/crew/workflows/remediation-plan/workflow.yaml"
+      exec: "crew/workflows/remediation-plan/workflow.yaml"
       description: "[RP] Remediation Plan: Draft the prioritized remediation roadmap deliverable"

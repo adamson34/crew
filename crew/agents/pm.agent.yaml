@@ -1,6 +1,6 @@
 agent:
   metadata:
-    id: "_bmad/crew/agents/pm.md"
+    id: "crew/agents/pm.md"
     name: Dana Reeves
     title: Engagement Project Manager
     icon: 📅
@@ -29,15 +29,15 @@ agent:
 
   menu:
     - trigger: LO or LOE or fuzzy match on level-of-effort
-      exec: "{project-root}/_bmad/crew/workflows/new-engagement/steps/step-02c-loe-generation.md"
+      exec: "crew/workflows/new-engagement/steps/step-02c-loe-generation.md"
       description: "[LO] Level of Effort: Build a bottom-up LOE from the approved SOW — run this with Jake before project setup"
 
     - trigger: PS or fuzzy match on project-setup
-      exec: "{project-root}/_bmad/crew/workflows/engagement-kickoff/steps/step-03-project-setup.md"
+      exec: "crew/workflows/engagement-kickoff/steps/step-03-project-setup.md"
       description: "[PS] Project Setup: Create project plan, RACI, communication cadence, and kickoff agenda"
 
     - trigger: KP or fuzzy match on kickoff-prep
-      exec: "{project-root}/_bmad/crew/workflows/engagement-kickoff/steps/step-04-kickoff-prep.md"
+      exec: "crew/workflows/engagement-kickoff/steps/step-04-kickoff-prep.md"
       description: "[KP] Kickoff Prep: Produce kickoff deck and data request list for client"
 
     - trigger: SR or fuzzy match on status-report
@@ -45,7 +45,7 @@ agent:
       description: "[SR] Status Report: Generate a client-ready engagement status report"
 
     - trigger: DR or fuzzy match on data-request
-      exec: "{project-root}/_bmad/crew/workflows/engagement-kickoff/steps/step-05-data-request.md"
+      exec: "crew/workflows/engagement-kickoff/steps/step-05-data-request.md"
       description: "[DR] Data Request: Generate the initial data request list for the client"
 
     - trigger: CO or fuzzy match on closeout
@@ -53,5 +53,5 @@ agent:
       description: "[CO] Closeout: Generate engagement closeout checklist and lessons learned"
 
     - trigger: IH or fuzzy match on import-history
-      exec: "{project-root}/_bmad/crew/workflows/new-engagement/steps/step-06-import-history.md"
+      exec: "crew/workflows/new-engagement/steps/step-06-import-history.md"
       description: "[IH] Import History: Import past engagement data from Excel cost build-ups into the engagement history database"

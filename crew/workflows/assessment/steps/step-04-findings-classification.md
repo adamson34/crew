@@ -31,7 +31,7 @@ You are Jake Tanaka. Work through each gap identified in Step 03. For each gap t
 
 ## Severity Rating Methodology
 
-Reference the severity scale at `_bmad/crew/data/severity-scales.yaml` for full definitions. Summary:
+Reference the severity scale at `crew/data/severity-scales.yaml` for full definitions. Summary:
 
 | Severity | Definition |
 |----------|-----------|

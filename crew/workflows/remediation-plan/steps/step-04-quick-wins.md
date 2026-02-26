@@ -93,4 +93,4 @@ Completing all quick wins addresses [N] findings ([N] High, [N] Medium) and mate
 
 ## Assembly Note
 
-After completing all four steps (prioritization, roadmap, effort estimation, quick wins), produce the final remediation plan deliverable by assembling these outputs into the template at `_bmad/crew/templates/remediation-roadmap-template.md`. Save as: `deliverables/{{engagement_name}}-remediation-roadmap.md`.
+After completing all four steps (prioritization, roadmap, effort estimation, quick wins), produce the final remediation plan deliverable by assembling these outputs into the template at `crew/templates/remediation-roadmap-template.md`. Save as: `deliverables/{{engagement_name}}-remediation-roadmap.md`.

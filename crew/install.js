@@ -164,6 +164,8 @@ function stamp(content, config) {
     if (config[f.key]) out = out.split(`{{${f.key}}}`).join(config[f.key]);
     // if null, leave {{key}} as-is for manual replacement
   }
+  // Replace {{date}} with today's date (not a user-prompted field)
+  if (config._date) out = out.split('{{date}}').join(config._date);
   return out;
 }
 
@@ -253,6 +255,29 @@ function createDirectories(config) {
     }
   }
   return created;
+}
+
+// ─── Stamp crew directory ────────────────────────────────────────────────────
+
+/**
+ * Walk the installed crew/ directory and stamp {{placeholders}} in all
+ * .md and .yaml files. This ensures workflow step instructions, templates,
+ * and workflow YAML artifact patterns contain real values instead of
+ * mustache placeholders.
+ */
+function stampCrewDir(dir, config) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      stampCrewDir(full, config);
+    } else if (entry.name.endsWith('.md') || entry.name.endsWith('.yaml')) {
+      const content = fs.readFileSync(full, 'utf8');
+      const stamped = stamp(content, config);
+      if (stamped !== content) {
+        fs.writeFileSync(full, stamped, 'utf8');
+      }
+    }
+  }
 }
 
 // ─── Hooks configuration ─────────────────────────────────────────────────────
@@ -422,6 +447,9 @@ async function main() {
 
   const config = await collectConfig(CONFIG_FIELDS);
 
+  // Computed values (not user-prompted)
+  config._date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
   console.log('');
 
   // Write .crew config file
@@ -442,6 +470,10 @@ async function main() {
   const moduleDestDir = path.join(process.cwd(), 'crew');
   copyDir(__dirname, moduleDestDir);
   console.log('  OK  crew/');
+
+  // Stamp placeholders in copied crew/ files (workflows, templates, step files)
+  stampCrewDir(moduleDestDir, config);
+  console.log('  OK  crew/ (stamped)');
 
   // Write hook configuration to .claude/settings.json
   writeHooksConfig();

@@ -20,7 +20,7 @@ steps:
     required_artifacts:
       - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
     produces:
-      - pattern: "{{assessment_artifacts}}/framework-selection.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-framework-selection.md"
         type: framework-selection
 
   - id: step-03-gap-analysis
@@ -29,7 +29,7 @@ steps:
     prerequisites: [step-02-framework-selection]
     required_artifacts:
       - pattern: "{{assessment_artifacts}}/{{engagement_name}}-environment-profile.md"
-      - pattern: "{{assessment_artifacts}}/framework-selection.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-framework-selection.md"
     produces:
       - pattern: "{{assessment_artifacts}}/{{engagement_name}}-gap-analysis.md"
         type: gap-analysis
@@ -52,7 +52,7 @@ steps:
     required_artifacts:
       - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
     produces:
-      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
         type: compliance-matrix
 
   - id: step-06-qa-review
@@ -62,7 +62,7 @@ steps:
     gate_after: gate-qa-review
     required_artifacts:
       - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
-      - pattern: "{{assessment_artifacts}}/compliance-matrix.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
     produces: []
 
 # ─── Gates ──────────────────────────────────────────────────────────────────────
