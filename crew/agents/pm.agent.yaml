@@ -51,3 +51,7 @@ agent:
     - trigger: CO or fuzzy match on closeout
       action: "Produce an engagement closeout checklist covering: all deliverables confirmed delivered and accepted, lessons learned documented, archive package created, any follow-on opportunities identified and handed to BD."
       description: "[CO] Closeout: Generate engagement closeout checklist and lessons learned"
+
+    - trigger: IH or fuzzy match on import-history
+      exec: "{project-root}/_bmad/crew/workflows/new-engagement/steps/step-06-import-history.md"
+      description: "[IH] Import History: Import past engagement data from Excel cost build-ups into the engagement history database"

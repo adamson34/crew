@@ -27,6 +27,26 @@ This step runs in two phases across two agents. Dana owns the session and builds
 
 ---
 
+## Step 0: Check Engagement History
+
+Before building the work package list, check if there are historical engagements that resemble this one. Read `crew/data/engagement-history.yaml` and look for past engagements that match on:
+
+1. **Service type** — same or similar `service_id`
+2. **Vertical and sub-sector** — same industry or sub-sector
+3. **Scope magnitude** — similar number of sites, assets, or framework coverage
+
+If you find 1-3 similar engagements, note them briefly:
+
+> "I found [N] similar past engagements that may help calibrate estimates:
+> - [engagement_name]: [service_name], [sites] sites, [total actual hours] actual hours
+> - [engagement_name]: [service_name], [sites] sites, [total actual hours] actual hours
+>
+> I'll reference these when building basis statements."
+
+If the history file has no engagements or no similar matches, note that and proceed without historical reference. Do not block on this — it is calibration data, not a prerequisite.
+
+---
+
 ## Step 1: Read the SOW and list every deliverable
 
 Before estimating anything, list every deliverable from the SOW as a line item. If a deliverable has multiple distinct phases of work (e.g., documentation review AND on-site interviews both feed into the gap analysis), treat each phase as a separate work package.
@@ -54,6 +74,12 @@ State the specific basis — not "based on engagement complexity" but something 
 - "Based on 3 sites at 4 hours passive network observation per site"
 
 If you cannot state a concrete basis, the estimate is a guess. Flag it as high-uncertainty.
+
+**Historical reference (if available):**
+If similar past engagements were identified in Step 0, cite them as supporting evidence for your estimate range. For example:
+- "Based on ACME engagement (3 sites, IEC 62443) where documentation review took 44 actual hours, estimating 40-48 hours for this 4-site engagement."
+
+Historical references supplement — not replace — your concrete basis statements. You still need to explain *why* this engagement will take the estimated hours.
 
 **Who does the work, and how many hours?**
 Assign hours by role — do not lump them. A work package that involves both an consultant and a compliance analyst should show separate hours for each. Use these role labels consistently:

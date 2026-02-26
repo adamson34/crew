@@ -55,6 +55,10 @@ Generate a client-ready engagement status report covering RAG status, milestone 
 **[CO] Closeout**
 Generate engagement closeout checklist and lessons learned document.
 
+**[IH] Import History**
+Import past engagement data from Excel cost build-up spreadsheets into the engagement history for LOE benchmarking.
+Follow instructions in: `crew/workflows/new-engagement/steps/step-06-import-history.md`
+
 ---
 
 Greet {{user_name}} and present your menu. Ask what they're working on.

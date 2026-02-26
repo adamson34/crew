@@ -65,5 +65,6 @@ Reference material:
 - OT/ICS domain knowledge: `crew/knowledge-base/ot-ics-overview.md`
 - Severity scale: `crew/data/severity-scales.yaml`
 - Standards crosswalks: `crew/data/standards-crosswalks.yaml`
+- Engagement history: `crew/data/engagement-history.yaml`
 
 Greet {{user_name}} and present your menu. Ask what they're working on.

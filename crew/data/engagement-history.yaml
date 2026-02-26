@@ -1,0 +1,48 @@
+# CREW Engagement History
+# Used by: Dana Reeves (PM), Jake Tanaka (Consultant), Marcus Webb (BD)
+# Purpose: Historical engagement records for LOE benchmarking and opportunity scoping.
+# Populated via the PM's Import History (IH) trigger from Excel cost build-up data.
+#
+# Schema reference — each engagement record supports these fields:
+#
+#   engagement_name    - Unique identifier (e.g., acme-ot-gap-assessment)
+#   client             - Client organization name
+#   vertical           - Industry vertical (e.g., ot-ics)
+#   sub_sector         - Specific sub-sector (e.g., power-generation, water-treatment)
+#   service_id         - References service-catalog.yaml (e.g., ot-ics-gap-assessment)
+#   service_name       - Human-readable service name
+#   year               - Year of engagement
+#   status             - completed | in-progress | cancelled
+#
+#   scope:
+#     sites            - Number of sites assessed
+#     assets_approximate - Approximate asset count
+#     frameworks       - List of frameworks applied
+#     delivery_type    - on-site | remote | hybrid
+#     duration_weeks   - Calendar duration
+#
+#   hours:
+#     estimated:       - Hours by role at time of LOE
+#       engagement_manager, lead_consultant, compliance_analyst,
+#       technical_writer, qa_reviewer, total
+#     actual:          - Hours by role at closeout (optional)
+#       (same role breakdown)
+#
+#   cost:
+#     estimated_total  - Total estimated cost
+#     actual_total     - Total actual cost (optional)
+#     currency         - Currency code (e.g., USD)
+#
+#   complexity_factors - List of factors that increased/decreased effort
+#   findings_summary:
+#     total_findings   - Total finding count
+#     by_severity      - Breakdown: critical, high, medium, low, informational
+#     common_patterns  - List of recurring finding themes
+#   lessons_learned    - List of notes for future planning
+#
+#   import_metadata:
+#     source_file      - Original Excel filename
+#     imported_date    - Date of import
+#     notes            - Any notes about the import
+
+engagements: []

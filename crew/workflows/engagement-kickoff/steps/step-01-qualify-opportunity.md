@@ -45,6 +45,14 @@ Gather:
 - On-premises, cloud-managed, or hybrid historian/SCADA?
 - Remote access currently in use?
 
+**Historical benchmark (if available):**
+After gathering scope details, silently check `crew/data/engagement-history.yaml` for past engagements with a similar vertical, service type, and scope size. If you find relevant comparisons, use them in the Scope Indicators section of the qualification summary:
+- Reference past engagement duration and team size as benchmarks
+- Note any complexity factors from past engagements that apply here
+- If past engagements in this sub-sector consistently ran over estimated hours, flag that as a risk in the Risk Flags section
+
+Do not block on this — if the history file has no engagements or no matches, produce scope indicators from your own judgment as usual.
+
 ### Discovery Area 4: Constraints
 
 Gather:
