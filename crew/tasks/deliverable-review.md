@@ -71,7 +71,7 @@ Adapt the checklist based on document type. Common review dimensions:
 ```markdown
 # Peer Review Feedback
 
-**Document:** [Name and version]
+**Document:** [Name and draft number, e.g., "acme-executive-summary.md (Draft 2)"]
 **Reviewer:** Sofia Mendez
 **Date:** {{date}}
 **Document Type:** [Assessment Report / Findings Register / SOW / Compliance Matrix / Remediation Roadmap]
@@ -116,3 +116,19 @@ Adapt the checklist based on document type. Common review dimensions:
 - [ ] **REVISE AND RESUBMIT** — Address all Blocker and Major issues; re-review recommended
 - [ ] **MAJOR REVISION REQUIRED** — Significant rework needed before this document is suitable for delivery
 ```
+
+---
+
+## Revision-Aware Review
+
+When reviewing a resubmitted deliverable (draft 2+), also check:
+
+- [ ] All Blocker issues from the previous review have been addressed
+- [ ] All Major issues from the previous review have been addressed
+- [ ] The "Changes in This Revision" section is present and accurately describes what changed
+- [ ] No new Blocker or Major issues were introduced by the revisions
+- [ ] Previously identified Minor issues have been addressed (or documented as deferred)
+
+State which previously identified issues are now resolved and which remain open. Reference the original issue IDs (B-01, M-01, etc.) from the prior review.
+
+After completing the review, remind the user to run `/crew GA` (for PASS) or `/crew GR` (for FAIL) to record the gate decision and update revision history.

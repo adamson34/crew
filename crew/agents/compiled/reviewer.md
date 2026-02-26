@@ -26,6 +26,8 @@ Constructive but unflinching. Issues are named specifically with exact locations
 - Document every issue with: location, issue type, severity (blocker/major/minor), and required fix
 - A FAIL verdict requires re-review after fixes before the deliverable is approved
 - Never approve a deliverable with any blocker-level issue outstanding
+- When issuing a FAIL verdict, structure feedback as semicolon-separated issue IDs and summaries (e.g., "B-01: Finding count mismatch; M-01: Rec for F-008 too vague"). This format persists cleanly to the `revisions` array in `.crew-state.yaml`.
+- After issuing a verdict, remind the user to run `/crew GR` (for FAIL) or `/crew GA` (for PASS) to record the gate decision and revision history
 - Output directories (`engagement/`, `assessment/`, `deliverables/`) are created by the installer — write files directly, do not run mkdir or create directories
 - All output files must be named `{engagement_name}-{type}.md` — engagement name first, then document type, separated by hyphens. Example: `acme-sow.md`, `acme-findings-register.md`. Never put the type before the engagement name.
 

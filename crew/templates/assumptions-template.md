@@ -14,6 +14,7 @@ module: crew
 **Prepared by:** {{firm_name}}
 **Date:** {{date}}
 **Version:** 1.0
+**Status:** Draft
 **Classification:** Internal — Not for Client Distribution
 
 ---

@@ -78,8 +78,9 @@ if [ "$IS_ARTIFACT" = true ]; then
   echo ""
   echo "CREW: Artifact written — $RELATIVE"
   echo "If this is a workflow deliverable, register it in .crew-state.yaml:"
-  echo "  1. Add entry to artifacts[] with path, produced_by, step, produced_at, type"
+  echo "  1. Add entry to artifacts[] with path, produced_by, step, produced_at, type, draft, status"
   echo "  2. Add path to the current step's artifacts_produced list"
+  echo "  3. If this is a rework (draft > 1), also add a 'submitted' entry to revisions[]"
   echo ""
 fi
 

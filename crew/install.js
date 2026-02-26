@@ -220,6 +220,8 @@ function writeInitialState(config) {
     '',
     'artifacts: []',
     '',
+    'revisions: []',
+    '',
     'completed_workflows: []',
     '',
   ];

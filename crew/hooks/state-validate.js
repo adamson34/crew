@@ -14,6 +14,8 @@
 const WORKFLOW_STATUSES = ['not_started', 'in_progress', 'completed'];
 const STEP_STATUSES     = ['not_started', 'in_progress', 'completed'];
 const GATE_STATUSES     = ['pending', 'approved', 'rejected'];
+const REVISION_ACTIONS  = ['submitted', 'rejected', 'approved'];
+const ARTIFACT_STATUSES = ['draft', 'approved', 'superseded'];
 
 // ISO 8601 timestamp: YYYY-MM-DDTHH:MM:SS with optional fractional seconds and tz
 const ISO_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})?$/;
@@ -276,6 +278,20 @@ function validateStateContent(content) {
       if (gate.reviewed_at && gate.reviewed_at !== null && !isValidTimestamp(gate.reviewed_at)) {
         errors.push(`Gate "${id}": reviewed_at "${gate.reviewed_at}" is not a valid ISO 8601 timestamp`);
       }
+
+      // Revision tracking fields (optional)
+      if (gate.revision_count !== undefined && gate.revision_count !== null) {
+        const rc = parseInt(gate.revision_count, 10);
+        if (isNaN(rc) || rc < 0) {
+          errors.push(`Gate "${id}": revision_count must be a non-negative integer`);
+        }
+      }
+      if (gate.approved_draft !== undefined && gate.approved_draft !== null) {
+        const ad = parseInt(gate.approved_draft, 10);
+        if (isNaN(ad) || ad < 1) {
+          errors.push(`Gate "${id}": approved_draft must be a positive integer`);
+        }
+      }
     }
   }
 
@@ -285,6 +301,37 @@ function validateStateContent(content) {
     // Allow empty object {} from the parser as a degenerate empty case
     if (typeof state.artifacts === 'object' && Object.keys(state.artifacts).length > 0) {
       errors.push('artifacts must be an array, not a map');
+    }
+  }
+
+  // 6b. Artifact item validation (optional fields)
+  if (Array.isArray(state.artifacts)) {
+    for (let ai = 0; ai < state.artifacts.length; ai++) {
+      const art = state.artifacts[ai];
+      if (typeof art !== 'object' || art === null) continue;
+      if (art.status && !ARTIFACT_STATUSES.includes(art.status)) {
+        errors.push(`Artifact ${ai}: status "${art.status}" is invalid (must be: ${ARTIFACT_STATUSES.join(', ')})`);
+      }
+    }
+  }
+
+  // 7. Revisions validation (optional — absent in older state files)
+  if (state.revisions !== undefined && state.revisions !== null) {
+    if (!Array.isArray(state.revisions) && typeof state.revisions === 'object'
+        && Object.keys(state.revisions).length > 0) {
+      errors.push('revisions must be an array, not a map');
+    }
+    if (Array.isArray(state.revisions)) {
+      for (let ri = 0; ri < state.revisions.length; ri++) {
+        const rev = state.revisions[ri];
+        if (typeof rev !== 'object' || rev === null) continue;
+        if (rev.action && !REVISION_ACTIONS.includes(rev.action)) {
+          errors.push(`Revision ${ri}: action "${rev.action}" is invalid (must be: ${REVISION_ACTIONS.join(', ')})`);
+        }
+        if (rev.at && rev.at !== null && !isValidTimestamp(rev.at)) {
+          errors.push(`Revision ${ri}: at "${rev.at}" is not a valid ISO 8601 timestamp`);
+        }
+      }
     }
   }
 

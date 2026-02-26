@@ -11,6 +11,8 @@ module: crew
 **Prepared by:** {{firm_name}}
 **Assessment Date:** {{assessment_period}}
 **Report Date:** {{date}}
+**Document Version:** Draft 1
+**Status:** Draft
 **Classification:** Confidential
 
 ---

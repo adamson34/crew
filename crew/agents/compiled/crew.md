@@ -21,8 +21,10 @@ Present this menu when invoked. The user picks a command by letter code or descr
 | **GA** | Gate Approval | List pending gates, confirm the user has reviewed, update gate status to `approved` |
 | **GR** | Gate Rejection | Reject a gate with notes, keep downstream steps blocked |
 | **IN** | Initialize | Pick a workflow, parse its workflow.yaml, scaffold steps and gates into the state file |
-| **RS** | Reset Step | Reset a step to `not_started` (useful after gate rejection or rework) |
-| **AF** | Artifacts | List all produced artifacts with provenance (which step, which agent, when) |
+| **RS** | Reset Step | Reset a step to `not_started`, increment revision count for rework |
+| **AF** | Artifacts | List all produced artifacts with provenance and draft/status info |
+| **RH** | Revision History | View the full revision history for an artifact or gate |
+| **RC** | Revision Context | Show the latest rejection feedback for rework |
 
 ---
 
@@ -45,12 +47,14 @@ Steps:
 
 Gates:
   [ ] gate-findings-classification     pending    (blocks: step-05)
+  [-] gate-qa-review                   rejected   (draft 1, blocks: report-generation)
   [ ] gate-qa-review                   pending    (blocks: report-generation)
 
 Artifacts: 1 produced
 ```
 
-Use `[x]` for completed, `[>]` for in_progress, `[ ]` for not_started, `[-]` for skipped.
+Use `[x]` for completed, `[>]` for in_progress, `[ ]` for not_started, `[-]` for skipped/rejected.
+For rejected gates with a `revision_count`, show the draft number (e.g., `rejected (draft 1)`).
 
 ---
 
@@ -77,6 +81,7 @@ Use `[x]` for completed, `[>]` for in_progress, `[ ]` for not_started, `[-]` for
    - `steps` section scaffolded from the workflow's steps array — each step set to `not_started`
    - `gates` section scaffolded from the workflow's gates array — each gate set to `pending`
    - Empty `artifacts` array
+   - Empty `revisions` array
    - Empty `completed_workflows` array
 
 If `.crew-state.yaml` already exists with an active workflow, warn the user and ask to confirm before overwriting.
@@ -89,7 +94,9 @@ If `.crew-state.yaml` already exists with an active workflow, warn the user and 
 2. User selects a gate.
 3. Confirm: "You are approving **{gate.id}** which unblocks {gate.blocks}. Have you reviewed the outputs from {gate.after_step}?"
 4. On confirmation: set gate status to `approved`, record `reviewed_at` as current ISO timestamp.
-5. Show updated status.
+5. Set `approved_draft` on the gate to the current draft number (`revision_count` if set, otherwise `1`).
+6. Append an entry to the `revisions` array: `action: approved`, the artifact path, gate id, draft number, agent `reviewer`, timestamp, and any approval notes.
+7. Show updated status.
 
 ---
 
@@ -97,9 +104,11 @@ If `.crew-state.yaml` already exists with an active workflow, warn the user and 
 
 1. List all gates with status `pending`.
 2. User selects a gate.
-3. Ask for rejection notes (what needs to change).
+3. Ask for rejection notes (what needs to change). Encourage structured format: semicolon-separated issue IDs and descriptions (e.g., "B-01: Finding count mismatch; M-01: Rec too vague").
 4. Set gate status to `rejected`, record notes and `reviewed_at`.
-5. Suggest: "Run `/crew RS` to reset {gate.after_step} so the agent can rework it."
+5. If `revision_count` is not set on the gate, set it to `1` (this is draft 1 being rejected).
+6. Append an entry to the `revisions` array: `action: rejected`, the artifact path, gate id, draft number (`revision_count`), agent `reviewer`, timestamp, and the rejection notes.
+7. Suggest: "Run `/crew RS` to reset {gate.after_step} so the agent can rework it. Revision context will be carried forward."
 
 ---
 
@@ -109,7 +118,9 @@ If `.crew-state.yaml` already exists with an active workflow, warn the user and 
 2. User selects a step to reset.
 3. Set step status to `not_started`, clear `started_at`, `completed_at`, and `artifacts_produced`.
 4. If the step had a `gate_after`, also reset that gate to `pending`.
-5. Show updated status.
+5. Increment `revision_count` on the associated gate (or set to `2` if not present — we are going from draft 1 rejection to starting draft 2).
+6. Tell the user: "Revision context from the previous review is available. The agent will read it automatically, or run `/crew RC` to preview the feedback."
+7. Show updated status.
 
 ---
 
@@ -125,9 +136,57 @@ Artifacts (3 produced):
   assessment/framework-selection.md
     produced by: compliance | step: step-02-framework-selection | 2026-02-26
 
-  assessment/acme-gap-analysis.md
-    produced by: consultant | step: step-03-gap-analysis | 2026-02-26
+  deliverables/acme-executive-summary.md  [draft 2, approved]
+    produced by: writer | step: step-01-executive-summary | 2026-02-26
 ```
+
+If an artifact has `draft` and `status` fields, show them in brackets after the path.
+
+---
+
+## RH — Revision History
+
+1. Read the `revisions` array from `.crew-state.yaml`.
+2. If the user specifies an artifact path or gate ID, filter to those entries. Otherwise list all artifacts that have revision entries, grouped by artifact path.
+3. Display in chronological order, grouped by draft number:
+
+```
+Revision History: deliverables/acme-executive-summary.md
+  Gate: gate-executive-summary
+
+  Draft 1:
+    submitted  2026-02-26T10:00:00Z  writer    Initial draft
+    rejected   2026-02-26T11:30:00Z  reviewer  B-01: Finding count mismatch; M-01: Rec too vague
+
+  Draft 2:
+    submitted  2026-02-26T14:00:00Z  writer    Fixed finding count, rewrote F-008 recommendation
+    approved   2026-02-26T15:00:00Z  reviewer  All issues resolved. PASS.
+
+  Result: Approved at draft 2 (1 revision cycle)
+```
+
+4. If no revisions exist yet, say "No revision history recorded."
+
+---
+
+## RC — Revision Context
+
+1. User specifies a gate ID (or the active gate is inferred from the step being reworked).
+2. Find the most recent `rejected` entry in `revisions` for that gate.
+3. Display the rejection feedback:
+
+```
+Revision Context for gate-executive-summary:
+  Last rejection (draft 1):
+    B-01: Finding count mismatch in para 2
+    M-01: Recommendation for F-008 too vague
+
+  Next draft will be: draft 2. Address all issues above.
+```
+
+4. If no rejection exists for the specified gate, say "No rejection history for this gate."
+
+This command is primarily used by agents (via the state protocol) to understand what to fix during rework. Users can also run it to preview the feedback before invoking an agent.
 
 ---
 

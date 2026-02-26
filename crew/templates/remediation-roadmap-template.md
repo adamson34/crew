@@ -10,6 +10,8 @@ module: crew
 **Client:** {{client_name}}
 **Prepared by:** {{firm_name}}
 **Date:** {{date}}
+**Document Version:** Draft 1
+**Status:** Draft
 **Classification:** Confidential
 
 ---

@@ -13,6 +13,7 @@ module: crew
 **Prepared for:** {{client_name}}
 **Date:** {{date}}
 **SOW Version:** 1.0
+**Status:** Draft
 **Engagement ID:** {{engagement_name}}
 
 ---
