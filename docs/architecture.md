@@ -13,32 +13,32 @@ This document explains how CREW's pieces fit together: the bootstrapping flow fr
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Claude Code Session                      │
-│                                                              │
-│  ┌──────────┐    ┌──────────┐    ┌───────────────────────┐  │
-│  │ CLAUDE.md │    │  .crew   │    │   .crew-state.yaml    │  │
-│  │ (context) │    │ (config) │    │      (state)          │  │
-│  └─────┬─────┘    └────┬─────┘    └──────────┬────────────┘  │
-│        │               │                     │               │
-│        ▼               ▼                     ▼               │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │              Agent / Orchestrator                     │    │
-│  │   Reads context, config, and state                    │    │
-│  │   Follows workflow steps from crew/workflows/         │    │
-│  │   Uses templates from crew/templates/                 │    │
-│  │   References crew/data/ and crew/knowledge-base/      │    │
-│  └───────────────────────┬──────────────────────────────┘    │
-│                          │                                    │
-│                          ▼                                    │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │                    Hooks Layer                        │    │
-│  │   SessionStart  → session-context.sh (load state)    │    │
-│  │   PreToolUse    → state-guard.js (validate writes)   │    │
-│  │   PostToolUse   → state-post-validate.sh (warn)      │    │
-│  │   PostToolUse   → artifact-tracker.sh (track files)  │    │
-│  │   Stop          → completion-guard.sh (enforce)      │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
+│                     Claude Code Session                     │
+│                                                             │
+│  ┌───────────┐    ┌──────────┐    ┌───────────────────────┐ │
+│  │ CLAUDE.md │    │  .crew   │    │   .crew-state.yaml    │ │
+│  │ (context) │    │ (config) │    │      (state)          │ │
+│  └─────┬─────┘    └────┬─────┘    └──────────┬────────────┘ │
+│        │               │                     │              │
+│        ▼               ▼                     ▼              │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Agent / Orchestrator                    │   │
+│  │   Reads context, config, and state                   │   │
+│  │   Follows workflow steps from crew/workflows/        │   │
+│  │   Uses templates from crew/templates/                │   │
+│  │   References crew/data/ and crew/knowledge-base/     │   │
+│  └───────────────────────┬──────────────────────────────┘   │
+│                          │                                  │
+│                          ▼                                  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                    Hooks Layer                       │   │
+│  │   SessionStart  → session-context.sh (load state)    │   │
+│  │   PreToolUse    → state-guard.js (validate writes)   │   │
+│  │   PostToolUse   → state-post-validate.sh (warn)      │   │
+│  │   PostToolUse   → artifact-tracker.sh (track files)  │   │
+│  │   Stop          → completion-guard.sh (enforce)      │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
