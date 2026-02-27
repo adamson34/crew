@@ -146,6 +146,25 @@ node crew/install.js --uninstall
 
 ---
 
+## Documentation
+
+Start here: **[Getting Started](docs/getting-started.md)** — a step-by-step tutorial for your first engagement.
+
+| Doc | What It Covers |
+|-----|---------------|
+| [Getting Started](docs/getting-started.md) | First-engagement tutorial: install through deliverables |
+| [Orchestrator Reference](docs/orchestrator-reference.md) | All 9 `/crew` commands (ST, NX, GA, GR, IN, RS, AF, RH, RC) |
+| [Agent Overview](docs/agents/overview.md) | Shared agent behavior, state preamble, agent-workflow mapping |
+| [Agent: BD](docs/agents/bd.md), [PM](docs/agents/pm.md), [Consultant](docs/agents/consultant.md), [Compliance](docs/agents/compliance.md), [Writer](docs/agents/writer.md), [Reviewer](docs/agents/reviewer.md) | Individual agent profiles, menu commands, principles, workflow participation |
+| [Workflow Overview](docs/workflows/overview.md) | How workflows, steps, and gates fit together |
+| [Engagement Kickoff](docs/workflows/engagement-kickoff.md), [New Engagement](docs/workflows/new-engagement.md), [Assessment](docs/workflows/assessment.md), [Report Generation](docs/workflows/report-generation.md), [Remediation Plan](docs/workflows/remediation-plan.md) | Step-by-step workflow walkthroughs with gate details |
+| [State Management](docs/state-management.md) | `.crew-state.yaml` schema, lifecycle diagrams, revision tracking, manual editing |
+| [Troubleshooting](docs/troubleshooting.md) | Common issues and fixes for installation, state, workflows, agents, and rework |
+
+**Reading order for new users:** Getting Started > Orchestrator Reference > Agent Overview > Workflow Overview > individual agent/workflow pages as needed.
+
+---
+
 ## How It Works
 
 ### Agents
