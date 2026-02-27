@@ -11,35 +11,22 @@ This document explains how CREW's pieces fit together: the bootstrapping flow fr
 
 ## System Overview
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Claude Code Session                     │
-│                                                             │
-│  ┌───────────┐    ┌──────────┐    ┌───────────────────────┐ │
-│  │ CLAUDE.md │    │  .crew   │    │   .crew-state.yaml    │ │
-│  │ (context) │    │ (config) │    │      (state)          │ │
-│  └─────┬─────┘    └────┬─────┘    └──────────┬────────────┘ │
-│        │               │                     │              │
-│        ▼               ▼                     ▼              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Agent / Orchestrator                    │   │
-│  │   Reads context, config, and state                   │   │
-│  │   Follows workflow steps from crew/workflows/        │   │
-│  │   Uses templates from crew/templates/                │   │
-│  │   References crew/data/ and crew/knowledge-base/     │   │
-│  └───────────────────────┬──────────────────────────────┘   │
-│                          │                                  │
-│                          ▼                                  │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │                    Hooks Layer                       │   │
-│  │   SessionStart  → session-context.sh (load state)    │   │
-│  │   PreToolUse    → state-guard.js (validate writes)   │   │
-│  │   PostToolUse   → state-post-validate.sh (warn)      │   │
-│  │   PostToolUse   → artifact-tracker.sh (track files)  │   │
-│  │   Stop          → completion-guard.sh (enforce)      │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph session["Claude Code Session"]
+        claude_md["CLAUDE.md<br/>(context)"]
+        crew_config[".crew<br/>(config)"]
+        state[".crew-state.yaml<br/>(state)"]
+
+        agent["**Agent / Orchestrator**<br/>Reads context, config, and state<br/>Follows workflow steps from crew/workflows/<br/>Uses templates from crew/templates/<br/>References crew/data/ and crew/knowledge-base/"]
+
+        hooks["**Hooks Layer**<br/>SessionStart → session-context.sh (load state)<br/>PreToolUse → state-guard.js (validate writes)<br/>PostToolUse → state-post-validate.sh (warn)<br/>PostToolUse → artifact-tracker.sh (track files)<br/>Stop → completion-guard.sh (enforce)"]
+
+        claude_md --> agent
+        crew_config --> agent
+        state --> agent
+        agent --> hooks
+    end
 ```
 
 ## Bootstrapping Flow
@@ -164,9 +151,12 @@ The preamble also instructs agents to use the **AskUserQuestion tool** for menus
 
 ### How Config Flows
 
-```
-Installer prompts → .crew file → stamped into agents, workflows, templates
-                  → CLAUDE.md  → Claude reads at session start
+```mermaid
+graph LR
+    prompts["Installer prompts"] --> crew[".crew file"]
+    crew --> stamped["Stamped into agents,<br/>workflows, templates"]
+    prompts --> claudemd["CLAUDE.md"]
+    claudemd --> session["Claude reads at<br/>session start"]
 ```
 
 The `.crew` config is the source of truth for engagement settings. It's read by:
@@ -176,23 +166,26 @@ The `.crew` config is the source of truth for engagement settings. It's read by:
 
 ### How State Flows
 
-```
-/crew IN → scaffolds .crew-state.yaml from workflow.yaml
-agents   → read state, update steps/gates/artifacts
-/crew    → reads state for status, gate decisions, next-step routing
-hooks    → validate state writes, load state at session start
+```mermaid
+graph LR
+    init["/crew IN"] -->|scaffolds| state[".crew-state.yaml"]
+    wf["workflow.yaml"] -->|defines| state
+    agents["Agents"] -->|read & update<br/>steps/gates/artifacts| state
+    crew["/crew"] -->|reads for status,<br/>gates, routing| state
+    hooks["Hooks"] -->|validate writes,<br/>load at session start| state
 ```
 
 The state file is the only mutable runtime data. Everything else (workflow YAMLs, agent files, templates) is read-only after installation.
 
 ### How Knowledge Flows
 
-```
-crew/knowledge-base/  → agents read domain reference material
-crew/data/            → agents read severity scales, standards crosswalks, service catalog
-crew/templates/       → agents use as document structure guides
-crew/workflows/steps/ → agents read step-specific instructions
-crew/tasks/           → agents read standalone task guides (outside workflows)
+```mermaid
+graph LR
+    kb["crew/knowledge-base/"] -->|domain reference material| agents["Agents"]
+    data["crew/data/"] -->|severity scales, crosswalks, catalog| agents
+    templates["crew/templates/"] -->|document structure guides| agents
+    steps["crew/workflows/steps/"] -->|step-specific instructions| agents
+    tasks["crew/tasks/"] -->|standalone task guides| agents
 ```
 
 All of this is read-only. Agents reference these files when producing artifacts but never modify them.

@@ -62,24 +62,17 @@ Each gate declares:
 
 ## Step Lifecycle
 
-```
-not_started
-     |
-     v  (agent marks in_progress, records started_at)
-in_progress
-     |
-     v  (agent completes work, registers artifacts)
-completed
-     |
-     v  (if gate_after exists)
-gate: pending
-     |
-     +---> approved  (/crew GA)  ---> downstream steps unblocked
-     |
-     +---> rejected  (/crew GR)  ---> step reset (/crew RS)
-                                       ---> revision_count incremented
-                                       ---> agent reworks with rejection context
-                                       ---> completed ---> gate: pending (re-review)
+```mermaid
+stateDiagram-v2
+    [*] --> not_started
+    not_started --> in_progress : Agent marks in_progress,<br/>records started_at
+    in_progress --> completed : Agent completes work,<br/>registers artifacts
+    completed --> gate_pending : If gate_after exists
+    gate_pending --> approved : /crew GA
+    gate_pending --> rejected : /crew GR
+    approved --> [*] : Downstream steps unblocked
+    rejected --> not_started : /crew RS resets step,<br/>revision_count incremented
+    note right of not_started : Agent reworks with<br/>rejection context
 ```
 
 **Constraint:** Only one step can be `in_progress` at a time.
@@ -110,10 +103,12 @@ When `/crew NX` detects all non-optional steps are completed and all gates appro
 
 **Dependency graph:**
 
-```
-engagement-kickoff ──┐
-                     ├──> assessment ──┬──> report-generation
-new-engagement ──────┘                 └──> remediation-plan
+```mermaid
+graph LR
+    ek["engagement-kickoff"] --> assessment
+    ne["new-engagement"] --> assessment
+    assessment --> rg["report-generation"]
+    assessment --> rp["remediation-plan"]
 ```
 
 ## Available Workflows

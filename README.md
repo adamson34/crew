@@ -41,40 +41,44 @@ CREW produces the core deliverables of a consulting engagement:
 
 ### Engagement Lifecycle
 
-```
-BD Qualification & SOW
-        |
-    Kickoff & Setup
-        |
-   Technical Assessment
-   +-------------------------------------+
-   |  Environment Profiling (Consultant)  |
-   |  Framework Selection (Compliance)    |
-   |  Gap Analysis (Consultant+Compliance)|
-   |  Findings Classification >> GATE     |
-   |  Compliance Mapping (Compliance)     |
-   |  QA Review >> GATE                   |
-   +-------------------------------------+
-        |
-   Report Generation
-   +-------------------------------------+
-   |  Executive Summary >> GATE           |
-   |  Technical Report (Writer)           |
-   |  Findings Matrix (Writer)            |
-   |  Assembly (Writer)                   |
-   |  Final QA >> GATE (blocks delivery)  |
-   +-------------------------------------+
-        |
-   Remediation Plan
-   +-------------------------------------+
-   |  Prioritization >> GATE              |
-   |  Roadmap (PM + Consultant)           |
-   |  Effort Estimation                   |
-   |  Quick Wins                          |
-   +-------------------------------------+
+```mermaid
+graph TD
+    bd["BD Qualification & SOW"] --> kickoff["Kickoff & Setup"]
+    kickoff --> assessment
 
->> GATE = Human review required before proceeding
+    subgraph assessment["Technical Assessment"]
+        a1["Environment Profiling (Consultant)"]
+        a2["Framework Selection (Compliance)"]
+        a3["Gap Analysis (Consultant+Compliance)"]
+        a4["Findings Classification >> GATE"]
+        a5["Compliance Mapping (Compliance)"]
+        a6["QA Review >> GATE"]
+        a1 --> a2 --> a3 --> a4 --> a5 --> a6
+    end
+
+    assessment --> report
+
+    subgraph report["Report Generation"]
+        r1["Executive Summary >> GATE"]
+        r2["Technical Report (Writer)"]
+        r3["Findings Matrix (Writer)"]
+        r4["Assembly (Writer)"]
+        r5["Final QA >> GATE (blocks delivery)"]
+        r1 --> r2 --> r3 --> r4 --> r5
+    end
+
+    report --> remed
+
+    subgraph remed["Remediation Plan"]
+        m1["Prioritization >> GATE"]
+        m2["Roadmap (PM + Consultant)"]
+        m3["Effort Estimation"]
+        m4["Quick Wins"]
+        m1 --> m2 --> m3 --> m4
+    end
 ```
+
+> **>> GATE** = Human review required before proceeding
 
 Every gate is a deliberate pause where you review AI-generated work before it moves forward. Findings can be wrong, over-stated, or under-stated — the gates exist because a human expert must validate before anything becomes a client deliverable.
 

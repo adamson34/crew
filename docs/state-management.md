@@ -110,10 +110,12 @@ requires_workflows:
 
 **Current dependency graph:**
 
-```
-engagement-kickoff ──┐
-                     ├──> assessment ──┬──> report-generation
-new-engagement ──────┘                 └──> remediation-plan
+```mermaid
+graph LR
+    ek["engagement-kickoff"] --> assessment
+    ne["new-engagement"] --> assessment
+    assessment --> rg["report-generation"]
+    assessment --> rp["remediation-plan"]
 ```
 
 **Enforcement points:**
@@ -132,35 +134,36 @@ new-engagement ──────┘                 └──> remediation-plan
 
 ## Step Lifecycle
 
-```
-not_started
-     |
-     v  agent marks in_progress, records started_at
-in_progress
-     |
-     v  agent completes work, registers artifacts
-completed
+```mermaid
+stateDiagram-v2
+    [*] --> not_started
+    not_started --> in_progress : Agent marks in_progress,<br/>records started_at
+    in_progress --> completed : Agent completes work,<br/>registers artifacts
 ```
 
 **Constraint:** Only one step can be `in_progress` at a time across the entire engagement.
 
 ## Gate Lifecycle
 
-```
-pending
-     |
-     +---> approved  (/crew GA)
-     |       Records: reviewed_at, approved_draft
-     |       Appends: revision entry (action: approved)
-     |       Effect: downstream steps unblocked
-     |
-     +---> rejected  (/crew GR)
-             Records: reviewed_at, notes, revision_count
-             Appends: revision entry (action: rejected)
-             Effect: downstream steps stay blocked
-                |
-                v  /crew RS resets the step
-             pending  (revision_count incremented, ready for rework)
+```mermaid
+stateDiagram-v2
+    [*] --> pending
+    pending --> approved : /crew GA
+    pending --> rejected : /crew GR
+
+    note right of approved
+        Records: reviewed_at, approved_draft
+        Appends: revision entry (action: approved)
+        Effect: downstream steps unblocked
+    end note
+
+    note right of rejected
+        Records: reviewed_at, notes, revision_count
+        Appends: revision entry (action: rejected)
+        Effect: downstream steps stay blocked
+    end note
+
+    rejected --> pending : /crew RS resets step,<br/>revision_count incremented
 ```
 
 ## Revision Tracking
