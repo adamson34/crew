@@ -1,4 +1,20 @@
-# CREW — Consulting Role Engine Workflows
+```
+ ██████╗██████╗ ███████╗██╗    ██╗
+██╔════╝██╔══██╗██╔════╝██║    ██║
+██║     ██████╔╝█████╗  ██║ █╗ ██║
+██║     ██╔══██╗██╔══╝  ██║███╗██║
+╚██████╗██║  ██║███████╗╚███╔███╔╝
+ ╚═════╝╚═╝  ╚═╝╚══════╝ ╚══╝╚══╝
+```
+
+### Consulting Role Engine Workflows
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](package.json)
+[![Built for Claude Code](https://img.shields.io/badge/Built_for-Claude_Code-blueviolet.svg)](https://docs.anthropic.com/en/docs/claude-code)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](#)
+
+---
 
 CREW is an AI-powered consulting workflow framework that runs inside [Claude Code](https://docs.anthropic.com/en/docs/claude-code). It gives you a team of six AI agents — each with a distinct consulting role, personality, and methodology — that walk you through a full engagement lifecycle: from scoping and SOW generation through technical assessment, report writing, and remediation planning.
 
