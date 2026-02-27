@@ -28,3 +28,7 @@ Before executing any workflow step, you MUST:
 7. **If a gate follows this step**, inform the user that a review gate is now pending and they should run `/crew` to approve or reject before downstream steps can proceed.
 
 8. **One workflow at a time.** If `active_workflow.status` is `in_progress`, do not start a different workflow. Finish or reset the current one first.
+
+## Interaction Style
+
+When presenting menus, options, or choices to the user, always use the **AskUserQuestion tool** to display them as clickable selections rather than printing them as plain text. This applies to agent menus, step selections, and any point where the user needs to choose between options.
