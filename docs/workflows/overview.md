@@ -86,21 +86,45 @@ gate: pending
 
 ## Prerequisite Logic
 
+### Within a Workflow
+
 - **`prerequisites`** — ALL listed steps must be `completed`
 - **`prerequisites_any`** — AT LEAST ONE listed step must be `completed` (convergence points where branching paths merge)
 - **Gate blocking** — Steps listed in a gate's `blocks` array are held until the gate is `approved`
 
 Both prerequisite types and gate blocking are checked by the orchestrator (`/crew NX`) and enforced by agents via the state preamble.
 
+### Across Workflows
+
+Workflows can declare dependencies on other completed workflows via the `requires_workflows` field in their `workflow.yaml`:
+
+```yaml
+requires_workflows:
+  - any_of: [engagement-kickoff, new-engagement]
+    reason: "SOW must exist before assessment begins"
+```
+
+`any_of` means at least one of the listed workflows must be in `completed_workflows` in the state file. The orchestrator checks this during `/crew IN` and warns if prerequisites aren't met — the user can override if they have artifacts from outside CREW.
+
+When `/crew NX` detects all non-optional steps are completed and all gates approved, it auto-completes the workflow and appends it to `completed_workflows`, unblocking downstream workflows.
+
+**Dependency graph:**
+
+```
+engagement-kickoff ──┐
+                     ├──> assessment ──┬──> report-generation
+new-engagement ──────┘                 └──> remediation-plan
+```
+
 ## Available Workflows
 
-| Workflow | Steps | Gates | Primary Agents | Use When |
-|----------|-------|-------|----------------|----------|
-| [engagement-kickoff](engagement-kickoff.md) | 6 | 3 | BD, PM | Starting a new engagement (scoping through kickoff) |
-| [new-engagement](new-engagement.md) | 10+ | 6 | All | Full end-to-end lifecycle in one workflow |
-| [assessment](assessment.md) | 6 | 2 | Consultant, Compliance, Reviewer | Core technical assessment phase |
-| [report-generation](report-generation.md) | 5 | 2 | Writer, Reviewer | Assembling client deliverables |
-| [remediation-plan](remediation-plan.md) | 4 | 1 | Consultant, PM | Building the remediation roadmap |
+| Workflow | Steps | Gates | Primary Agents | Requires | Use When |
+|----------|-------|-------|----------------|----------|----------|
+| [engagement-kickoff](engagement-kickoff.md) | 6 | 3 | BD, PM | — | Starting a new engagement (scoping through kickoff) |
+| [new-engagement](new-engagement.md) | 10+ | 6 | All | — | Full end-to-end lifecycle in one workflow |
+| [assessment](assessment.md) | 6 | 2 | Consultant, Compliance, Reviewer | engagement-kickoff OR new-engagement | Core technical assessment phase |
+| [report-generation](report-generation.md) | 5 | 2 | Writer, Reviewer | assessment OR new-engagement | Assembling client deliverables |
+| [remediation-plan](remediation-plan.md) | 4 | 1 | Consultant, PM | assessment OR new-engagement | Building the remediation roadmap |
 
 ## Recommended Sequencing
 
@@ -111,7 +135,7 @@ If running workflows individually (not using new-engagement):
 3. **report-generation** — Executive summary, technical report, findings matrix, final QA
 4. **remediation-plan** — Prioritization, roadmap, effort estimation, quick wins
 
-Each workflow assumes artifacts from prior phases exist. The assessment workflow needs a SOW for scope validation. Report generation needs a QA-approved findings register. Remediation planning needs findings and compliance data.
+This sequence is enforced by `requires_workflows` declarations — the orchestrator will warn if you try to initialize a workflow before its prerequisites are completed. For example, starting `assessment` before `engagement-kickoff` is completed will prompt a warning explaining that a SOW must exist first. You can override if you have the necessary artifacts from outside CREW.
 
 ---
 

@@ -154,6 +154,68 @@ testHook('No content field', {
   tool_input: { file_path: '/tmp/.crew-state.yaml' },
 }, true);
 
+// ─── completed_workflows Validation Tests ───────────────────────────────────
+
+console.log('');
+console.log('completed_workflows Validation Tests');
+console.log('─'.repeat(50));
+
+const validWithCompleted = validPopulated.replace(
+  'completed_workflows: []',
+  [
+    'completed_workflows:',
+    '  - id: engagement-kickoff',
+    '    completed_at: "2026-02-26T09:00:00Z"',
+  ].join('\n')
+);
+
+testHook('Valid state with completed_workflows', {
+  tool_input: { file_path: '/tmp/.crew-state.yaml', content: validWithCompleted },
+}, false);
+
+const multipleCompleted = validPopulated.replace(
+  'completed_workflows: []',
+  [
+    'completed_workflows:',
+    '  - id: engagement-kickoff',
+    '    completed_at: "2026-02-26T09:00:00Z"',
+    '  - id: assessment',
+    '    completed_at: "2026-02-26T15:00:00Z"',
+  ].join('\n')
+);
+
+testHook('Valid state with multiple completed_workflows', {
+  tool_input: { file_path: '/tmp/.crew-state.yaml', content: multipleCompleted },
+}, false);
+
+const badCompletedTimestamp = validPopulated.replace(
+  'completed_workflows: []',
+  [
+    'completed_workflows:',
+    '  - id: engagement-kickoff',
+    '    completed_at: "not-a-timestamp"',
+  ].join('\n')
+);
+
+testHook('completed_workflows bad timestamp', {
+  tool_input: { file_path: '/tmp/.crew-state.yaml', content: badCompletedTimestamp },
+}, true);
+
+const duplicateCompleted = validPopulated.replace(
+  'completed_workflows: []',
+  [
+    'completed_workflows:',
+    '  - id: engagement-kickoff',
+    '    completed_at: "2026-02-26T09:00:00Z"',
+    '  - id: engagement-kickoff',
+    '    completed_at: "2026-02-26T12:00:00Z"',
+  ].join('\n')
+);
+
+testHook('completed_workflows duplicate id', {
+  tool_input: { file_path: '/tmp/.crew-state.yaml', content: duplicateCompleted },
+}, true);
+
 // ─── Session Context Test ────────────────────────────────────────────────────
 
 console.log('');

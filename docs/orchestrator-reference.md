@@ -40,6 +40,9 @@ Engagement: acme-assessment
 Workflow:   assessment (in_progress)
 Started:    2026-02-26T10:00:00Z
 
+Completed Workflows:
+  [x] engagement-kickoff    completed 2026-02-26
+
 Steps:
   [x] step-01-environment-profiling    (consultant)    completed 2026-02-26
   [>] step-02-framework-selection      (compliance)    in_progress
@@ -57,6 +60,8 @@ Artifacts: 1 produced
 
 Markers: `[x]` completed, `[>]` in_progress, `[ ]` not_started/pending, `[-]` rejected.
 
+The "Completed Workflows" section only appears if `completed_workflows` is non-empty.
+
 ---
 
 ## NX — Next Step
@@ -65,15 +70,15 @@ Finds the first step that's ready to work on — prerequisites completed and blo
 
 **When to use:** After completing a step, after gate approval, or whenever you're not sure what to do next.
 
-**Reads:** `.crew-state.yaml` (steps, gates), `workflow.yaml` (prerequisites)
-**Writes:** Nothing
+**Reads:** `.crew-state.yaml` (steps, gates, completed_workflows), `workflow.yaml` (prerequisites), other workflow YAMLs (for unblocked check)
+**Writes:** `.crew-state.yaml` (active_workflow status/completed_at, completed_workflows — when completing a workflow)
 
 **Five possible outcomes:**
 
 1. **Step found** — "Next: `step-03-gap-analysis`. Run `/consultant` and select gap analysis. Required input: `assessment/acme-environment-profile.md`"
 2. **Gate pending** — "Gate `gate-findings-classification` is pending. Review the findings register and run `/crew GA` to approve."
 3. **Step in progress** — "`step-02-framework-selection` is currently in progress with `/compliance`."
-4. **All complete** — "All steps completed! Consider starting the next workflow with `/crew IN`."
+4. **Workflow complete** — All non-optional steps are `completed` and all gates are `approved`. NX auto-completes the workflow: sets `active_workflow.status` to `completed`, appends to `completed_workflows`, and lists any workflows now unblocked by this completion.
 5. **Prerequisites unmet** — "Cannot proceed — `step-02-framework-selection` requires `step-01-environment-profiling` to be completed first."
 
 ---
@@ -84,26 +89,29 @@ Scaffolds a workflow into the state file so you can start working through its st
 
 **When to use:** At the start of each workflow phase.
 
-**Reads:** `crew/workflows/` directory listing, chosen `workflow.yaml`
-**Writes:** `.crew-state.yaml` (overwrites steps, gates, active_workflow)
+**Reads:** `crew/workflows/` directory listing, chosen `workflow.yaml`, existing `.crew-state.yaml` (if present)
+**Writes:** `.crew-state.yaml` (overwrites steps, gates, active_workflow; preserves completed_workflows and artifacts)
 
 **Available workflows:**
 
-| Workflow | Steps | Gates | Description |
-|----------|-------|-------|-------------|
-| engagement-kickoff | 6 | 3 | Qualification, SOW, project setup, kickoff |
-| new-engagement | 10+ | 6 | Full lifecycle (two entry paths) |
-| assessment | 6 | 2 | Environment profiling through QA review |
-| report-generation | 5 | 2 | Executive summary through final QA |
-| remediation-plan | 4 | 1 | Prioritization through quick wins |
+| Workflow | Steps | Gates | Requires | Description |
+|----------|-------|-------|----------|-------------|
+| engagement-kickoff | 6 | 3 | — | Qualification, SOW, project setup, kickoff |
+| new-engagement | 10+ | 6 | — | Full lifecycle (two entry paths) |
+| assessment | 6 | 2 | engagement-kickoff OR new-engagement | Environment profiling through QA review |
+| report-generation | 5 | 2 | assessment OR new-engagement | Executive summary through final QA |
+| remediation-plan | 4 | 1 | assessment OR new-engagement | Prioritization through quick wins |
 
 **Process:**
 1. Lists available workflows
 2. You pick one
-3. Reads the workflow's YAML and scaffolds all steps as `not_started` and gates as `pending`
-4. Records `active_workflow` with the workflow ID, start time, and `status: in_progress`
+3. Reads the workflow's YAML, including `requires_workflows` if present
+4. **Checks cross-workflow prerequisites.** If `requires_workflows` exists, verifies at least one workflow from each `any_of` list is in `completed_workflows`. If unmet, warns and asks to confirm override.
+5. **Preserves prior state.** Carries forward `completed_workflows` and `artifacts` from the existing state file.
+6. Scaffolds all steps as `not_started` and gates as `pending`
+7. Records `active_workflow` with the workflow ID, start time, and `status: in_progress`
 
-If a workflow is already active, warns before overwriting.
+If a workflow is already active and `in_progress`, warns before overwriting.
 
 ---
 

@@ -37,6 +37,9 @@ Engagement: {engagement}
 Workflow:   {active_workflow.id} ({active_workflow.status})
 Started:    {active_workflow.started_at}
 
+Completed Workflows:
+  [x] engagement-kickoff    completed 2026-02-26
+
 Steps:
   [x] step-01-environment-profiling    (consultant)    completed 2026-02-26
   [>] step-02-framework-selection      (compliance)    in_progress
@@ -55,6 +58,7 @@ Artifacts: 1 produced
 
 Use `[x]` for completed, `[>]` for in_progress, `[ ]` for not_started, `[-]` for skipped/rejected.
 For rejected gates with a `revision_count`, show the draft number (e.g., `rejected (draft 1)`).
+Only show the "Completed Workflows" section if `completed_workflows` is non-empty.
 
 ---
 
@@ -64,7 +68,19 @@ For rejected gates with a `revision_count`, show the draft number (e.g., `reject
 2. If found: tell the user the step name, which agent to invoke (e.g., "Run `/consultant` and select environment profiling"), and what input artifacts are needed.
 3. If not found because a gate is pending: tell the user which gate needs approval and suggest `GA`.
 4. If not found because a step is `in_progress`: tell the user which step is active and which agent is working it.
-5. If all steps are completed: congratulate and suggest the next workflow or deliverable export.
+5. If all non-optional steps are `completed` and all gates are `approved`, **complete the workflow**:
+   a. Set `active_workflow.status` to `completed` and record `active_workflow.completed_at` as current ISO timestamp.
+   b. Append `{ id: <workflow-id>, completed_at: <timestamp> }` to the `completed_workflows` array.
+   c. Read the workflow directories under `crew/workflows/` and check each workflow's `requires_workflows` field. List any workflows that are now unblocked by this completion.
+   d. Display:
+      ```
+      ✓ Workflow "{workflow-id}" completed.
+
+      Now unblocked:
+        - {workflow-name} (run /crew IN to start)
+        - ...
+      ```
+   e. If no workflows are unblocked, congratulate and suggest deliverable export.
 
 ---
 
@@ -72,19 +88,31 @@ For rejected gates with a `revision_count`, show the draft number (e.g., `reject
 
 1. List available workflows by reading directory names under `crew/workflows/`.
 2. User picks one.
-3. Read that workflow's `workflow.yaml` and extract the `steps` array and `gates` array.
-4. Write `.crew-state.yaml` with:
+3. Read that workflow's `workflow.yaml` and extract the `steps` array, `gates` array, and `requires_workflows` field (if present).
+4. **Check cross-workflow prerequisites.** If `requires_workflows` is present in the workflow definition:
+   - Read existing `.crew-state.yaml` (if it exists) and extract the `completed_workflows` array.
+   - For each entry in `requires_workflows`, check that at least one workflow ID from its `any_of` list exists in `completed_workflows`.
+   - If any prerequisite is not met, warn the user:
+     ```
+     ⚠ Workflow prerequisite not met:
+       "{reason}"
+       Required: one of [{any_of list}] must be completed first.
+       Completed so far: [{completed_workflows list, or "none"}]
+     ```
+   - Ask the user to confirm override. They may have artifacts from outside CREW or a prior untracked session. If they decline, stop — do not initialize.
+5. **Preserve prior workflow history.** If `.crew-state.yaml` already exists:
+   - If `active_workflow.status` is `in_progress`, warn the user that the current workflow is not finished and ask to confirm before overwriting.
+   - Carry forward the existing `completed_workflows` array and `artifacts` array into the new state file.
+6. Write `.crew-state.yaml` with:
    - `crew_version: "1.0.0"`
    - `engagement` from `.crew` config file
    - `initialized_at` as current ISO timestamp
    - `active_workflow` with the chosen workflow id, `started_at`, and `status: in_progress`
    - `steps` section scaffolded from the workflow's steps array — each step set to `not_started`
    - `gates` section scaffolded from the workflow's gates array — each gate set to `pending`
-   - Empty `artifacts` array
+   - Carried-forward `artifacts` array (or empty if no prior state)
    - Empty `revisions` array
-   - Empty `completed_workflows` array
-
-If `.crew-state.yaml` already exists with an active workflow, warn the user and ask to confirm before overwriting.
+   - Carried-forward `completed_workflows` array (or empty if no prior state)
 
 ---
 

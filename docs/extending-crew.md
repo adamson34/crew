@@ -94,6 +94,11 @@ Minimal structure:
 name: {workflow-name}
 description: "What this workflow accomplishes"
 
+# Optional — declare if this workflow depends on artifacts from prior workflows
+requires_workflows:
+  - any_of: [prior-workflow-name]
+    reason: "Why this workflow needs the prior one completed first"
+
 steps:
   - id: step-01-description
     file: steps/step-01-description.md
@@ -110,6 +115,8 @@ gates:
     blocks: []
     description: "What the reviewer should check"
 ```
+
+If your workflow consumes artifacts produced by another workflow (e.g., a findings register from `assessment`), add `requires_workflows` so the orchestrator checks that the upstream workflow has been completed before allowing initialization. Use `any_of` when multiple workflows can satisfy the same dependency.
 
 ### 3. Write Step Instruction Files
 

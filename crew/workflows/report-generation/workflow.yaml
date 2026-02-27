@@ -1,6 +1,10 @@
 name: report-generation
 description: "Assemble the full client assessment report: executive summary, technical findings, compliance matrix, and final QA review. Requires a completed, QA-approved findings register as input."
 
+requires_workflows:
+  - any_of: [assessment, new-engagement]
+    reason: "Findings register and compliance matrix must exist before report generation"
+
 # ─── Steps ──────────────────────────────────────────────────────────────────────
 
 steps:

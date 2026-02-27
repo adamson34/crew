@@ -23,6 +23,11 @@ Workflow YAMLs are **read-only** — they are never modified at runtime. The orc
 name: workflow-name
 description: "What this workflow does"
 
+# Optional — declares which workflows must be completed first
+requires_workflows:
+  - any_of: [prior-workflow-a, prior-workflow-b]
+    reason: "Why this dependency exists"
+
 steps:
   - id: step-01-name
     # ... step fields
@@ -56,7 +61,29 @@ input_file_patterns:
 | `templates` | No | Map of template references |
 | `knowledge_base` | No | Map of knowledge base file references |
 | `data` | No | Map of data file references |
+| `requires_workflows` | No | Cross-workflow prerequisites (see below) |
 | `input_file_patterns` | No | Map of expected input files with patterns |
+
+### Cross-Workflow Prerequisites
+
+Workflows can declare dependencies on other completed workflows:
+
+```yaml
+requires_workflows:
+  - any_of: [engagement-kickoff, new-engagement]
+    reason: "SOW must exist before assessment begins"
+```
+
+| Subfield | Description |
+|----------|-------------|
+| `any_of` | Array of workflow IDs — at least one must be in `completed_workflows` in state |
+| `reason` | Human-readable explanation shown when the prerequisite is not met |
+
+The orchestrator checks `requires_workflows` during `/crew IN`. If any prerequisite is unmet, it warns the user and requires explicit override before initializing. This prevents starting downstream workflows before upstream artifacts exist.
+
+`any_of` supports alternative paths — for example, `assessment` accepts either `engagement-kickoff` (modular path) or `new-engagement` (all-in-one path) as a prerequisite.
+
+Workflows without `requires_workflows` (like `engagement-kickoff` and `new-engagement`) are entry points that can be initialized without prior workflow completion.
 
 ---
 
@@ -334,13 +361,13 @@ Step files may contain `{{placeholders}}` that are stamped at install time.
 
 ## Existing Workflows
 
-| Workflow | Directory | Steps | Gates | Branching |
-|----------|-----------|-------|-------|-----------|
-| engagement-kickoff | `crew/workflows/engagement-kickoff/` | 6 | 3 | No |
-| new-engagement | `crew/workflows/new-engagement/` | 10+ | 6 | Yes (Path A/B) |
-| assessment | `crew/workflows/assessment/` | 6 | 2 | No |
-| report-generation | `crew/workflows/report-generation/` | 5 | 2 | No |
-| remediation-plan | `crew/workflows/remediation-plan/` | 4 | 1 | No |
+| Workflow | Directory | Steps | Gates | Branching | Requires |
+|----------|-----------|-------|-------|-----------|----------|
+| engagement-kickoff | `crew/workflows/engagement-kickoff/` | 6 | 3 | No | — |
+| new-engagement | `crew/workflows/new-engagement/` | 10+ | 6 | Yes (Path A/B) | — |
+| assessment | `crew/workflows/assessment/` | 6 | 2 | No | engagement-kickoff OR new-engagement |
+| report-generation | `crew/workflows/report-generation/` | 5 | 2 | No | assessment OR new-engagement |
+| remediation-plan | `crew/workflows/remediation-plan/` | 4 | 1 | No | assessment OR new-engagement |
 
 For walkthroughs of each workflow, see the individual docs in [docs/workflows/](workflows/).
 
@@ -353,6 +380,10 @@ Here's a minimal but complete workflow YAML showing all features:
 ```yaml
 name: example-workflow
 description: "A minimal workflow demonstrating all schema features"
+
+requires_workflows:
+  - any_of: [setup-workflow]
+    reason: "Setup artifacts must exist before this workflow begins"
 
 steps:
   - id: step-00-entry

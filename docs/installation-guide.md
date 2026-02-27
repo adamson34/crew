@@ -141,7 +141,7 @@ revisions: []
 completed_workflows: []
 ```
 
-This skeleton passes validation. The orchestrator (`/crew IN`) populates it when you initialize a workflow.
+This skeleton passes validation. The orchestrator (`/crew IN`) populates it when you initialize a workflow. The `completed_workflows` array tracks which workflows have been finished — it's used by the orchestrator to enforce cross-workflow prerequisites and is carried forward when transitioning between workflows.
 
 ### `crew/` — Module Directory
 

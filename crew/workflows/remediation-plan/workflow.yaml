@@ -1,6 +1,10 @@
 name: remediation-plan
 description: "Build the prioritized remediation roadmap: findings prioritization, multi-phase roadmap, effort estimation, and quick wins identification. Produces the remediation plan deliverable."
 
+requires_workflows:
+  - any_of: [assessment, new-engagement]
+    reason: "Findings register and compliance matrix must exist before remediation planning"
+
 # ─── Steps ──────────────────────────────────────────────────────────────────────
 
 steps:

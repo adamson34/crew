@@ -1,6 +1,10 @@
 name: assessment
 description: "Execute the full cybersecurity assessment lifecycle: environment profiling, framework selection, gap analysis, findings classification, compliance mapping, and QA review. This is the core technical workflow for CREW engagements."
 
+requires_workflows:
+  - any_of: [engagement-kickoff, new-engagement]
+    reason: "SOW must exist before assessment begins"
+
 # ─── Steps ──────────────────────────────────────────────────────────────────────
 
 steps:

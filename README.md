@@ -238,10 +238,14 @@ artifacts:
     step: step-01-environment-profiling
     produced_at: "2026-02-26T12:30:00Z"
 
-completed_workflows: []
+completed_workflows:
+  - id: engagement-kickoff
+    completed_at: "2026-02-26T09:30:00Z"
 ```
 
 The state file is human-readable and manually editable. If something goes wrong, you can edit it directly.
+
+`completed_workflows` tracks which workflows have been finished. When you initialize a new workflow with `/crew IN`, the orchestrator checks that any required prior workflows have been completed — for example, `assessment` requires `engagement-kickoff` or `new-engagement` to be completed first. This prevents starting downstream workflows before the artifacts they depend on exist.
 
 ### CLAUDE.md
 

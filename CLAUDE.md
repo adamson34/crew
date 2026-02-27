@@ -43,8 +43,17 @@ artifacts:
   - { path, produced_by, step, produced_at, draft, status }
 revisions:
   - { artifact, gate, draft, action, agent, at, notes }
-completed_workflows: []
+completed_workflows:
+  - { id, completed_at }
 ```
+
+Workflow YAML files may include `requires_workflows` declaring cross-workflow dependencies:
+```yaml
+requires_workflows:
+  - any_of: [engagement-kickoff, new-engagement]
+    reason: "SOW must exist before assessment begins"
+```
+The orchestrator checks these at `/crew IN` time. When a workflow completes (`/crew NX` detects all steps done + gates approved), it appends to `completed_workflows` and carries the array forward across workflow transitions.
 
 Valid enums:
 - Step status: `not_started | in_progress | completed`
@@ -69,4 +78,4 @@ Hook test utilities: `crew/hooks/test-hooks.js`
 
 **Adding a new agent:** Create `{role}.agent.yaml` and `compiled/{role}.md`. Add to the agent install loop in `install.js` (the `agentFiles` array). Preamble is prepended automatically.
 
-**Adding a new workflow:** Create `crew/workflows/{name}/workflow.yaml` with `steps` and `gates` arrays, plus step files in `steps/` subdirectory.
+**Adding a new workflow:** Create `crew/workflows/{name}/workflow.yaml` with `steps` and `gates` arrays, plus step files in `steps/` subdirectory. Add `requires_workflows` if the workflow depends on artifacts from prior workflows.

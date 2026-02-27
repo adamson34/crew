@@ -81,10 +81,12 @@ When you open Claude Code in the engagement directory:
 
 The orchestrator:
 1. Reads `crew/workflows/assessment/workflow.yaml`
-2. Parses the `steps` and `gates` arrays
-3. Scaffolds all steps and gates into `.crew-state.yaml` (all `not_started`/`pending`)
-4. Sets `active_workflow` to `{id: assessment, status: in_progress}`
-5. **State Guard** validates the write before it happens
+2. Parses the `steps` and `gates` arrays, and `requires_workflows` if present
+3. **Checks cross-workflow prerequisites** — verifies that required prior workflows (e.g., `engagement-kickoff`) are in `completed_workflows`. Warns if unmet, allows override.
+4. **Preserves prior state** — carries forward `completed_workflows` and `artifacts` from existing state
+5. Scaffolds all steps and gates into `.crew-state.yaml` (all `not_started`/`pending`)
+6. Sets `active_workflow` to `{id: assessment, status: in_progress}`
+7. **State Guard** validates the write before it happens
 
 ### 4. Step Execution
 

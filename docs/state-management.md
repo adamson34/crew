@@ -20,7 +20,7 @@ The file is human-readable YAML and can be manually edited when needed.
 | `gates` | map | Yes | Gate ID → status object |
 | `artifacts` | array | Yes | Produced artifact records |
 | `revisions` | array | No | Revision/review history |
-| `completed_workflows` | array | No | Finished workflow IDs |
+| `completed_workflows` | array | No | Completed workflow records (for cross-workflow prerequisite checks) |
 
 ### active_workflow
 
@@ -82,6 +82,44 @@ Each entry in the `revisions` array:
 | `agent` | Agent name |
 | `at` | ISO 8601 timestamp |
 | `notes` | Description of changes or rejection feedback |
+
+### Completed Workflow Entry
+
+Each entry in the `completed_workflows` array:
+
+| Field | Description |
+|-------|-------------|
+| `id` | Workflow name (e.g., `engagement-kickoff`) |
+| `completed_at` | ISO 8601 timestamp when the workflow was marked complete |
+
+Populated automatically by `/crew NX` when all non-optional steps are completed and all gates are approved. Carried forward when initializing a new workflow — never cleared.
+
+Validated: `id` must be a string, `completed_at` must be a valid ISO 8601 timestamp, and no duplicate IDs.
+
+## Cross-Workflow Prerequisites
+
+Workflows can declare dependencies on other workflows via the `requires_workflows` field in their `workflow.yaml`:
+
+```yaml
+requires_workflows:
+  - any_of: [engagement-kickoff, new-engagement]
+    reason: "SOW must exist before assessment begins"
+```
+
+`any_of` means at least one of the listed workflows must appear in `completed_workflows`. This handles the two engagement paths: modular (engagement-kickoff → assessment → ...) and all-in-one (new-engagement).
+
+**Current dependency graph:**
+
+```
+engagement-kickoff ──┐
+                     ├──> assessment ──┬──> report-generation
+new-engagement ──────┘                 └──> remediation-plan
+```
+
+**Enforcement points:**
+- `/crew IN` checks `requires_workflows` before initializing. If unmet, warns the user and requires explicit override.
+- `/crew NX` auto-completes workflows when all steps and gates are done, appending to `completed_workflows` to unblock downstream workflows.
+- `/crew IN` preserves `completed_workflows` and `artifacts` from the previous state file when transitioning between workflows.
 
 ## Valid Enums
 
@@ -193,6 +231,7 @@ The state validator checks:
 - Revision action values are valid enums
 - Artifact status values are valid enums
 - Timestamps are ISO 8601 format
+- `completed_workflows` entries have valid `id` and `completed_at`, no duplicates
 
 **Note:** The validator uses a custom YAML parser (`crew/hooks/state-validate.js`) that handles only the known `.crew-state.yaml` structure — no YAML anchors, no multi-line strings, no deep nesting. Do not add complex YAML features to the state file.
 

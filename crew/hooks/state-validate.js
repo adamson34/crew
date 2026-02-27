@@ -335,6 +335,34 @@ function validateStateContent(content) {
     }
   }
 
+  // 8. completed_workflows validation (optional — absent in older state files)
+  if (state.completed_workflows !== undefined && state.completed_workflows !== null) {
+    if (!Array.isArray(state.completed_workflows) && typeof state.completed_workflows === 'object'
+        && Object.keys(state.completed_workflows).length > 0) {
+      errors.push('completed_workflows must be an array, not a map');
+    }
+    if (Array.isArray(state.completed_workflows)) {
+      const seenIds = new Set();
+      for (let ci = 0; ci < state.completed_workflows.length; ci++) {
+        const cw = state.completed_workflows[ci];
+        if (typeof cw !== 'object' || cw === null) continue;
+
+        if (!cw.id || typeof cw.id !== 'string') {
+          errors.push(`completed_workflows[${ci}]: missing or invalid "id" (must be a string)`);
+        }
+
+        if (cw.completed_at && cw.completed_at !== null && !isValidTimestamp(cw.completed_at)) {
+          errors.push(`completed_workflows[${ci}]: completed_at "${cw.completed_at}" is not a valid ISO 8601 timestamp`);
+        }
+
+        if (cw.id && seenIds.has(cw.id)) {
+          errors.push(`completed_workflows[${ci}]: duplicate workflow id "${cw.id}"`);
+        }
+        if (cw.id) seenIds.add(cw.id);
+      }
+    }
+  }
+
   return errors;
 }
 
