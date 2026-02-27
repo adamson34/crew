@@ -168,8 +168,11 @@ Or use **new-engagement** for the full end-to-end lifecycle in a single workflow
 
 ## What's Next
 
+- [Architecture](architecture.md) — How all the pieces fit together end-to-end
 - [Orchestrator Reference](orchestrator-reference.md) — All 9 `/crew` commands in detail
 - [Agent Overview](agents/overview.md) — How agents work, the state preamble protocol
 - [Workflow Overview](workflows/overview.md) — How workflows, steps, and gates fit together
 - [State Management](state-management.md) — Deep dive into `.crew-state.yaml`
+- [Hooks Reference](hooks-reference.md) — How hooks enforce state integrity
+- [Installation Guide](installation-guide.md) — Deep dive into what the installer does
 - [Troubleshooting](troubleshooting.md) — Common issues and fixes

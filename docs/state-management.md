@@ -216,6 +216,8 @@ Validation runs automatically on the next Claude write operation, so you'll get 
 
 ## See Also
 
+- [Hooks Reference](hooks-reference.md) — The hooks that validate and protect state
 - [Orchestrator Reference](orchestrator-reference.md) — Commands that read and write state
 - [Agent Overview](agents/overview.md) — The state preamble protocol agents follow
+- [Architecture](architecture.md) — How state fits into the overall system
 - [Troubleshooting](troubleshooting.md) — Common state issues and fixes

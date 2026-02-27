@@ -144,5 +144,7 @@ Check `revision_count` on the gate in `.crew-state.yaml`. If it's wrong, manuall
 ## See Also
 
 - [State Management](state-management.md) — Schema reference and manual editing guide
+- [Hooks Reference](hooks-reference.md) — Hook behavior, exit codes, and debugging
+- [Installation Guide](installation-guide.md) — What the installer does and reconfiguration
 - [Orchestrator Reference](orchestrator-reference.md) — All `/crew` commands
 - [Getting Started](getting-started.md) — End-to-end tutorial

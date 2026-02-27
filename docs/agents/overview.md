@@ -87,3 +87,5 @@ If you leave a config field blank during install, the placeholder stays as `{{ke
 - [Orchestrator Reference](../orchestrator-reference.md) — The `/crew` command that routes between agents
 - [Workflow Overview](../workflows/overview.md) — Steps and gates that agents execute
 - [State Management](../state-management.md) — The `.crew-state.yaml` file agents read and write
+- [Architecture](../architecture.md) — Preamble protocol details and system integration
+- [Extending CREW](../extending-crew.md) — How to add new agents

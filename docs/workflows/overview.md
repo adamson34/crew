@@ -117,6 +117,8 @@ Each workflow assumes artifacts from prior phases exist. The assessment workflow
 
 ## See Also
 
+- [Workflow Definition Reference](../workflow-definition-reference.md) — Complete `workflow.yaml` schema
 - [Orchestrator Reference](../orchestrator-reference.md) — `/crew IN` to initialize, `/crew NX` to navigate
 - [Agent Overview](../agents/overview.md) — Which agents own which steps
 - [State Management](../state-management.md) — How steps and gates are tracked in `.crew-state.yaml`
+- [Extending CREW](../extending-crew.md) — How to add new workflows
