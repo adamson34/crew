@@ -9,7 +9,7 @@
   "scripts": {
     "install-crew": "node crew/install.js",
     "uninstall-crew": "node crew/install.js --uninstall",
-    "test": "node crew/hooks/test-hooks.js"
+    "test": "node crew/hooks/test-hooks.js && node crew/test-install.js"
   },
   "keywords": [
     "claude-code",
