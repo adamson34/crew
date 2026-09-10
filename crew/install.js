@@ -9,6 +9,7 @@
  *
  * Usage:
  *   node install.js
+ *   node install.js --yes   (non-interactive: accept defaults for every field)
  *
  * All config values are optional. Leave blank to accept the default
  * or keep {{placeholder}} for manual find-and-replace later.
@@ -92,6 +93,17 @@ function printSelect(options, defaultValue) {
     const marker = o.value === defaultValue ? '*' : ' ';
     process.stdout.write(`    ${marker} ${i + 1}) ${o.label} [${o.value}]\n`);
   });
+}
+
+/**
+ * Fill every field with its default (or null for placeholder fields with
+ * no default), matching the fallback behavior collectConfig() applies when
+ * stdin closes early. Used by --yes for non-interactive installs.
+ */
+function defaultConfig(fields) {
+  const config = {};
+  for (const f of fields) config[f.key] = f.default || null;
+  return config;
 }
 
 /**
@@ -445,9 +457,15 @@ async function main() {
   console.log('─'.repeat(50));
   console.log('Installs CREW agents as slash commands in .claude/commands/');
   console.log('Agents: /bd /pm /consultant /compliance /writer /reviewer /crew\n');
-  console.log('Press Enter to accept defaults shown in parentheses.\n');
 
-  const config = await collectConfig(CONFIG_FIELDS);
+  const nonInteractive = process.argv.includes('--yes');
+  if (nonInteractive) {
+    console.log('Non-interactive mode: accepting defaults for every field.\n');
+  } else {
+    console.log('Press Enter to accept defaults shown in parentheses.\n');
+  }
+
+  const config = nonInteractive ? defaultConfig(CONFIG_FIELDS) : await collectConfig(CONFIG_FIELDS);
 
   // Computed values (not user-prompted)
   config._date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
@@ -529,6 +547,7 @@ async function main() {
   }
 
   console.log('To re-run with different config:  node install.js');
+  console.log('To re-run non-interactively:      node install.js --yes');
   console.log('To uninstall:                     node install.js --uninstall\n');
 }
 
