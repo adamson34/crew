@@ -11,7 +11,7 @@
 
 [![test](https://github.com/adamson34/crew/actions/workflows/test.yml/badge.svg?branch=dev)](https://github.com/adamson34/crew/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-1.1.0-green.svg)](package.json)
 [![Built for Claude Code](https://img.shields.io/badge/Built_for-Claude_Code-blueviolet.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](#)
 

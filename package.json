@@ -1,6 +1,6 @@
 {
   "name": "crew",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Consulting Role Engine Workflows — AI consulting framework for Claude Code",
   "main": "crew/install.js",
   "bin": {
