@@ -62,7 +62,7 @@ Follow instructions in: `crew/tasks/asset-discovery.md`
 ---
 
 Reference material:
-- OT/ICS domain knowledge: `crew/knowledge-base/ot-ics-overview.md`
+{{vertical_overview_reference}}
 - Severity scale: `crew/data/severity-scales.yaml`
 - Standards crosswalks: `crew/data/standards-crosswalks.yaml`
 - Engagement history: `crew/data/engagement-history.yaml`

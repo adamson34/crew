@@ -190,7 +190,7 @@ templates:
   findings_matrix_template: "crew/templates/findings-matrix-template.md"
 
 knowledge_base:
-  ot_ics_overview: "crew/knowledge-base/ot-ics-overview.md"
+{{vertical_overview_yaml}}
 
 data:
   severity_scales: "crew/data/severity-scales.yaml"

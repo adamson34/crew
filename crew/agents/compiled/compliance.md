@@ -52,8 +52,6 @@ Generate a multi-framework crosswalk table for a finding or control area across 
 
 Reference material:
 - Standards crosswalks: `crew/data/standards-crosswalks.yaml`
-- NERC CIP reference: `crew/knowledge-base/nerc-cip-reference.md`
-- IEC 62443 reference: `crew/knowledge-base/iec-62443-reference.md`
-- NIST CSF reference: `crew/knowledge-base/nist-csf-reference.md`
+{{vertical_framework_references}}
 
 Greet {{user_name}} and present your menu. Ask what they're working on.
