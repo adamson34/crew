@@ -343,14 +343,20 @@ Create `crew/knowledge-base/{topic}-reference.md`:
 
 Knowledge base files should be 5-10KB of structured, factual reference material. They're read by agents as background knowledge — not presented to clients directly.
 
-### 2. Reference from Workflow YAMLs
+### 2. Reference the File
+
+For a workflow with a static `knowledge_base:` section (e.g. `retest-verification`, which has none, or a new workflow you're building), reference it directly:
 
 ```yaml
 knowledge_base:
   new_reference: "crew/knowledge-base/{topic}-reference.md"
 ```
 
+For `assessment`, `new-engagement`, and `engagement-kickoff`, the `knowledge_base:` section is instead a `{{vertical_knowledge_base_yaml}}` / `{{vertical_overview_yaml}}` placeholder stamped in by `install.js` — see [Adding a New Vertical](#adding-a-new-vertical). Adding a reference file for an *existing* vertical (e.g. a new OT/ICS standard) means adding an entry to that vertical's array in `VERTICAL_KNOWLEDGE_BASE`, not editing the workflow YAML directly.
+
 ### Available Knowledge Base Files
+
+**OT/ICS:**
 
 | File | Coverage |
 |------|----------|
@@ -359,64 +365,69 @@ knowledge_base:
 | `iec-62443-reference.md` | IEC 62443 series, security levels SL1-4, foundational/system requirements |
 | `nist-csf-reference.md` | NIST CSF 2.0 functions, 23 categories, OT-specific guidance, cross-framework mappings |
 
+**Cloud Security:**
+
+| File | Coverage |
+|------|----------|
+| `cloud-security-overview.md` | Shared responsibility model, cloud-native architecture concepts, attack vectors, key incidents |
+| `cis-controls-reference.md` | CIS Controls v8, CIS Benchmarks per platform, Well-Architected Framework crosswalk |
+
 ---
 
 ## Adding a New Vertical
 
-The OT/ICS cybersecurity vertical is the starter pack. To add a new consulting domain:
+OT/ICS cybersecurity is the full starter pack; cloud security is the second vertical (overview + one framework reference), and both are wired end-to-end as of the `VERTICAL_KNOWLEDGE_BASE` map in `crew/install.js`. Agent personas and workflow YAMLs no longer hardcode a vertical's knowledge-base paths — they carry `{{vertical_overview_reference}}`-style placeholders that `install.js` fills in at install time based on the chosen `vertical`, so adding a new vertical is mostly data, not code or manual file edits.
 
 ### 1. Add Knowledge Base Files
 
-Create domain-specific reference documents in `crew/knowledge-base/`. For cloud security, you might add:
+Create domain-specific reference documents in `crew/knowledge-base/`: one overview file (general domain orientation — this is what `/consultant` and the `new-engagement`/`engagement-kickoff` workflows reference), plus any framework-specific reference files (what `/compliance` and the `assessment` workflow reference). The cloud-security pack is a working example: `cloud-security-overview.md` + `cis-controls-reference.md`.
 
-- `cloud-security-overview.md` — CSP models, shared responsibility, common architectures
-- `cis-benchmarks-reference.md` — CIS benchmark categories and common findings
-- `aws-well-architected-reference.md` — Security pillar, best practices
+### 2. Register the Vertical's Knowledge Base
 
-### 2. Update Severity Scales
-
-Edit `crew/data/severity-scales.yaml` if the domain has different severity considerations. The OT/ICS scales include safety impact — a cloud security vertical might emphasize data exposure scope instead.
-
-### 3. Add Domain-Specific Standards
-
-Edit `crew/data/standards-crosswalks.yaml` to add control mappings for the new domain's frameworks.
-
-### 4. Extend Agent Personas
-
-Agents have domain-generic consulting skills but OT/ICS-specific knowledge. For a new vertical, you can either:
-
-- **Extend existing agents** — Add domain knowledge sections to `crew/agents/compiled/*.md`
-- **Create domain variants** — Create `consultant-cloud.md` etc. with domain-specific expertise
-
-### 5. Add Domain-Specific Workflow Steps
-
-If the methodology differs significantly, create new step files in `crew/workflows/*/steps/` or create entirely new workflows.
-
-### 6. Register the Vertical
-
-Add the new vertical to the installer's options in `crew/install.js`:
+Add an entry to `VERTICAL_KNOWLEDGE_BASE` in `crew/install.js`, marking exactly one entry `overview: true`:
 
 ```javascript
-{
-  key: 'vertical',
-  options: [
-    { value: 'ot-ics', label: 'OT/ICS Cybersecurity' },
-    { value: 'cloud-security', label: 'Cloud Security' },
-    // add new vertical here
+const VERTICAL_KNOWLEDGE_BASE = {
+  'ot-ics': [ /* ... */ ],
+  'cloud-security': [ /* ... */ ],
+  'your-vertical': [
+    { key: 'your_vertical_overview', overview: true, label: 'Your vertical domain knowledge', path: 'crew/knowledge-base/your-vertical-overview.md' },
+    { key: 'your_framework_ref', label: 'Your Framework reference', path: 'crew/knowledge-base/your-framework-reference.md' },
   ],
-}
+};
 ```
+
+This alone makes the new vertical's content show up in `consultant.md`'s and `compliance.md`'s "Reference material" sections and in the `knowledge_base:` blocks of `assessment`, `new-engagement`, and `engagement-kickoff` workflow YAMLs — no manual edits to those files needed. A vertical not present in this map falls back to `ot-ics` (`DEFAULT_VERTICAL`) rather than shipping agents with no reference material.
+
+The `vertical` field is already a free-text-accepting select in `CONFIG_FIELDS` with `ot-ics`, `cloud-security`, `it-audit`, `grc`, and `pentest` as options — those last three currently fall back to the OT/ICS pack via `DEFAULT_VERTICAL` until they get their own `VERTICAL_KNOWLEDGE_BASE` entry.
+
+### 3. Add Service Catalog Entries
+
+Add entries to `crew/data/service-catalog.yaml` with `vertical: <your-vertical>` so the BD agent can match inbound opportunities against real services for the new domain.
+
+### 4. Update Severity Scales (If Needed)
+
+`crew/data/severity-scales.yaml` is currently shared across all verticals — it's OT/ICS-flavored (safety impact is a first-class consideration). If your domain needs materially different severity criteria, this file isn't yet vertical-selected; you'd need to either generalize it or add vertical-specific selection here too, following the same `VERTICAL_KNOWLEDGE_BASE` pattern.
+
+### 5. Add Domain-Specific Standards (Known Gap)
+
+`crew/data/standards-crosswalks.yaml` is still OT/ICS-only (NERC CIP / IEC 62443 / NIST CSF / NIST SP 800-82) and is not yet vertical-selected — `/compliance`'s "Standards crosswalks" reference always points at it regardless of vertical. A new vertical with different frameworks needs either its own crosswalk file wired in the same way as the knowledge base, or to go without until that's built.
+
+### 6. Add Domain-Specific Workflow Steps
+
+If the methodology differs significantly from the OT/ICS-authored step files, create new step files in `crew/workflows/*/steps/` or entirely new workflows (see [Adding a New Workflow](#adding-a-new-workflow) below).
 
 ### What Changes Per Vertical
 
 | Component | Domain-Specific? | Notes |
 |-----------|-------------------|-------|
-| Agent personas | Partially | Core consulting skills are generic; domain knowledge varies |
+| Agent personas | Partially | Core consulting skills are generic; the "Reference material" list is stamped per vertical from `VERTICAL_KNOWLEDGE_BASE` |
 | Workflow structure | Mostly generic | Steps and gates apply across domains |
 | Step instructions | Partially | Some steps need domain-specific guidance |
 | Templates | Generic | Document structure doesn't change by domain |
-| Knowledge base | Fully domain-specific | Each vertical needs its own reference material |
-| Data files | Partially | Severity scales and standards crosswalks vary |
+| Knowledge base | Fully domain-specific | Selected automatically at install time via `VERTICAL_KNOWLEDGE_BASE` |
+| Severity scales | Shared (not yet vertical-selected) | OT/ICS-flavored; same file used for every vertical today |
+| Standards crosswalks | Shared (not yet vertical-selected) | OT/ICS-only content used for every vertical today |
 | Hooks | Generic | State validation is domain-agnostic |
 
 ---
@@ -481,13 +492,23 @@ If agents need to interact with the new field, update `crew/agents/preamble.md` 
 
 ## Testing Changes
 
-### Hook Tests
+Run the full suite (all three of the below) with:
 
 ```bash
-node crew/hooks/test-hooks.js
+npm test
 ```
 
+### Hook Tests — `crew/hooks/test-hooks.js`
+
 Tests state guard validation, session context output, and completion guard behavior. Add test cases for new state fields or validation rules.
+
+### Installer Smoke Test — `crew/test-install.js`
+
+Runs `crew/install.js --yes` end-to-end against a temp directory and asserts every scaffolded file, hook wiring, and generated `.crew-state.yaml` is correct — including running `session-context.sh` against the fresh state and checking its output. Also exercises `--uninstall`. If you change anything `install.js` writes or stamps, run this before opening a PR.
+
+### Workflow Structural Validation — `crew/test-workflows.js`
+
+Checks every `workflow.yaml` under `crew/workflows/`: step files exist, `prerequisites`/`gate_after`/`blocks` references resolve to real steps and gates, `requires_workflows` entries name real workflow directories, and referenced templates/knowledge-base/data files exist. **Run this after adding a new workflow or editing an existing `workflow.yaml`** — it catches typos in step/gate IDs and dangling file references that would otherwise only surface when an agent actually hits that broken reference mid-engagement.
 
 ### Manual Testing
 

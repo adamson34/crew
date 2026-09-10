@@ -9,6 +9,7 @@
 
 ### Consulting Role Engine Workflows
 
+[![test](https://github.com/adamson34/crew/actions/workflows/test.yml/badge.svg?branch=dev)](https://github.com/adamson34/crew/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](package.json)
 [![Built for Claude Code](https://img.shields.io/badge/Built_for-Claude_Code-blueviolet.svg)](https://docs.anthropic.com/en/docs/claude-code)
@@ -20,7 +21,7 @@ CREW is an AI-powered consulting workflow framework that runs inside [Claude Cod
 
 A `/crew` orchestrator tracks workflow state, manages review gates, and routes you to the right agent at each step. Nothing advances without your explicit approval.
 
-**Current vertical:** OT/ICS cybersecurity consulting, with an extensible architecture for additional verticals.
+**Verticals:** OT/ICS cybersecurity consulting (full knowledge pack) and cloud security (overview + CIS Controls/Benchmarks reference), selected at install time. The knowledge base and agent reference material swap automatically based on your choice — see [Adding a New Vertical](#adding-a-new-vertical).
 
 ## What It Does
 
@@ -54,6 +55,7 @@ CREW produces the core deliverables of a consulting engagement:
 - **Technical report** — detailed findings and analysis
 - **Findings matrix** — sortable table of all findings with status tracking
 - **Remediation roadmap** — phased plan with effort estimates, quick wins, and success criteria
+- **Verification report** — confirms which remediation items were actually implemented, with residual risk on anything that wasn't
 
 ### Engagement Lifecycle
 
@@ -92,6 +94,16 @@ graph TD
         m4["Quick Wins"]
         m1 --> m2 --> m3 --> m4
     end
+
+    remed --> retest
+
+    subgraph retest["Retest & Verification"]
+        v1["Retest Scoping (PM)"]
+        v2["Control Verification >> GATE"]
+        v3["Residual Risk Assessment (Compliance)"]
+        v4["Verification Report >> GATE (blocks delivery)"]
+        v1 --> v2 --> v3 --> v4
+    end
 ```
 
 > **>> GATE** = Human review required before proceeding
@@ -128,7 +140,7 @@ The installer prompts you for:
 | Your name | *(blank)* | Identifies the engagement lead |
 | Engagement name | Directory name | Labels all outputs |
 | Client name | "Client" | Used in deliverable templates |
-| Consulting vertical | ot-ics | Selects domain knowledge and service catalog |
+| Consulting vertical | ot-ics | Selects which knowledge-base files and reference material get stamped into agents and workflows (ot-ics or cloud-security; other options fall back to ot-ics) |
 | Consultant skill level | intermediate | Controls how much guidance agents provide |
 | Artifact paths | engagement/, assessment/, deliverables/ | Where outputs are written |
 
@@ -181,7 +193,7 @@ Start here: **[Getting Started](docs/getting-started.md)** — a step-by-step tu
 | [Agent: BD](docs/agents/bd.md), [PM](docs/agents/pm.md), [Consultant](docs/agents/consultant.md), [Compliance](docs/agents/compliance.md), [Writer](docs/agents/writer.md), [Reviewer](docs/agents/reviewer.md) | Individual agent profiles, menu commands, principles, workflow participation |
 | [Workflow Overview](docs/workflows/overview.md) | How workflows, steps, and gates fit together |
 | [Workflow Definition Reference](docs/workflow-definition-reference.md) | Complete `workflow.yaml` schema: steps, gates, branching, prerequisites, artifacts |
-| [Engagement Kickoff](docs/workflows/engagement-kickoff.md), [New Engagement](docs/workflows/new-engagement.md), [Assessment](docs/workflows/assessment.md), [Report Generation](docs/workflows/report-generation.md), [Remediation Plan](docs/workflows/remediation-plan.md) | Step-by-step workflow walkthroughs with gate details |
+| [Engagement Kickoff](docs/workflows/engagement-kickoff.md), [New Engagement](docs/workflows/new-engagement.md), [Assessment](docs/workflows/assessment.md), [Report Generation](docs/workflows/report-generation.md), [Remediation Plan](docs/workflows/remediation-plan.md), [Retest & Verification](docs/workflows/retest-verification.md) | Step-by-step workflow walkthroughs with gate details |
 | [State Management](docs/state-management.md) | `.crew-state.yaml` schema, lifecycle diagrams, revision tracking, manual editing |
 | [Extending CREW](docs/extending-crew.md) | Adding agents, workflows, templates, verticals, data files, task files |
 | [Troubleshooting](docs/troubleshooting.md) | Common issues and fixes for installation, state, workflows, agents, and rework |
@@ -292,12 +304,21 @@ Workflows are YAML definitions in `crew/workflows/`. Each declares the step orde
 
 ### Knowledge Base
 
+**OT/ICS** (full pack):
+
 | File | Coverage |
 |------|----------|
 | `knowledge-base/ot-ics-overview.md` | Purdue model, zone/conduit model, IT vs OT differences, common attack vectors and vulnerabilities |
 | `knowledge-base/nerc-cip-reference.md` | NERC CIP standards (CIP-002 through CIP-013), scope, common findings, evidence requirements |
 | `knowledge-base/iec-62443-reference.md` | IEC 62443 series structure, security levels (SL1-4), foundational and system requirements, common gaps |
 | `knowledge-base/nist-csf-reference.md` | NIST CSF 2.0 functions, 23 categories, OT-specific guidance, cross-framework mappings |
+
+**Cloud Security:**
+
+| File | Coverage |
+|------|----------|
+| `knowledge-base/cloud-security-overview.md` | Shared responsibility model, cloud-native architecture concepts, common attack vectors and vulnerabilities, key incidents |
+| `knowledge-base/cis-controls-reference.md` | CIS Controls v8 (18 categories), CIS Benchmarks per platform (AWS/Azure/GCP/Kubernetes/M365), Well-Architected crosswalk |
 
 ### Templates
 
@@ -307,16 +328,18 @@ SOW, executive summary, technical report, findings matrix, remediation roadmap, 
 
 ## Adding a New Vertical
 
-The OT/ICS cybersecurity vertical is the starter pack. To add a new consulting domain (cloud security, penetration testing, GRC, IT audit):
+OT/ICS is the full starter pack; cloud security is the second, currently overview + one framework reference. The installer selects between them (and falls back to OT/ICS for any vertical without an entry) via a `VERTICAL_KNOWLEDGE_BASE` map in `crew/install.js`, which drives the `{{vertical_knowledge_base_yaml}}`, `{{vertical_overview_yaml}}`, `{{vertical_overview_reference}}`, and `{{vertical_framework_references}}` placeholders stamped into `consultant.md`, `compliance.md`, and the `assessment`/`new-engagement`/`engagement-kickoff` workflow YAMLs at install time — nothing needs to be edited per-project.
 
-1. **Add knowledge base files** in `knowledge-base/` for the new domain
-2. **Update `data/severity-scales.yaml`** if the domain has different severity considerations
-3. **Add domain-specific standards** to `data/standards-crosswalks.yaml`
-4. **Extend agent personas** with domain knowledge (or create domain-specific variants)
-5. **Add domain-specific workflow steps** where methodology differs
-6. **Update `module.yaml`** to add the new vertical to the installer options
+To add a new consulting domain (penetration testing, GRC, IT audit):
 
-The core agent structure, workflow phases, and review gates are domain-agnostic — only the knowledge base and reference data change per vertical.
+1. **Add knowledge base files** in `knowledge-base/` for the new domain — one overview file, plus any framework-specific references
+2. **Add an entry to `VERTICAL_KNOWLEDGE_BASE`** in `crew/install.js`, marking the overview entry with `overview: true`
+3. **Add service-catalog entries** in `data/service-catalog.yaml` with `vertical: <your-vertical>` so the BD agent can match opportunities against it
+4. **Update `data/severity-scales.yaml`** if the domain has different severity considerations (this file is currently shared across all verticals)
+5. **Add domain-specific standards** to `data/standards-crosswalks.yaml`, or a separate crosswalk file, if the domain needs one (currently OT/ICS-specific; not yet vertical-selected)
+6. **Add domain-specific workflow steps** where methodology differs from the existing OT/ICS-authored step files
+
+The core agent structure, workflow phases, and review gates are domain-agnostic — only the knowledge base, reference material, and (for now) the standards crosswalk change per vertical.
 
 ---
 
@@ -332,16 +355,18 @@ CREW was originally designed as an expansion module for the [BMAD-METHOD](https:
 
 ### Current State
 
-CREW is a working tool with a single vertical (OT/ICS cybersecurity). It runs locally via `node install.js`, tracks workflow state across sessions, enforces review gates, and routes users between agents via the `/crew` orchestrator. Six role agents, five workflow phases, templates, reference data, and the orchestrator are all functional.
+CREW is a working tool covering two verticals (OT/ICS cybersecurity — full pack, cloud security — overview + CIS reference), selected at install time. It runs locally via `node install.js` (or non-interactively via `node install.js --yes`), tracks workflow state across sessions, enforces review gates, and routes users between agents via the `/crew` orchestrator. Six role agents, six workflow phases (engagement kickoff/new-engagement through remediation planning and retest verification), templates, reference data, and the orchestrator are all functional, backed by an automated test suite (hook behavior, end-to-end installer smoke test, and workflow structural validation) running in CI on every push and PR.
 
 ### Near-Term
 
 - **npm distribution** — publish as a package so users can install via `npx` without cloning
 - **Additional templates** — client-facing presentation decks, data request checklists, closeout reports
+- **Vertical-aware standards crosswalks** — `data/standards-crosswalks.yaml` is still OT/ICS-only; cloud security has no equivalent control-mapping file yet
+- **Closeout/lessons-learned workflow** — nothing currently writes engagement outcomes back to `data/engagement-history.yaml`
 
 ### Medium-Term
 
-- **Additional verticals** — cloud security, IT audit, GRC, and penetration testing knowledge packs
+- **Additional verticals** — IT audit, GRC, and penetration testing knowledge packs (cloud security landed; see [Adding a New Vertical](#adding-a-new-vertical))
 - **Multi-engagement management** — support multiple concurrent engagements from a single CREW install
 - **Evidence management** — structured evidence collection, linking, and referencing within findings
 - **Custom service catalogs** — let firms define their own service offerings and agent behavior

@@ -87,10 +87,7 @@ gates:
 # ─── References ─────────────────────────────────────────────────────────────────
 
 knowledge_base:
-  ot_ics_overview: "crew/knowledge-base/ot-ics-overview.md"
-  nerc_cip_ref: "crew/knowledge-base/nerc-cip-reference.md"
-  iec_62443_ref: "crew/knowledge-base/iec-62443-reference.md"
-  nist_csf_ref: "crew/knowledge-base/nist-csf-reference.md"
+{{vertical_knowledge_base_yaml}}
 
 data:
   severity_scales: "crew/data/severity-scales.yaml"

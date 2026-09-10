@@ -9,6 +9,7 @@
  *
  * Usage:
  *   node install.js
+ *   node install.js --yes   (non-interactive: accept defaults for every field)
  *
  * All config values are optional. Leave blank to accept the default
  * or keep {{placeholder}} for manual find-and-replace later.
@@ -20,6 +21,58 @@ const path = require('path');
 // ─── Agents to install ────────────────────────────────────────────────────────
 
 const AGENTS = ['bd', 'pm', 'consultant', 'compliance', 'writer', 'reviewer', 'crew'];
+
+// ─── Vertical knowledge base ─────────────────────────────────────────────────
+//
+// Maps each `vertical` config option to the knowledge-base files agents and
+// workflows should reference. Exactly one entry per vertical should have
+// `overview: true` — it's the general domain-orientation doc referenced by
+// the consultant agent and the new-engagement/engagement-kickoff workflows.
+// The full list (overview + framework references) is used by the assessment
+// workflow and the compliance agent. A vertical with no entry here falls
+// back to DEFAULT_VERTICAL rather than shipping agents with no reference
+// material at all.
+
+const DEFAULT_VERTICAL = 'ot-ics';
+
+const VERTICAL_KNOWLEDGE_BASE = {
+  'ot-ics': [
+    { key: 'ot_ics_overview', overview: true, label: 'OT/ICS domain knowledge', path: 'crew/knowledge-base/ot-ics-overview.md' },
+    { key: 'nerc_cip_ref', label: 'NERC CIP reference', path: 'crew/knowledge-base/nerc-cip-reference.md' },
+    { key: 'iec_62443_ref', label: 'IEC 62443 reference', path: 'crew/knowledge-base/iec-62443-reference.md' },
+    { key: 'nist_csf_ref', label: 'NIST CSF reference', path: 'crew/knowledge-base/nist-csf-reference.md' },
+  ],
+  'cloud-security': [
+    { key: 'cloud_security_overview', overview: true, label: 'Cloud security domain knowledge', path: 'crew/knowledge-base/cloud-security-overview.md' },
+    { key: 'cis_controls_ref', label: 'CIS Controls & Benchmarks reference', path: 'crew/knowledge-base/cis-controls-reference.md' },
+  ],
+};
+
+function verticalEntries(vertical) {
+  return VERTICAL_KNOWLEDGE_BASE[vertical] || VERTICAL_KNOWLEDGE_BASE[DEFAULT_VERTICAL];
+}
+
+function yamlBlock(entries) {
+  return entries.map(e => `  ${e.key}: "${e.path}"`).join('\n');
+}
+
+function referenceMaterialBlock(entries) {
+  return entries.map(e => `- ${e.label}: \`${e.path}\``).join('\n');
+}
+
+/** Computes the vertical-scoped placeholder values stamped into workflow.yaml
+ *  and agent files. Called once per install with the resolved config. */
+function verticalPlaceholders(vertical) {
+  const entries = verticalEntries(vertical);
+  const overview = entries.filter(e => e.overview);
+  const frameworks = entries.filter(e => !e.overview);
+  return {
+    vertical_knowledge_base_yaml: yamlBlock(entries),
+    vertical_overview_yaml: yamlBlock(overview),
+    vertical_overview_reference: referenceMaterialBlock(overview),
+    vertical_framework_references: referenceMaterialBlock(frameworks),
+  };
+}
 
 // ─── Config schema ────────────────────────────────────────────────────────────
 
@@ -95,6 +148,17 @@ function printSelect(options, defaultValue) {
 }
 
 /**
+ * Fill every field with its default (or null for placeholder fields with
+ * no default), matching the fallback behavior collectConfig() applies when
+ * stdin closes early. Used by --yes for non-interactive installs.
+ */
+function defaultConfig(fields) {
+  const config = {};
+  for (const f of fields) config[f.key] = f.default || null;
+  return config;
+}
+
+/**
  * Collect all config fields interactively via readline.
  * Supports plain text fields and single-select fields.
  */
@@ -164,8 +228,13 @@ function stamp(content, config) {
     if (config[f.key]) out = out.split(`{{${f.key}}}`).join(config[f.key]);
     // if null, leave {{key}} as-is for manual replacement
   }
-  // Replace {{date}} with today's date (not a user-prompted field)
-  if (config._date) out = out.split('{{date}}').join(config._date);
+  // Computed values (not user-prompted), e.g. config._date -> {{date}},
+  // config._vertical_overview_yaml -> {{vertical_overview_yaml}}
+  for (const key of Object.keys(config)) {
+    if (key.startsWith('_') && config[key] != null) {
+      out = out.split(`{{${key.slice(1)}}}`).join(config[key]);
+    }
+  }
   return out;
 }
 
@@ -445,12 +514,21 @@ async function main() {
   console.log('─'.repeat(50));
   console.log('Installs CREW agents as slash commands in .claude/commands/');
   console.log('Agents: /bd /pm /consultant /compliance /writer /reviewer /crew\n');
-  console.log('Press Enter to accept defaults shown in parentheses.\n');
 
-  const config = await collectConfig(CONFIG_FIELDS);
+  const nonInteractive = process.argv.includes('--yes');
+  if (nonInteractive) {
+    console.log('Non-interactive mode: accepting defaults for every field.\n');
+  } else {
+    console.log('Press Enter to accept defaults shown in parentheses.\n');
+  }
+
+  const config = nonInteractive ? defaultConfig(CONFIG_FIELDS) : await collectConfig(CONFIG_FIELDS);
 
   // Computed values (not user-prompted)
   config._date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  for (const [key, value] of Object.entries(verticalPlaceholders(config.vertical))) {
+    config[`_${key}`] = value;
+  }
 
   console.log('');
 
@@ -529,6 +607,7 @@ async function main() {
   }
 
   console.log('To re-run with different config:  node install.js');
+  console.log('To re-run non-interactively:      node install.js --yes');
   console.log('To uninstall:                     node install.js --uninstall\n');
 }
 

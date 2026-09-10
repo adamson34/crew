@@ -85,7 +85,7 @@ templates:
   sow_template: "crew/templates/sow-template.md"
 
 knowledge_base:
-  ot_ics_overview: "crew/knowledge-base/ot-ics-overview.md"
+{{vertical_overview_yaml}}
 
 data:
   service_catalog: "crew/data/service-catalog.yaml"

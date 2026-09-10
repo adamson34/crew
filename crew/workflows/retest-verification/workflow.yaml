@@ -1,0 +1,89 @@
+name: retest-verification
+description: "Close the loop on a remediation roadmap: retest closed findings, verify controls were actually implemented as claimed, assess residual risk on anything not fully remediated, and produce a verification report. Runs after remediation-plan execution."
+
+requires_workflows:
+  - any_of: [remediation-plan]
+    reason: "A remediation roadmap must exist to define which findings are in scope for retest"
+
+# ─── Steps ──────────────────────────────────────────────────────────────────────
+
+steps:
+  - id: step-01-retest-scoping
+    file: steps/step-01-retest-scoping.md
+    agent: pm
+    prerequisites: []
+    required_artifacts:
+      - pattern: "{{deliverables}}/{{engagement_name}}-remediation-roadmap.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-retest-scope.md"
+        type: retest-scope
+
+  - id: step-02-control-verification
+    file: steps/step-02-control-verification.md
+    agent: consultant
+    prerequisites: [step-01-retest-scoping]
+    gate_after: gate-verification-results
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-retest-scope.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-verification-results.md"
+        type: verification-results
+
+  - id: step-03-residual-risk-assessment
+    file: steps/step-03-residual-risk-assessment.md
+    agent: compliance
+    prerequisites: [step-02-control-verification]
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-verification-results.md"
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
+    produces:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-verification-results.md"
+        type: verification-results
+        note: "Adds residual risk ratings to findings that are unresolved or only partially remediated"
+
+  - id: step-04-verification-report
+    file: steps/step-04-verification-report.md
+    agent: writer
+    prerequisites: [step-03-residual-risk-assessment]
+    gate_after: gate-qa-review
+    required_artifacts:
+      - pattern: "{{assessment_artifacts}}/{{engagement_name}}-verification-results.md"
+    produces:
+      - pattern: "{{deliverables}}/{{engagement_name}}-verification-report.md"
+        type: verification-report
+
+# ─── Gates ──────────────────────────────────────────────────────────────────────
+
+gates:
+  - id: gate-verification-results
+    after_step: step-02-control-verification
+    blocks: [step-03-residual-risk-assessment]
+    description: "Raw retest results and evidence must be reviewed by the engagement lead before residual risk is assessed — confirms the retest methodology and evidence are sound"
+
+  - id: gate-qa-review
+    after_step: step-04-verification-report
+    blocks: []
+    description: "QA reviewer must explicitly PASS the verification report before client delivery"
+    required_approvers: [qa-reviewer]
+    blocking: true
+
+# ─── References ─────────────────────────────────────────────────────────────────
+
+templates:
+  verification_report_template: "crew/templates/verification-report-template.md"
+
+data:
+  severity_scales: "crew/data/severity-scales.yaml"
+
+input_file_patterns:
+  remediation_roadmap:
+    description: "Prioritized remediation roadmap defining what was supposed to be fixed, by when"
+    pattern: "{{deliverables}}/{{engagement_name}}-remediation-roadmap.md"
+  findings_register:
+    description: "Original findings register — source of truth for what is being retested"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-findings-register.md"
+  compliance_matrix:
+    description: "Compliance mapping to reassess after verification"
+    pattern: "{{assessment_artifacts}}/{{engagement_name}}-compliance-matrix.md"
