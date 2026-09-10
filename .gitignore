@@ -6,7 +6,8 @@
 .crew
 .crew-state.yaml
 
-# Engagement artifacts (contain client data)
-engagement/
-assessment/
-deliverables/
+# Engagement artifacts (contain client data) — anchored to repo root so this
+# doesn't also match crew/workflows/assessment/ or similarly-named paths
+/engagement/
+/assessment/
+/deliverables/
