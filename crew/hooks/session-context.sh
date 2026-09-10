@@ -80,14 +80,14 @@ awk '
 ' "$STATE_FILE"
 
 # Count artifacts
-ARTIFACT_COUNT=$(grep -c '^  - path:' "$STATE_FILE" 2>/dev/null || echo "0")
+ARTIFACT_COUNT=$(grep -c '^  - path:' "$STATE_FILE" 2>/dev/null) || ARTIFACT_COUNT=0
 echo ""
 echo "Artifacts registered: $ARTIFACT_COUNT"
 
 # Count revisions
-REVISION_COUNT=$(grep -c '^  - artifact:' "$STATE_FILE" 2>/dev/null || echo "0")
+REVISION_COUNT=$(grep -c '^  - artifact:' "$STATE_FILE" 2>/dev/null) || REVISION_COUNT=0
 if [ "$REVISION_COUNT" != "0" ]; then
-  REJECTION_COUNT=$(grep -c 'action: .*rejected' "$STATE_FILE" 2>/dev/null || echo "0")
+  REJECTION_COUNT=$(grep -c 'action: .*rejected' "$STATE_FILE" 2>/dev/null) || REJECTION_COUNT=0
   echo "Revision cycles: $REJECTION_COUNT rejection(s) across $REVISION_COUNT revision entries"
 fi
 
