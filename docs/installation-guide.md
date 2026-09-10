@@ -27,6 +27,9 @@ Each step is idempotent — re-running the installer overwrites previous output 
 ```bash
 # From your engagement project directory:
 node /path/to/CREW/crew/install.js
+
+# Non-interactively (accepts every field's default — useful for CI/scripting):
+node /path/to/CREW/crew/install.js --yes
 ```
 
 The installer must be run from the project directory where you want the engagement set up. It writes files relative to the current working directory.
@@ -41,7 +44,7 @@ The installer prompts for 9 fields. All are optional — press Enter to accept d
 | `user_name` | Your name | *(blank — keeps `{{user_name}}`)* | How agents address you |
 | `engagement_name` | Engagement name | Directory name | Labels all outputs, artifact filenames |
 | `client_name` | Client organization | `"Client"` | Used in deliverable templates |
-| `vertical` | Consulting vertical | `ot-ics` | Selects domain knowledge and references |
+| `vertical` | Consulting vertical | `ot-ics` | Selects which knowledge-base files and reference material get stamped into agents and workflows |
 | `assessor_skill_level` | Consultant skill level | `intermediate` | Controls guidance detail from agents |
 | `engagement_artifacts` | Engagement artifacts path | `engagement` | Where SOWs, project plans, comms go |
 | `assessment_artifacts` | Assessment artifacts path | `assessment` | Where findings, evidence, notes go |
@@ -49,13 +52,15 @@ The installer prompts for 9 fields. All are optional — press Enter to accept d
 
 ### Vertical Options
 
-| Value | Label |
-|-------|-------|
-| `ot-ics` | OT/ICS Cybersecurity |
-| `cloud-security` | Cloud Security |
-| `it-audit` | IT Audit |
-| `grc` | GRC — Governance, Risk & Compliance |
-| `pentest` | Penetration Testing |
+| Value | Label | Knowledge Base |
+|-------|-------|-----------------|
+| `ot-ics` | OT/ICS Cybersecurity | Full pack (overview + 3 framework references) |
+| `cloud-security` | Cloud Security | Overview + CIS Controls/Benchmarks reference |
+| `it-audit` | IT Audit | Not yet built — falls back to the OT/ICS pack |
+| `grc` | GRC — Governance, Risk & Compliance | Not yet built — falls back to the OT/ICS pack |
+| `pentest` | Penetration Testing | Not yet built — falls back to the OT/ICS pack |
+
+Any vertical without an entry in `VERTICAL_KNOWLEDGE_BASE` (`crew/install.js`) falls back to `ot-ics` rather than shipping agents with no reference material — see [Extending CREW: Adding a New Vertical](extending-crew.md#adding-a-new-vertical).
 
 ### Skill Level Options
 
@@ -217,12 +222,18 @@ After copying the `crew/` module, the installer walks every `.md` and `.yaml` fi
 | `{{assessment_artifacts}}` | Config field (default: `assessment`) |
 | `{{deliverables}}` | Config field (default: `deliverables`) |
 | `{{date}}` | Auto-filled: install date (YYYY-MM-DD) |
+| `{{vertical_knowledge_base_yaml}}` | Computed: full `knowledge_base:` YAML block for the chosen vertical (overview + all framework references) |
+| `{{vertical_overview_yaml}}` | Computed: `knowledge_base:` YAML block with just the vertical's overview entry |
+| `{{vertical_overview_reference}}` | Computed: single-line "Reference material" bullet for the vertical's overview file |
+| `{{vertical_framework_references}}` | Computed: "Reference material" bullets for the vertical's non-overview (framework-specific) entries |
+
+The `vertical_*` placeholders are computed from `VERTICAL_KNOWLEDGE_BASE` (see [Extending CREW: Adding a New Vertical](extending-crew.md#adding-a-new-vertical)) rather than being config field values directly. `stamp()` substitutes any config key starting with `_` generically — `config._date` fills `{{date}}`, `config._vertical_overview_yaml` fills `{{vertical_overview_yaml}}`, and so on — so a new computed placeholder just needs a `config._your_key` assignment in `main()`, no changes to `stamp()` itself.
 
 ### Where Placeholders Appear
 
-- **Agent files** — Agent identity sections, workflow references
+- **Agent files** — Agent identity sections, workflow references, `{{vertical_overview_reference}}` / `{{vertical_framework_references}}` in "Reference material"
 - **Workflow step files** — Artifact paths, client references
-- **Workflow YAMLs** — `produces` and `required_artifacts` path patterns
+- **Workflow YAMLs** — `produces` and `required_artifacts` path patterns; `{{vertical_knowledge_base_yaml}}` / `{{vertical_overview_yaml}}` in `knowledge_base:` sections (assessment, new-engagement, engagement-kickoff)
 - **Templates** — Document headers, client/firm names
 - **CLAUDE.md** — Engagement metadata, directory layout
 

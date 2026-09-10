@@ -21,6 +21,9 @@ crew/workflows/
   remediation-plan/
     workflow.yaml
     steps/
+  retest-verification/
+    workflow.yaml
+    steps/
 ```
 
 Each workflow has a `workflow.yaml` definition and a `steps/` directory with detailed instructions for each step. The orchestrator reads the YAML; agents read the step files.
@@ -109,6 +112,7 @@ graph LR
     ne["new-engagement"] --> assessment
     assessment --> rg["report-generation"]
     assessment --> rp["remediation-plan"]
+    rp --> rv["retest-verification"]
 ```
 
 ## Available Workflows
@@ -120,6 +124,7 @@ graph LR
 | [assessment](assessment.md) | 6 | 2 | Consultant, Compliance, Reviewer | engagement-kickoff OR new-engagement | Core technical assessment phase |
 | [report-generation](report-generation.md) | 5 | 2 | Writer, Reviewer | assessment OR new-engagement | Assembling client deliverables |
 | [remediation-plan](remediation-plan.md) | 4 | 1 | Consultant, PM | assessment OR new-engagement | Building the remediation roadmap |
+| [retest-verification](retest-verification.md) | 4 | 2 | PM, Consultant, Compliance, Writer, Reviewer | remediation-plan | Verifying remediation was actually implemented |
 
 ## Recommended Sequencing
 
@@ -129,6 +134,7 @@ If running workflows individually (not using new-engagement):
 2. **assessment** — Environment profiling, gap analysis, findings, QA
 3. **report-generation** — Executive summary, technical report, findings matrix, final QA
 4. **remediation-plan** — Prioritization, roadmap, effort estimation, quick wins
+5. **retest-verification** — Once the client reports remediation progress: retest, verify, assess residual risk, report
 
 This sequence is enforced by `requires_workflows` declarations — the orchestrator will warn if you try to initialize a workflow before its prerequisites are completed. For example, starting `assessment` before `engagement-kickoff` is completed will prompt a warning explaining that a SOW must exist first. You can override if you have the necessary artifacts from outside CREW.
 

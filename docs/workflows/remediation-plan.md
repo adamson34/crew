@@ -54,3 +54,4 @@ The roadmap is a single artifact that gets progressively enriched across steps 0
 - [Jake Tanaka (`/consultant`)](../agents/consultant.md) — Steps 01, 02, 04
 - [Dana Reeves (`/pm`)](../agents/pm.md) — Step 03
 - [Assessment](assessment.md) — Produces input artifacts for this workflow
+- [Retest & Verification](retest-verification.md) — Verifies this roadmap was actually implemented
