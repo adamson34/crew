@@ -183,6 +183,73 @@ services:
       - continuous improvement
 
   # ─────────────────────────────────────────
+  # Cloud Security
+  # ─────────────────────────────────────────
+
+  - id: cloud-security-posture-assessment
+    name: Cloud Security Posture Assessment
+    status: active
+    vertical: cloud-security
+    description: |
+      Structured evaluation of AWS, Azure, and/or GCP environments against CIS Benchmarks
+      and CIS Controls. Reviews IAM configuration, network architecture, data exposure,
+      logging coverage, and account governance. Produces a prioritized remediation roadmap.
+    delivery_types: [remote, hybrid]
+    typical_duration: "4–8 weeks"
+    team: ["Lead Consultant", "Compliance Analyst"]
+    outputs: ["Cloud Posture Assessment Report", "Findings Matrix", "Remediation Roadmap"]
+    keywords:
+      - cloud security assessment
+      - CSPM
+      - CIS benchmark
+      - AWS security review
+      - Azure security review
+      - GCP security review
+      - cloud posture
+      - cloud misconfiguration
+
+  - id: cloud-iam-review
+    name: Cloud IAM & Access Review
+    status: active
+    vertical: cloud-security
+    description: |
+      Focused review of identity and access management across cloud accounts —
+      role/policy permission analysis, privileged access controls, federation and
+      trust relationship review, and service account/workload identity hygiene.
+    delivery_types: [remote]
+    typical_duration: "2–4 weeks"
+    team: ["Lead Consultant"]
+    outputs: ["IAM Findings Report", "Least-Privilege Recommendations"]
+    keywords:
+      - IAM review
+      - least privilege
+      - access review
+      - identity federation
+      - role review
+      - permission audit
+      - service account review
+
+  - id: cloud-architecture-review
+    name: Cloud Network & Account Architecture Review
+    status: emerging
+    vertical: cloud-security
+    description: |
+      Analysis of multi-account/subscription governance structure, VPC/VNet network
+      design, segmentation between environments, and alignment with the relevant
+      provider's Well-Architected Framework security pillar.
+    delivery_types: [remote, hybrid]
+    typical_duration: "3–6 weeks"
+    team: ["Lead Consultant"]
+    outputs: ["Architecture Review Report", "Landing Zone Recommendations"]
+    keywords:
+      - cloud architecture review
+      - landing zone
+      - multi-account strategy
+      - VPC review
+      - well-architected
+      - account governance
+
+  # ─────────────────────────────────────────
   # General / Cross-Vertical
   # ─────────────────────────────────────────
 
