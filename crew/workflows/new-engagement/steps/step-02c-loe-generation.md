@@ -1,10 +1,10 @@
-# Step 02c: Level of Effort Generation (Path B)
+# Step 02c: Level of Effort Generation (Path A)
 
 **Agents:** Dana Reeves (PM) + Jake Tanaka (Consultant)
-**Path:** B — Vague or unscoped project
+**Path:** A — Signed proposal in hand
 **Input:** Approved SOW from `engagement/{{engagement_name}}-sow.md`
-**Output:** `engagement/{{engagement_name}}-loe.md`
-**Template:** `crew/templates/loe-template.md`
+**Output:** `engagement/{{engagement_name}}-loe.md` and `engagement/{{engagement_name}}-assumptions.md`
+**Templates:** `crew/templates/loe-template.md`, `crew/templates/assumptions-template.md`
 
 > Read `.crew` in the project root for configured output paths. Default: `engagement/` for SOW/LOE/assumptions, `assessment/` for findings/profiles, `deliverables/` for reports.
 
@@ -133,15 +133,29 @@ Specific requirements:
 - Section 3 (Total Hours by Role) must sum correctly from the work packages above
 - Section 4 must include every work package flagged as high-uncertainty
 - Section 5 (Out-of-Scope) must be consistent with SOW Section 9 (Exclusions)
-- Section 6 (Assumptions) must match the Assumptions document from Step 02b
+- Section 6 (Assumptions) lists every assumption this LOE's hours depend on — these feed the Assumptions Register below, they are not sourced from a prior step
 
 Save as: `engagement/{{engagement_name}}-loe.md`
 
 ---
 
+## Produce the Assumptions Register
+
+Path A has no separate scoping step that produces an assumptions document before this one — unlike Path B, where `step-02b-scope-definition` builds it during scope definition, Path A's SOW (from `step-02a-sow-derivation`) and this LOE are the only two sources of assumptions that exist by this point. Consolidating them into a standalone register is this step's job, not an input to it.
+
+Load `crew/templates/assumptions-template.md` and produce the Assumptions Register by combining:
+- Every assumption from the approved SOW's Section 8 (Assumptions)
+- Every assumption from this LOE's Section 6 (Assumptions)
+
+Give each a numbered ID (A-001, A-002, ...), category, basis, owner, and risk-if-wrong rating per the template's field definitions. Do not just copy the two lists side by side — de-duplicate overlapping assumptions and resolve any that conflict between the SOW and LOE (if they conflict, that's itself worth flagging to the user before proceeding).
+
+Save as: `engagement/{{engagement_name}}-assumptions.md`
+
+---
+
 ## Human Review Gate
 
-Present the completed LOE to the user. Walk through it section by section:
+Present the completed LOE and Assumptions Register to the user together. Walk through it section by section:
 
 **Work packages:**
 1. Does the list of work packages cover everything in the SOW scope?
@@ -157,8 +171,12 @@ Present the completed LOE to the user. Walk through it section by section:
 7. Does the total fee in the LOE match the price in the SOW's pricing section? If not, one of them needs to change.
 8. Is the total defensible if a client or partner asks how you got to that number?
 
-> **Do not proceed to Step 03 until the LOE is approved and the SOW pricing section is updated to match.**
+**Assumptions:**
+9. Does the Assumptions Register capture everything from both the SOW and the LOE, with no material assumption dropped?
+10. Are the high-risk assumptions correctly flagged, with a real mitigation action for each?
+
+> **Do not proceed to Step 03 until the LOE and Assumptions Register are both approved and the SOW pricing section is updated to match.**
 
 When approved:
 - Confirm the SOW's pricing table reflects the LOE totals
-- Tell the user: "LOE approved. Handing the scoping package to Dana Reeves to build the work breakdown and task assignments."
+- Tell the user: "LOE and Assumptions Register approved. Handing the scoping package to Dana Reeves to build the work breakdown and task assignments."
